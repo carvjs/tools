@@ -5,6 +5,7 @@
   "keywords": [
     "csa-template"
   ],
+  "homepage": "https://github.com/carvjs/snowpack#readme",
   "bugs": {
     "url": "https://github.com/carvjs/snowpack/issues"
   },

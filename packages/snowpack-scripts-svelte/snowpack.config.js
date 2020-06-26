@@ -16,4 +16,9 @@ module.exports = {
       dedupe: [...((defaults.rollup || {}).dedupe || []), 'svelte'],
     },
   },
+  buildOptions: {
+    ...defaults.buildOptions,
+    // Prevent accidental pickup of package.json[homepage]
+    baseUrl: '/'
+  }
 }
