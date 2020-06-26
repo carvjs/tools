@@ -9,4 +9,4 @@ cd new-dir
 
 ## Templates
 
-- [form](/templates/svelte-form): `npx degit @carv/snowpack/template/svelte-form svelte-form`
+- [svelte-form](/templates/svelte-form): `npx degit @carvjs/snowpack/template/svelte-form svelte-form`
