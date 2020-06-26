@@ -1,0 +1,36 @@
+{
+  "name": "@carv/load-stylesheet",
+  "version": "1.0.0",
+  "homepage": "https://github.com/carvjs/snowpack#readme",
+  "bugs": {
+    "url": "https://github.com/carvjs/snowpack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carvjs/snowpack.git",
+    "directory": "packages/load-stylesheet"
+  },
+  "license": "MIT",
+  "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "require": "./cjs/load-stylesheet.js",
+      "default": "./esm/load-stylesheet.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./cjs/load-stylesheet.js",
+  "module": "./esm/load-stylesheet.js",
+  "files": [
+    "esm",
+    "dist"
+  ],
+  "scripts": {
+    "build": "ucjs esm cjs",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "ucjs": "^0.1.1"
+  }
+}

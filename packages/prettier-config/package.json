@@ -1,0 +1,23 @@
+{
+  "name": "@carv/prettier-config",
+  "version": "1.0.0",
+  "homepage": "https://github.com/carvjs/snowpack#readme",
+  "bugs": {
+    "url": "https://github.com/carvjs/snowpack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carvjs/snowpack.git",
+    "directory": "packages/prettier-config"
+  },
+  "license": "MIT",
+  "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "main": "prettier-preset.js",
+  "dependencies": {
+    "prettier-plugin-packagejson": "^2.2.5",
+    "prettier-plugin-svelte": "^1.1.0"
+  },
+  "peerDependencies": {
+    "prettier": "^2.0.5"
+  }
+}

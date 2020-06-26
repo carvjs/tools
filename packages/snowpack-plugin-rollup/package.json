@@ -1,0 +1,26 @@
+{
+  "name": "@carv/snowpack-plugin-rollup",
+  "version": "1.0.0",
+  "homepage": "https://github.com/carvjs/snowpack#readme",
+  "bugs": {
+    "url": "https://github.com/carvjs/snowpack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carvjs/snowpack.git",
+    "directory": "packages/snowpack-plugin-rollup"
+  },
+  "license": "MIT",
+  "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "main": "plugin.js",
+  "files": [
+    "rollup"
+  ],
+  "dependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-yaml": "^2.1.1",
+    "execa": "^4.0.1",
+    "npm-run-path": "^4.0.1",
+    "rollup": "^2.18.0"
+  }
+}
