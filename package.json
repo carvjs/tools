@@ -7,8 +7,7 @@
   ],
   "scripts": {
     "fix": "prettier --ignore-path .gitignore --write .",
-    "publish": "npx lerna publish",
-    "test": "jest"
+    "publish": "npx lerna publish"
   },
   "prettier": "@carv/prettier-config",
   "jest": {
@@ -19,11 +18,7 @@
   },
   "devDependencies": {
     "@carv/prettier-config": "^1.0.0",
-    "create-snowpack-app": "^1.2.1",
-    "execa": "^4.0.2",
-    "jest": "^26.0.1",
     "lerna": "^3.20.2",
-    "npm-run-path": "^4.0.1",
     "prettier": "^2.0.5"
   }
 }

@@ -1,11 +1,21 @@
 {
-  "name": "@carv/snowpack-template-form",
-  "version": "1.0.2-alpha.0",
+  "name": "@carv/template-svelte-form",
+  "version": "1.0.0",
   "private": true,
   "keywords": [
     "csa-template"
   ],
+  "homepage": "https://github.com/carvjs/snowpack#readme",
+  "bugs": {
+    "url": "https://github.com/carvjs/snowpack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carvjs/snowpack.git",
+    "directory": "templates/svelte-form"
+  },
   "license": "MIT",
+  "author": "Sascha Tandel <s.tandel@kenoxa.de>",
   "source": "src/form.svelte",
   "scripts": {
     "build": "snowpack build",

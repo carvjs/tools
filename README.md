@@ -1,9 +1,12 @@
-# Create Snowpack App (CSA)
+# Create Carv Snowpack Libraries
 
 ```
-npx create-snowpack-app new-dir --template @carv/snowpack-template-NAME [--use-yarn]
+npx degit @carvjs/snowpack/template/<NAME> new-dir
+cd new-dir
 ```
 
-## Official Templates
+*Note that you will need to have [Node.js](https://nodejs.org) installed.*
 
-- [@carv/snowpack-template-form](/templates/snowpack-template-form)
+## Templates
+
+- [form](/templates/svelte-form): `npx degit @carv/snowpack/template/svelte-form svelte-form`
