@@ -1,6 +1,6 @@
 {
   "name": "@carv/eslint-config",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "homepage": "https://github.com/carvjs/snowpack#readme",
   "bugs": {
     "url": "https://github.com/carvjs/snowpack/issues"
@@ -29,5 +29,9 @@
   },
   "peerDependencies": {
     "eslint": "^7.2.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "a703a79c23b2a15884ef57e393745f1ea57b0a23"
 }

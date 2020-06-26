@@ -1,6 +1,6 @@
 {
   "name": "@carv/snowpack-scripts-svelte",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "homepage": "https://github.com/carvjs/snowpack#readme",
   "bugs": {
     "url": "https://github.com/carvjs/snowpack/issues"
@@ -14,9 +14,9 @@
   "author": "Sascha Tandel <s.tandel@kenoxa.de>",
   "main": "snowpack.config.js",
   "dependencies": {
-    "@carv/eslint-config": "^1.0.0",
-    "@carv/prettier-config": "^1.0.0",
-    "@carv/snowpack-plugin-rollup": "^1.0.0",
+    "@carv/eslint-config": "^1.0.1-alpha.0",
+    "@carv/prettier-config": "^1.0.1-alpha.0",
+    "@carv/snowpack-plugin-rollup": "^1.0.1-alpha.0",
     "@jest/globals": "^26.1.0",
     "@snowpack/app-scripts-svelte": "^1.2.0",
     "@testing-library/jest-dom": "^5.11.0",
@@ -26,5 +26,9 @@
   },
   "peerDependencies": {
     "jest": "^26.1.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "a703a79c23b2a15884ef57e393745f1ea57b0a23"
 }

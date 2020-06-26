@@ -1,6 +1,6 @@
 {
   "name": "@carv/snowpack-template-form",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "private": true,
   "keywords": [
     "csa-template"
@@ -26,7 +26,7 @@
     "preset": "@carv/snowpack-scripts-svelte"
   },
   "devDependencies": {
-    "@carv/snowpack-scripts-svelte": "^1.0.0",
+    "@carv/snowpack-scripts-svelte": "^1.0.1-alpha.0",
     "eslint": "^7.2.0",
     "jest": "^26.1.0",
     "prettier": "^2.0.5",
