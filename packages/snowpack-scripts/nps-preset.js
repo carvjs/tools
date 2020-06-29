@@ -6,7 +6,7 @@ if (npmBin) {
   alterPath.unshift(npmBin)
 }
 
-const eslint = 'eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx,.svelte .'
+const eslint = 'eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx .'
 const prettier = 'prettier --ignore-path .gitignore .'
 
 module.exports = {
