@@ -1,4 +1,4 @@
-# @carv/snowpack-scripts-svelte
+# @carv/snowpack-scripts
 
 ## Features
 
