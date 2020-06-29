@@ -52,6 +52,8 @@ module.exports = function rollupBundlePlugin(config, options) {
 
       if (!inputFile) throw new Error('No input file found.')
 
+      const useTypescript = inputFile.endsWith('.ts') || inputFile.endsWith('.tsx')
+
       Object.assign(manifest, {
         // Allow publish
         private: undefined,
@@ -70,7 +72,7 @@ module.exports = function rollupBundlePlugin(config, options) {
           },
           './package.json': './package.json',
         },
-        types: `./types/${unscopedPackageName}.d.ts`,
+        types: useTypescript ? `./types/${unscopedPackageName}.d.ts` : undefined,
 
         // Some defaults
         sideEffects: manifest.sideEffects === true,
@@ -127,7 +129,7 @@ module.exports = function rollupBundlePlugin(config, options) {
        */
       const typesDirectory = path.join(srcDirectory, 'types')
 
-      if (inputFile.endsWith('.ts') || inputFile.endsWith('.tsx')) {
+      if (useTypescript) {
         // tsc
         const tscPromise = execa(
           'tsc',
