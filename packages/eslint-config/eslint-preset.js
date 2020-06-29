@@ -11,8 +11,14 @@ module.exports = {
     'prettier',
     'prettier/unicorn',
   ],
-  plugins: ['svelte3'],
+  plugins: [
+    // Disabled until preprocess is supported: https://github.com/sveltejs/eslint-plugin-svelte3/pull/62
+    // 'svelte3'
+  ],
   rules: {
+    // Disabled until optional chaining is supported
+    'no-unused-expressions': 'off',
+
     'unicorn/no-null': 'off',
     'unicorn/filename-case': [
       'error',
@@ -25,6 +31,7 @@ module.exports = {
       {
         whitelist: {
           src: true,
+          pkg: true,
         },
       },
     ],
@@ -38,18 +45,19 @@ module.exports = {
     'promise/param-names': 'error',
   },
   overrides: [
-    {
-      files: ['**/*.svelte'],
-      processor: 'svelte3/svelte3',
-      rules: {
-        'import/no-mutable-exports': 'off',
-        'import/no-duplicates': 'off',
-        'import/no-unresolved': 'off',
-        'import/imports-first': 'off',
-        'import/first': 'off',
-        'css-rcurlyexpected': 'off',
-      },
-    },
+    // Disabled until preprocess is supported: https://github.com/sveltejs/eslint-plugin-svelte3/pull/62
+    // {
+    //   files: ['**/*.svelte'],
+    //   processor: 'svelte3/svelte3',
+    //   rules: {
+    //     'import/no-mutable-exports': 'off',
+    //     'import/no-duplicates': 'off',
+    //     'import/no-unresolved': 'off',
+    //     'import/imports-first': 'off',
+    //     'import/first': 'off',
+    //     'css-rcurlyexpected': 'off',
+    //   },
+    // },
     {
       files: [
         '**/*.test.js',
@@ -69,7 +77,7 @@ module.exports = {
       ],
     },
     {
-      files: ['./*.config.js'],
+      files: ['./*.config.js', './package-scripts.js'],
       env: {
         node: true,
       },

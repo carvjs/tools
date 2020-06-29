@@ -1,11 +1,11 @@
-<script>
+<script lang="typescript">
   import { getFormupContext } from 'svelte-formup'
 
-  export let at
+  export let at: string
 
   const { touched, errors } = getFormupContext()
 
-  let error
+  let error: Error
 
   $: error = $errors.get(at)
 </script>

@@ -5,7 +5,7 @@ npx degit @carvjs/snowpack/template/<NAME> new-dir
 cd new-dir
 ```
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+_Note that you will need to have [Node.js](https://nodejs.org) installed._
 
 ## Templates
 

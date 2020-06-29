@@ -1,0 +1,59 @@
+{
+  "name": "@carv/snowpack-scripts",
+  "version": "1.0.2-alpha.0",
+  "homepage": "https://github.com/carvjs/snowpack#readme",
+  "bugs": {
+    "url": "https://github.com/carvjs/snowpack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carvjs/snowpack.git",
+    "directory": "packages/snowpack-scripts"
+  },
+  "license": "MIT",
+  "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "main": "snowpack-preset.js",
+  "types": "types/index.d.ts",
+  "dependencies": {
+    "@babel/preset-env": "^7.10.3",
+    "@babel/preset-typescript": "^7.10.1",
+    "@carv/eslint-config": "^1.0.2-alpha.0",
+    "@carv/prettier-config": "^1.0.2-alpha.0",
+    "@carv/snowpack-plugin-rollup": "^1.0.2-alpha.0",
+    "@carv/types": "^1.0.2-alpha.0",
+    "@jest/globals": "^26.1.0",
+    "@snowpack/app-scripts-svelte": "^1.0.2",
+    "@snowpack/plugin-svelte": "^1.2.0",
+    "@testing-library/jest-dom": "^5.11.0",
+    "@testing-library/svelte": "^3.0.0",
+    "babel-jest": "^26.1.0",
+    "doctoc": "^1.4.0",
+    "eslint": "^7.3.1",
+    "find-up": "^4.1.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
+    "manage-path": "^2.0.0",
+    "nps": "^5.9.12",
+    "prettier": "^2.0.5",
+    "snowpack": "^2.5.0",
+    "svelte": "^3.21.0",
+    "svelte-check": "^0.1.37",
+    "svelte-jester": "^1.0.6",
+    "svelte-preprocess": "^3.9.10",
+    "typescript": "^3.9.5",
+    "typescript-eslint-language-service": "^3.0.0"
+  },
+  "peerDependencies": {
+    "nps": "^5.9.12",
+    "svelte": "^3.21.0"
+  },
+  "peerDependenciesMeta": {
+    "svelte": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "a703a79c23b2a15884ef57e393745f1ea57b0a23"
+}

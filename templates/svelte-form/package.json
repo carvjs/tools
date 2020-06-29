@@ -16,16 +16,12 @@
   },
   "license": "MIT",
   "author": "Sascha Tandel <s.tandel@kenoxa.de>",
-  "source": "src/form.svelte",
   "scripts": {
-    "build": "snowpack build",
-    "fix": "prettier --ignore-path .gitignore --write . && eslint --ignore-path .gitignore --fix .",
-    "lint": "eslint --ignore-path .gitignore . && prettier --ignore-path .gitignore --check .",
-    "start": "snowpack dev",
-    "pretest": "npm run lint",
-    "test": "jest",
-    "test:coverage": "npm test -- --coverage",
-    "test:watch": "npm test -- --watch"
+    "format": "nps format",
+    "prepublishOnly": "echo 'Use `npm start release` instead of `npm publish`!' && exit 1",
+    "release": "nps release",
+    "start": "nps",
+    "test": "nps test"
   },
   "prettier": "@carv/prettier-config",
   "eslintConfig": {
@@ -33,14 +29,12 @@
     "root": true
   },
   "jest": {
-    "preset": "@carv/snowpack-scripts-svelte"
+    "preset": "@carv/snowpack-scripts"
   },
   "devDependencies": {
-    "@carv/snowpack-scripts-svelte": "^1.0.2-alpha.0",
-    "eslint": "^7.2.0",
-    "jest": "^26.1.0",
-    "prettier": "^2.0.5",
-    "snowpack": "^2.5.0",
+    "@carv/snowpack-scripts": "^1.0.2-alpha.0",
+    "@types/yup": "^0.29.1",
+    "nps": "^5.9.12",
     "svelte": "^3.21.0",
     "svelte-formup": "^0.0.2",
     "svelte-htm": "^1.0.2",
@@ -51,7 +45,11 @@
     "svelte-formup": "^0.0.2",
     "yup": "^0.29.1"
   },
+  "np": {
+    "yarn": false,
+    "contents": "build"
+  },
   "snowpack": {
-    "extends": "@carv/snowpack-scripts-svelte"
+    "extends": "@carv/snowpack-scripts"
   }
 }

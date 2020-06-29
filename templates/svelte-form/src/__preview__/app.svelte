@@ -1,5 +1,5 @@
-<script>
-  import Form from '../form.svelte'
+<script lang="typescript">
+  import Form from '../main.svelte'
 
   import favicon from './favicon.png'
 </script>

@@ -1,43 +1,94 @@
 const path = require('path')
-const { promises: fs } = require('fs')
+const { existsSync, promises: fs } = require('fs')
 const execa = require('execa')
 const npmRunPath = require('npm-run-path')
 const cwd = process.cwd()
+
+const EXTNAMES = ['', '.svelte', '.tsx', '.ts', '.mjs', '.jsx', '.js', '.cjs', '.json']
+
+function resolveFile(base) {
+  for (const extname of EXTNAMES) {
+    const file = base + extname
+    if (existsSync(file)) {
+      return file
+    }
+  }
+}
 
 module.exports = function rollupBundlePlugin(config, options) {
   return {
     type: 'bundle',
     defaultBuildScript: 'bundle:*',
     async bundle({ srcDirectory, destDirectory, log }) {
-      const manifest = JSON.parse(
-        await fs.readFile(path.join(cwd, 'package.json'), { encoding: 'utf-8' }),
-      )
+      const manifest = JSON.parse(await fs.readFile('package.json', { encoding: 'utf-8' }))
 
-      const inputFile = manifest.svelte || manifest.source || manifest.main || 'src/index'
+      // copy readme, license, changelog to build
+      async function copyFile(name) {
+        const src = path.join(process.cwd(), name)
 
-      const basename = manifest.name.replace(/^@.*\//, '')
+        if (existsSync(src)) {
+          await fs.copyFile(src, path.join(destDirectory, name))
+        }
+      }
+
+      await Promise.all([
+        copyFile('README.md'),
+        copyFile('LICENSE'),
+        copyFile('LICENCE'),
+        copyFile('NOTICE'),
+        copyFile('CHANGELOG.md'),
+      ])
+
+      // const packageName = manifest.name.replace(/^@/, '').replace(/\//g, '__')
+      const unscopedPackageName = manifest.name.replace(/^@.*\//, '')
+
+      const inputFile =
+        manifest.source ||
+        manifest.svelte ||
+        manifest.main ||
+        resolveFile(`src/${unscopedPackageName}`) ||
+        resolveFile('src/main') ||
+        resolveFile('src/index')
+
+      if (!inputFile) throw new Error('No input file found.')
 
       Object.assign(manifest, {
-        main: `./cjs/${basename}.js`,
-        module: `./esm/${basename}.js`,
+        // Allow publish
+        private: undefined,
+
+        // Include all files in the build folder
+        // TODO use .npmignore to exclude test files from src
+        files: undefined,
+
+        // Define package loading
+        main: `./cjs/${unscopedPackageName}.js`,
+        module: `./esm/${unscopedPackageName}.js`,
         exports: {
           '.': {
-            require: `./cjs/${basename}.js`,
-            default: `./esm/${basename}.js`,
+            require: `./cjs/${unscopedPackageName}.js`,
+            default: `./esm/${unscopedPackageName}.js`,
           },
           './package.json': './package.json',
         },
+        types: `./types/${unscopedPackageName}.d.ts`,
+
+        // Some defaults
         sideEffects: manifest.sideEffects === true,
-        files: ['cjs', 'esm'],
-        devDependencies: undefined,
-        scripts: undefined,
+
+        // These are not needed any more
         source: undefined,
-        private: undefined,
+        scripts: undefined,
+        devDependencies: undefined,
+
+        // Reset config sections
         eslintConfig: undefined,
         jest: undefined,
         prettier: undefined,
         snowpack: undefined,
+        np: undefined,
       })
+
+      await fs.writeFile(path.join(srcDirectory, 'package.json'), JSON.stringify(manifest, null, 2))
 
       await fs.writeFile(
         path.join(destDirectory, 'package.json'),
@@ -50,9 +101,7 @@ module.exports = function rollupBundlePlugin(config, options) {
         JSON.stringify({ type: 'module' }, null, 2),
       )
 
-      const rollupOptions = ['-c', require.resolve(`./rollup/config.js`)]
-
-      const bundleAppPromise = execa('rollup', rollupOptions, {
+      const rollupPromise = execa('rollup', ['-c', require.resolve(`./rollup/config.js`)], {
         cwd,
         env: {
           ...npmRunPath.env(),
@@ -62,14 +111,104 @@ module.exports = function rollupBundlePlugin(config, options) {
         },
         extendEnv: true,
       })
-      if (bundleAppPromise.stdout) {
-        bundleAppPromise.stdout.on('data', (b) => log(b.toString()))
-      }
-      if (bundleAppPromise.stderr) {
-        bundleAppPromise.stderr.on('data', (b) => log(b.toString()))
+
+      if (rollupPromise.stdout) {
+        rollupPromise.stdout.on('data', (b) => log(b.toString()))
       }
 
-      return bundleAppPromise
+      if (rollupPromise.stderr) {
+        rollupPromise.stderr.on('data', (b) => log(b.toString()))
+      }
+
+      await rollupPromise
+
+      /**
+       * Generate typescript definitions
+       */
+      const typesDirectory = path.join(srcDirectory, 'types')
+
+      if (inputFile.endsWith('.ts') || inputFile.endsWith('.tsx')) {
+        // tsc
+        const tscPromise = execa(
+          'tsc',
+          ['--emitDeclarationOnly', '--noEmit', 'false', '--outDir', typesDirectory],
+          {
+            cwd,
+            env: {
+              ...npmRunPath.env(),
+            },
+            extendEnv: true,
+          },
+        )
+
+        if (tscPromise.stdout) {
+          tscPromise.stdout.on('data', (b) => log(b.toString()))
+        }
+
+        if (tscPromise.stderr) {
+          tscPromise.stderr.on('data', (b) => log(b.toString()))
+        }
+
+        await tscPromise
+
+        // api-extractor run --local --verbose --config api-extractor.json
+        const apiExtractorConfigFile = path.join(srcDirectory, 'types', 'api-extractor.json')
+
+        const mainEntryPointFilePath = await require('find-up')(
+          path.basename(inputFile.replace(/\.(ts|tsx)$/, '.d.ts')),
+          {
+            cwd: path.join(typesDirectory, path.dirname(inputFile)),
+          },
+        )
+
+        await fs.writeFile(
+          apiExtractorConfigFile,
+          JSON.stringify(
+            {
+              mainEntryPointFilePath,
+              bundledPackages: Object.keys(manifest.dependencies || {}),
+              dtsRollup: {
+                enabled: true,
+                untrimmedFilePath: path.join(destDirectory, manifest.types),
+              },
+              apiReport: { enabled: false },
+              docModel: { enabled: false },
+              tsdocMetadata: { enabled: false },
+              messages: {
+                extractorMessageReporting: {
+                  'ae-missing-release-tag': {
+                    logLevel: 'none',
+                  },
+                },
+              },
+            },
+            null,
+            2,
+          ),
+        )
+
+        const apiExtractorPromise = execa(
+          'api-extractor',
+          ['run', '--local', '--verbose', '--config', apiExtractorConfigFile],
+          {
+            cwd,
+            env: {
+              ...npmRunPath.env(),
+            },
+            extendEnv: true,
+          },
+        )
+
+        if (apiExtractorPromise.stdout) {
+          apiExtractorPromise.stdout.on('data', (b) => log(b.toString()))
+        }
+
+        if (apiExtractorPromise.stderr) {
+          apiExtractorPromise.stderr.on('data', (b) => log(b.toString()))
+        }
+
+        await apiExtractorPromise
+      }
     },
   }
 }

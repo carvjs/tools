@@ -6,7 +6,7 @@
     "templates/*"
   ],
   "scripts": {
-    "fix": "prettier --ignore-path .gitignore --write .",
+    "format": "prettier --ignore-path .gitignore --write .",
     "publish": "npx lerna publish"
   },
   "prettier": "@carv/prettier-config",

@@ -12,6 +12,22 @@ Your forms's source code lives in `src/form.svelte`.
 
 You can create a package that exports multiple forms by adding them to the `src` directory and editing `src/index.js` to reexport them as named exports.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+- [form-template](#form-template)
+  - [Setting up](#setting-up)
+  - [Available Scripts](#available-scripts)
+    - [npm start](#npm-start)
+    - [npm test](#npm-test)
+  - [Create a release](#create-a-release)
+  - [Folder Structure](#folder-structure)
+    - [`src/`](#src)
+    - [`src/__preview__/`](#srcpreview)
+  - [Recommended VS Code Extensions](#recommended-vs-code-extensions)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Setting up
 
 - Run `npm init` (or `yarn init`)
@@ -29,21 +45,18 @@ You will also see any lint errors in the console.
 
 ### npm test
 
-Launches the test runner in the interactive watch mode.
-See the section about running tests for more information.
-
 Two sub scripts will came in handy from time to time:
 
-- `npm run test:watch`: re-run tests on change
-- `npm run test:coverage`: the create a coverage report at `coverage/lcov-report/index.html`
+- `npm start test.watch`: re-run tests on change
+- `npm start test.coverage`: creates a coverage report at `coverage/lcov-report/index.html`
 
-### npm run build
+## Create a release
 
-Builds a publishable package of your code to the `build/` folder.
-The package is ready to be published:
-
-1. check if everything is alright - `npm publish build/ --dry-run`
-2. then go for it - `npm publish build/`
+1. Update changelog
+2. `npm run format`
+3. git commit -a -m "chore: prepare release`
+4. [npm version [<newversion> | major | minor | patch] -m "chore: release"](https://docs.npmjs.com/cli/version)
+5. `npm run release`
 
 ## Folder Structure
 
@@ -60,14 +73,9 @@ are matched using the following regexp:
 This directory is used by snowpack on `npm start` to render a preview of your code.
 Modify `src/__preview__/app.svelte` to match your needs.
 
-### `public/`
-
-Additional assets for the preview. The `public/index.html` file has a script tag pointing to
-`src/__preview__/index.js` which is the main entrypoint for the preview.
-
 ## Recommended VS Code Extensions
 
-- [Svelte](https://marketplace.visualstudio.com/items?itemName=JamesBirtles.svelte-vscode)
+- [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode)
 - [Jest](https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest)
 - [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 - [Eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)

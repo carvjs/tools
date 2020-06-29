@@ -79,7 +79,7 @@ export default function snowpack({
           // does exist -> use that resource
           return resource
         } catch {
-          // does not exist - deleagte to other resolvers
+          // does not exist - delegate to other resolvers
         }
       }
 

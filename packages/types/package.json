@@ -1,0 +1,19 @@
+{
+  "name": "@carv/types",
+  "version": "1.0.2-alpha.0",
+  "homepage": "https://github.com/carvjs/snowpack#readme",
+  "bugs": {
+    "url": "https://github.com/carvjs/snowpack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carvjs/snowpack.git",
+    "directory": "packages/types"
+  },
+  "license": "MIT",
+  "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
+}
