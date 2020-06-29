@@ -5,6 +5,7 @@
     "target": "esnext",
     "module": "esnext",
     "lib": ["esnext", "dom", "dom.iterable"],
+    // ensure that nobody can accidentally use this config for a build
     "noEmit": true,
     "declaration": true,
     "declarationMap": true,

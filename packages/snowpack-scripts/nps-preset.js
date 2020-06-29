@@ -6,6 +6,9 @@ if (npmBin) {
   alterPath.unshift(npmBin)
 }
 
+const eslint = 'eslint --ignore-path .gitignore --ext .js,.jsx,.ts,.tsx,.svelte .'
+const prettier = 'prettier --ignore-path .gitignore .'
+
 module.exports = {
   scripts: {
     // main entrypoints
@@ -15,6 +18,7 @@ module.exports = {
       coverage: 'nps jest.coverage',
       watch: 'nps jest.watch',
     },
+    build: 'nps snowpack.build',
     release: {
       script: 'nps test doctoc build release.publish',
       description: 'create a release',
@@ -31,12 +35,12 @@ module.exports = {
       build: 'snowpack build',
     },
     eslint: {
-      default: 'eslint --ignore-path .gitignore .',
-      fix: 'eslint --ignore-path .gitignore . --fix',
+      default: eslint,
+      fix: `${eslint} --fix`,
     },
     prettier: {
-      check: 'prettier --ignore-path .gitignore . --check',
-      write: 'prettier --ignore-path .gitignore . --write',
+      check: `${prettier} --check`,
+      write: `${prettier} --write`,
     },
     'svelte-check': 'svelte-check',
     jest: {
