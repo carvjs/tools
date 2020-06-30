@@ -21,7 +21,7 @@ module.exports = {
 
     // Disabled until optional chaining is supported
     'no-unused-expressions': 'off',
-    'no-void': ["error", { "allowAsStatement": true }],
+    'no-void': ['error', { allowAsStatement: true }],
 
     // Use function hoisting to improve code readability
     'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
@@ -112,13 +112,15 @@ module.exports = {
         // TODO handle https://www.npmjs.com/package/@typescript-eslint/parser#parseroptionsproject
         project: './tsconfig.json',
       },
-      plugins: ['@typescript-eslint'],
+      plugins: ['@typescript-eslint', 'eslint-plugin-tsdoc'],
       extends: [
         'plugin:@typescript-eslint/recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'prettier/@typescript-eslint',
       ],
       rules: {
+        'tsdoc/syntax': 'warn',
+
         // TypeScript's `noFallthroughCasesInSwitch` option is more robust (#6906)
         'default-case': 'off',
         // 'tsc' already handles this (https://github.com/typescript-eslint/typescript-eslint/issues/291)
