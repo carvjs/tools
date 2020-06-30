@@ -20,8 +20,10 @@ module.exports = {
     },
     build: 'nps snowpack.build',
     release: {
-      script: 'nps test doctoc build release.publish',
-      description: 'create a release',
+      default: {
+        script: 'nps test doctoc build release.publish',
+        description: 'create a release',
+      },
       publish: {
         script: 'npm publish ./build',
         hiddenFromHelp: true,
