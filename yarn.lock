@@ -802,7 +802,7 @@
     core-js-pure "^3.0.0"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2", "@babel/runtime@^7.9.6":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2", "@babel/runtime@^7.9.6":
   version "7.10.3"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.10.3.tgz#670d002655a7c366540c67f6fd3342cd09500364"
   integrity sha512-RzGO0RLSdokm9Ipe/YD+7ww8X2Ro79qiXZF3HU9ljrM+qnJmH1Vqth+hbiQZy761LnMJTMitHDuKVYTk3k4dLw==
@@ -846,14 +846,6 @@
   version "0.2.3"
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
-
-"@carv/prettier-config@^1.0.2-alpha.0":
-  version "1.0.2-alpha.0"
-  resolved "https://registry.npmjs.org/@carv/prettier-config/-/prettier-config-1.0.2-alpha.0.tgz#ad2420d614bc5c0a3e4657e2f78215635a516fbc"
-  integrity sha512-G6R4QTAACFbXGf2i6/vwOw3z72Z2kMicIwa+GkL2p2FB3CA54DtPG3ksvDSj4UroocL2JC6AsT3QzU944PGkOg==
-  dependencies:
-    prettier-plugin-packagejson "^2.2.5"
-    prettier-plugin-svelte "^1.1.0"
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
@@ -2174,6 +2166,16 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
+"@testing-library/dom@^7.0.3":
+  version "7.19.0"
+  resolved "https://registry.npmjs.org/@testing-library/dom/-/dom-7.19.0.tgz#35d33bdac587000c4bd19cc73f3c58a05a0f29af"
+  integrity sha512-t4sIYKGJ8vCi+fEP3f+lnvomvhofHK8xXxhrapiRS8tnP6la9woE+d9hjivviRkwvNFAOAYaN7REKnQf5XCGxg==
+  dependencies:
+    "@babel/runtime" "^7.10.3"
+    aria-query "^4.2.2"
+    dom-accessibility-api "^0.4.5"
+    pretty-format "^25.5.0"
+
 "@testing-library/jest-dom@^5.11.0":
   version "5.11.0"
   resolved "https://registry.npmjs.org/@testing-library/jest-dom/-/jest-dom-5.11.0.tgz#1439f08dc85ce7c6d3bbad0ee5d53b2206f55768"
@@ -2189,6 +2191,20 @@
     jest-matcher-utils "^25.1.0"
     lodash "^4.17.15"
     redent "^3.0.0"
+
+"@testing-library/svelte@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/@testing-library/svelte/-/svelte-3.0.0.tgz#cfb9c5e2679b0e90f6a79ffdf4397b92537dd1f2"
+  integrity sha512-0KarnU6czyhNaRECWUI4lpxTGg+9lTgASrsrtnflw9odVSmKk3iRym3ZOg0TOM4GBsX/CR4Un590fEsf6FdTJg==
+  dependencies:
+    "@testing-library/dom" "^7.0.3"
+
+"@testing-library/user-event@^12.0.11":
+  version "12.0.11"
+  resolved "https://registry.npmjs.org/@testing-library/user-event/-/user-event-12.0.11.tgz#157594e6c6d73a1503003933177843648b8c7da4"
+  integrity sha512-r7QNfktLE2n8IODEl32orup/HNOMueJpoXRDeTMlvWR4nZIHJwx59+8SkLf6nqV4Ot5Xo6qNeaWrvC1KO4eOng==
+  dependencies:
+    "@babel/runtime" "^7.10.2"
 
 "@textlint/ast-node-types@^4.0.3":
   version "4.2.5"
@@ -4062,6 +4078,11 @@ doctrine@^3.0.0:
   integrity sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==
   dependencies:
     esutils "^2.0.2"
+
+dom-accessibility-api@^0.4.5:
+  version "0.4.5"
+  resolved "https://registry.npmjs.org/dom-accessibility-api/-/dom-accessibility-api-0.4.5.tgz#d9c1cefa89f509d8cf132ab5d250004d755e76e3"
+  integrity sha512-HcPDilI95nKztbVikaN2vzwvmv0sE8Y2ZJFODy/m15n7mGXLeOKGiys9qWVbFbh+aq/KYj2lqMLybBOkYAEXqg==
 
 dom-serializer@0:
   version "0.2.2"
@@ -9472,13 +9493,10 @@ svelte-check@^0.1.37:
     vscode-languageserver-types "3.15.1"
     vscode-uri "2.1.1"
 
-svelte-formup@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.npmjs.org/svelte-formup/-/svelte-formup-0.0.2.tgz#f0e70a12e7839906562198e5c46b5375371b633e"
-  integrity sha512-69u03WASOtFngmQCVSe+Zxmg/wo08pCGeCUwWpvvyJECq4gvvjCAWV/D8w0xzkLbqCUcuP4+mO6VWhw31n2dBQ==
-  dependencies:
-    "@babel/runtime-corejs3" "^7.10.3"
-    core-js "^3.6.5"
+svelte-formup@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/svelte-formup/-/svelte-formup-0.2.0.tgz#d76d2a8e9278941d3229b6d18772e2460c2adc0d"
+  integrity sha512-Y1MvyBBOhCE/3rRLEwehbsFcL3uDfY8PnhT4CNGg+cdkwNjuxIAcLWLKdInnPxIXnmjzpScIjx2JNd61lRProg==
 
 svelte-fragment-component@^1.1.0:
   version "1.1.0"

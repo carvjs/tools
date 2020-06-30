@@ -9,7 +9,7 @@
     schema: yup.object().shape({
       title: yup.string().oneOf(['Mr.', 'Mrs.', 'Mx.']).required(),
       name: yup.string().required(),
-      email: yup.string().email().requiredx(),
+      email: yup.string().email().required(),
     }),
     onSubmit(data, context) {
       console.log('onSubmit', { data, context })
@@ -37,7 +37,7 @@
 
   <p use:validity>
     <label for="email">E-Mail</label>
-    <input id="email" bind:value={$values.email} use:validate={{ validateOn: ['input'] }} />
+    <input id="email" bind:value={$values.email} use:validate={{ on: 'input' }} />
     <IfError at="email" />
   </p>
 

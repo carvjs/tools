@@ -3,14 +3,14 @@
 
   export let at: string
 
-  const { touched, errors } = getFormupContext()
+  const { dirty, errors } = getFormupContext()
 
-  let error: Error
+  let error: Error | undefined
 
   $: error = $errors.get(at)
 </script>
 
-{#if $touched.has(at) && error}
+{#if $dirty.has(at) && error}
   <span class="error" aria-live="polite">
     <slot {error}>{error.message}</slot>
   </span>

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/svelte'
-import App from './app.svelte'
+import Form from './main.svelte'
 
 test('renders learn svelte link', () => {
-  render(App)
+  render(Form)
 
   const submit = screen.getByRole('button', { name: /submit/i })
 
