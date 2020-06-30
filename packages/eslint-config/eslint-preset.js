@@ -272,8 +272,12 @@ module.exports = {
     {
       files: [
         '**/*.test.js',
+        '**/*.test.jsx',
+        '**/*.spec.js',
         '**/*.spec.jsx',
         '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.spec.ts',
         '**/*.spec.tsx',
         '**/__tests__/*.js',
         '**/__tests__/*.jsx',
@@ -289,6 +293,20 @@ module.exports = {
       rules: {
         'jest/no-large-snapshots': ['warn', { maxSize: 300 }],
         'jest/prefer-strict-equal': 'warn',
+      },
+    },
+    {
+      files: [
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.spec.ts',
+        '**/*.spec.tsx',
+        '**/__tests__/*.ts',
+        '**/__tests__/*.tsx',
+      ],
+      rules: {
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
       },
     },
     {
