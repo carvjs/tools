@@ -2,6 +2,7 @@ require('@rushstack/eslint-patch/modern-module-resolution')
 
 module.exports = {
   extends: [
+    'eslint:recommended',
     'xo/esnext',
     'xo/browser',
     'plugin:unicorn/recommended',
@@ -16,8 +17,30 @@ module.exports = {
     // 'svelte3'
   ],
   rules: {
+    'require-atomic-updates': 'off',
+
     // Disabled until optional chaining is supported
     'no-unused-expressions': 'off',
+    'no-void': ["error", { "allowAsStatement": true }],
+
+    // Use function hoisting to improve code readability
+    'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
+    'default-case': ['error', { commentPattern: '^no default$' }],
+
+    'no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^(?:_|ignore)',
+        varsIgnorePattern: '^(?:_|ignore)',
+        caughtErrorsIgnorePattern: '^(?:_|ignore)',
+        vars: 'all',
+        args: 'after-used',
+        caughtErrors: 'all',
+        ignoreRestSiblings: true,
+      },
+    ],
+
+    'class-methods-use-this': 'off', // three words: "componentDidMount" :)
 
     'unicorn/no-null': 'off',
     'unicorn/filename-case': [
@@ -29,9 +52,20 @@ module.exports = {
     'unicorn/prevent-abbreviations': [
       'error',
       {
+        checkShorthandImports: 'internal',
+        checkShorthandProperties: false,
+        checkProperties: false,
+        checkVariables: true,
+        checkFilenames: true,
+        extendDefaultWhitelist: true,
         whitelist: {
-          src: true,
           pkg: true,
+          arg: true,
+          args: true,
+          env: true,
+          nodeEnv: true,
+          ref: true,
+          src: true,
         },
       },
     ],
@@ -42,6 +76,13 @@ module.exports = {
         sortCharacterClasses: false,
       },
     ],
+    'unicorn/catch-error-name': [
+      'error',
+      {
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
+
     'promise/param-names': 'error',
   },
   overrides: [
@@ -59,10 +100,17 @@ module.exports = {
     //   },
     // },
     {
+      files: ['{CHANGELOG,CODE_OF_CONDUCT,CONTRIBUTING,README,TODO}.md'],
+      rules: {
+        'unicorn/filename-case': 'off',
+      },
+    },
+    {
       files: ['**/*.ts', '**/*.tsx'],
       parser: '@typescript-eslint/parser',
       parserOptions: {
-        project: ['./tsconfig.json'],
+        // TODO handle https://www.npmjs.com/package/@typescript-eslint/parser#parseroptionsproject
+        project: './tsconfig.json',
       },
       plugins: ['@typescript-eslint'],
       extends: [
@@ -70,6 +118,156 @@ module.exports = {
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'prettier/@typescript-eslint',
       ],
+      rules: {
+        // TypeScript's `noFallthroughCasesInSwitch` option is more robust (#6906)
+        'default-case': 'off',
+        // 'tsc' already handles this (https://github.com/typescript-eslint/typescript-eslint/issues/291)
+        'no-dupe-class-members': 'off',
+        // 'tsc' already handles this (https://github.com/typescript-eslint/typescript-eslint/issues/477)
+        'no-undef': 'off',
+
+        // TypeScript supports these features
+        'prefer-object-spread': 'error',
+        'no-useless-catch': 'error',
+
+        // The rule is deprecated in ESLint and it doesn't fully make sense for TypeScript.
+        'valid-jsdoc': 'off',
+
+        // Disabled because of https://github.com/typescript-eslint/typescript-eslint/issues/60
+        'no-redeclare': 'off',
+
+        'import/named': 'off',
+        'import/no-unresolved': 'off',
+
+        'no-array-constructor': 'off',
+        '@typescript-eslint/no-array-constructor': 'warn',
+        '@typescript-eslint/no-namespace': 'error',
+        'no-use-before-define': 'off',
+
+        'no-empty-function': 'off',
+        '@typescript-eslint/no-empty-function': 'error',
+        '@typescript-eslint/no-empty-interface': [
+          'error',
+          {
+            allowSingleExtends: true,
+          },
+        ],
+
+        // Disabled because it's buggy. It transforms
+        // `...(personalToken ? {Authorization: `token ${personalToken}`} : {})`
+        // into
+        // `...personalToken ? {Authorization: `token ${personalToken}`} : {}`
+        // which is not valid.
+        'no-extra-parens': 'off',
+
+        // Makes no sense to allow type inferrence for expression parameters, but require typing the response
+        '@typescript-eslint/explicit-function-return-type': [
+          'error',
+          { allowExpressions: true, allowTypedFunctionExpressions: true },
+        ],
+        '@typescript-eslint/no-use-before-define': [
+          'error',
+          { functions: false, classes: true, variables: true, typedefs: true },
+        ],
+
+        // RATIONALE:         The "any" keyword disables static type checking, the main benefit of using TypeScript.
+        //                    This rule should be suppressed only in very special cases such as JSON.stringify()
+        //                    where the type really can be anything.  Even if the type is flexible, another type
+        //                    may be more appropriate such as "unknown", "{}", or "Record<k,V>".
+        '@typescript-eslint/no-explicit-any': 'error',
+
+        // RATIONALE:         Catches a common coding mistake.
+        '@typescript-eslint/no-for-in-array': 'error',
+
+        // RATIONALE:         Parameter properties provide a shorthand such as "constructor(public title: string)"
+        //                    that avoids the effort of declaring "title" as a field.  This TypeScript feature makes
+        //                    code easier to write, but arguably sacrifices readability:  In the notes for
+        //                    "@typescript-eslint/member-ordering" we pointed out that fields are central to
+        //                    a class's design, so we wouldn't want to bury them in a constructor signature
+        //                    just to save some typing.
+        '@typescript-eslint/no-parameter-properties': 'error',
+
+        // RATIONALE:         When left in shipping code, unused variables often indicate a mistake.  Dead code
+        //                    may impact performance.
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            argsIgnorePattern: '^(?:_|ignore)',
+            varsIgnorePattern: '^(?:_|ignore)',
+            caughtErrorsIgnorePattern: '^(?:_|ignore)',
+            vars: 'all',
+            args: 'after-used',
+            caughtErrors: 'all',
+            ignoreRestSiblings: true,
+          },
+        ],
+
+        'no-useless-constructor': 'off',
+        '@typescript-eslint/no-useless-constructor': 'error',
+
+        '@typescript-eslint/typedef': [
+          'error',
+          {
+            arrayDestructuring: false,
+            arrowParameter: false,
+            memberVariableDeclaration: false,
+            parameter: false,
+            objectDestructuring: false,
+            propertyDeclaration: true,
+            variableDeclaration: false,
+          },
+        ],
+
+        '@typescript-eslint/ban-types': [
+          'error',
+          {
+            types: {
+              String: {
+                message: 'Use `string` instead.',
+                fixWith: 'string',
+              },
+              Number: {
+                message: 'Use `number` instead.',
+                fixWith: 'number',
+              },
+              Boolean: {
+                message: 'Use `boolean` instead.',
+                fixWith: 'boolean',
+              },
+              Symbol: {
+                message: 'Use `symbol` instead.',
+                fixWith: 'symbol',
+              },
+              Object: {
+                message: 'Use `object` instead.',
+                fixWith: 'object',
+              },
+              object: 'Use `{}` instead.',
+              Function: 'Use a specific function type instead, like `() => void`.',
+            },
+          },
+        ],
+
+        '@typescript-eslint/consistent-type-assertions': [
+          'error',
+          {
+            assertionStyle: 'as',
+            objectLiteralTypeAssertions: 'allow-as-parameter',
+          },
+        ],
+
+        // Disabled because it's not fully usable yet:
+        // https://github.com/typescript-eslint/typescript-eslint/issues/142
+        // '@typescript-eslint/consistent-type-definitions': [
+        // 	'error',
+        // 	'type'
+        // ],
+
+        '@typescript-eslint/unified-signatures': 'error',
+
+        '@typescript-eslint/unbound-method': 'off',
+      },
     },
     {
       files: [
@@ -88,6 +286,10 @@ module.exports = {
         'plugin:jest-dom/recommended',
         'plugin:testing-library/recommended',
       ],
+      rules: {
+        'jest/no-large-snapshots': ['warn', { maxSize: 300 }],
+        'jest/prefer-strict-equal': 'warn',
+      },
     },
     {
       files: ['./*.config.js', './package-scripts.js'],
