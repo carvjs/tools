@@ -21,7 +21,7 @@ module.exports = {
     build: 'nps snowpack.build',
     release: {
       default: {
-        script: 'nps test doctoc build release.publish',
+        script: 'nps test doctoc.readme build release.publish',
         description: 'create a release',
       },
       publish: {
@@ -29,7 +29,7 @@ module.exports = {
         hiddenFromHelp: true,
       },
     },
-    format: 'nps doctoc prettier.write eslint.fix',
+    format: 'nps doctoc.readme prettier.write eslint.fix',
 
     // tools
     snowpack: {
@@ -54,6 +54,8 @@ module.exports = {
       default: 'tsc --noEmit',
       watch: 'tsc --noEmit --watch',
     },
-    doctoc: 'doctoc --github README.md',
+    doctoc: {
+      readme: 'doctoc --github --notitle --maxlevel 2 README.md',
+    }
   },
 }
