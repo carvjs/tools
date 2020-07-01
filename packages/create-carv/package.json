@@ -1,0 +1,65 @@
+{
+  "name": "create-carv",
+  "version": "0.0.0-development",
+  "description": "scaffolding out a carv package.",
+  "keywords": [
+    "init",
+    "npm",
+    "create",
+    "initializer",
+    "module",
+    "library",
+    "sao-generator",
+    "sao",
+    "scaffold",
+    "scaffolding",
+    "carv"
+  ],
+  "homepage": "https://github.com/carvjs/snowpack#readme",
+  "bugs": {
+    "url": "https://github.com/carvjs/snowpack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carvjs/snowpack.git",
+    "directory": "packages/create-carv"
+  },
+  "license": "MIT",
+  "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "main": "./generator/saofile.js",
+  "bin": "./bin/create-carv",
+  "files": [
+    "bin",
+    "generator",
+    "!**/__test__/**"
+  ],
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "@carv/snowpack-scripts",
+    "testMatch": [
+      "<rootDir>/generator/**/__tests__/*.{js,jsx,ts,tsx}"
+    ],
+    "testPathIgnorePatterns": [
+      "/templates/"
+    ]
+  },
+  "dependencies": {
+    "cac": "^6.5.10",
+    "chalk": "^4.1.0",
+    "envinfo": "^7.5.1",
+    "execa": "^4.0.2",
+    "registry-url": "^5.1.0",
+    "sao": "^1.7.1",
+    "update-notifier": "^4.1.0",
+    "validate-npm-package-name": "^3.0.0"
+  },
+  "devDependencies": {
+    "@carv/snowpack-scripts": "^1.0.2",
+    "jest": "^26.1.0"
+  },
+  "engines": {
+    "node": ">=12"
+  }
+}

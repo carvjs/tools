@@ -1,12 +1,5 @@
-# Create Carv Snowpack Libraries
+# Carv Libraries
 
-```
-npx degit @carvjs/snowpack/template/<NAME> new-dir
-cd new-dir
-```
+> Collection of packages to create carv packages.
 
-_Note that you will need to have [Node.js](https://nodejs.org) installed._
-
-## Templates
-
-- [svelte-form](/templates/svelte-form): `npx degit @carvjs/snowpack/template/svelte-form svelte-form`
+To Start a new carv project use [our project initalizer](./packages/create-carv)
