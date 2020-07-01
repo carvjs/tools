@@ -42,7 +42,7 @@ export default async function () {
     },
     dtsFile &&
       pkg.types && {
-        input: dtsFile,
+        input: path.relative(process.cwd(), dtsFile),
         output: [{ file: path.join(destDirectory, pkg.types), format: 'es' }],
         plugins: [dts()],
       },
