@@ -77,7 +77,7 @@ module.exports = {
         name: 'typescript',
         message: 'Do you want to use Typescript?',
         type: 'confirm',
-        default: true,
+        default: false,
       },
       {
         name: 'npmClient',
@@ -106,7 +106,7 @@ module.exports = {
       },
       {
         name: 'publishRegistry',
-        message: 'Which npm registry to use for publishing? [blank for same as above]',
+        message: 'Which npm registry to use for publishing? [blank for npmjs.org]',
         filter: (publishRegistry, { registry } = {}) =>
           defaultRegistryBlank(publishRegistry, registry),
         default: ({ projectScope, registry }) =>
