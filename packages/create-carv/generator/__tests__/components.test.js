@@ -8,11 +8,11 @@ test.each([
   ['npm', { typescript: true }],
   ['yarn', { typescript: false }],
   ['yarn', { typescript: true }],
-])('form (%s): %j', async (npmClient, answers) => {
+])('components (%s): %j', async (npmClient, answers) => {
   const stream = await sao.mock(
     { generator, npmClient },
     {
-      starter: 'form',
+      starter: 'components',
       ...answers,
     },
   )
@@ -31,8 +31,7 @@ test.each([
     'src/__preview__/app.css',
     'src/__preview__/app.svelte',
     'src/__preview__/favicon.png',
-    'src/if-error.svelte',
-    'src/main.svelte',
+    'src/component.svelte',
     'svelte.config.js',
   ])
 
@@ -56,15 +55,13 @@ test.each([
     'svelte',
     'svelte-check',
     'svelte-htm',
-    '@types/yup',
-    'svelte-formup',
-    'yup',
   ])
 
   if (answers.typescript) {
     expect(stream.fileList).toIncludeAllMembers([
       'src/__preview__/start.ts',
-      'src/__tests__/main.test.ts',
+      'src/__tests__/component.test.ts',
+      'src/main.ts',
       'src/types/index.ts',
       'tsconfig.json',
     ])
@@ -72,7 +69,8 @@ test.each([
   } else {
     expect(stream.fileList).toIncludeAllMembers([
       'src/__preview__/start.js',
-      'src/__tests__/main.test.js',
+      'src/__tests__/component.test.js',
+      'src/main.js',
     ])
   }
 })

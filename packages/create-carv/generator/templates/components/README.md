@@ -1,6 +1,6 @@
 # <%= packageName %>
 
-The main entrypoint is `src/main.<%= typescript ? 'ts' : 'js %>`.
+The main entrypoint is `src/main<%= extname %>`.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->

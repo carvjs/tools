@@ -8,11 +8,11 @@ test.each([
   ['npm', { typescript: true }],
   ['yarn', { typescript: false }],
   ['yarn', { typescript: true }],
-])('form (%s): %j', async (npmClient, answers) => {
+])('extension (%s): %j', async (npmClient, answers) => {
   const stream = await sao.mock(
     { generator, npmClient },
     {
-      starter: 'form',
+      starter: 'extension',
       ...answers,
     },
   )
@@ -31,7 +31,6 @@ test.each([
     'src/__preview__/app.css',
     'src/__preview__/app.svelte',
     'src/__preview__/favicon.png',
-    'src/if-error.svelte',
     'src/main.svelte',
     'svelte.config.js',
   ])
@@ -56,9 +55,6 @@ test.each([
     'svelte',
     'svelte-check',
     'svelte-htm',
-    '@types/yup',
-    'svelte-formup',
-    'yup',
   ])
 
   if (answers.typescript) {

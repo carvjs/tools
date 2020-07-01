@@ -99,13 +99,16 @@ module.exports = {
       },
       {
         name: 'registry',
-        message: 'Which npm registry to use for installing packages?',
+        message: 'Which npm registry to use for installing packages? [blank for npmjs.org]',
+        filter: (registry) => defaultRegistryBlank(registry),
         default: () => defaultRegistryBlank(require('registry-url')()),
         validate: isValidRegistryURL,
       },
       {
         name: 'publishRegistry',
-        message: 'Which npm registry to use for publishing?',
+        message: 'Which npm registry to use for publishing? [blank for same as above]',
+        filter: (publishRegistry, { registry } = {}) =>
+          defaultRegistryBlank(publishRegistry, registry),
         default: ({ projectScope, registry }) =>
           defaultRegistryBlank(require('registry-url')(projectScope), registry),
         validate: isValidRegistryURL,
@@ -136,6 +139,7 @@ module.exports = {
     const templateData = {
       nodeMajorVersion,
       packageName,
+      extname: typescript ? '.ts' : '.js',
     }
 
     return [
@@ -151,6 +155,7 @@ module.exports = {
         files: '**',
         filters: {
           'package.json': false,
+          '.vscode/extensions.json': false,
         },
         templateData,
       },
@@ -160,6 +165,7 @@ module.exports = {
         files: '**',
         filters: {
           'package.json': false,
+          '.vscode/extensions.json': false,
         },
         templateData,
       },
@@ -169,6 +175,7 @@ module.exports = {
         files: '**',
         filters: {
           'package.json': false,
+          '.vscode/extensions.json': false,
         },
         templateData,
       },
@@ -178,6 +185,7 @@ module.exports = {
         files: '**',
         filters: {
           'package.json': false,
+          '.vscode/extensions.json': false,
         },
         templateData,
       },
@@ -185,6 +193,10 @@ module.exports = {
         type: 'add',
         templateDir: `templates/${starter}-${typescript ? 'ts' : 'js'}`,
         files: '**',
+        filters: {
+          'package.json': false,
+          '.vscode/extensions.json': false,
+        },
         templateData,
       },
       {
@@ -299,8 +311,6 @@ module.exports = {
 }
 
 function isValidRegistryURL(value) {
-  if (!value) return true
-
   try {
     new URL(value)
     return true
