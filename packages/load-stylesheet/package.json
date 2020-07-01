@@ -24,7 +24,7 @@
   "module": "./esm/load-stylesheet.js",
   "files": [
     "esm",
-    "dist"
+    "cjs"
   ],
   "scripts": {
     "build": "ucjs esm cjs",
