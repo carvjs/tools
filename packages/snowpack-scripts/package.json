@@ -20,18 +20,20 @@
     "@carv/eslint-config": "^1.2.2",
     "@carv/prettier-config": "^1.0.2",
     "@carv/snowpack-plugin-rollup": "^1.0.3",
-    "@carv/types": "^1.0.3",
     "@snowpack/app-scripts-svelte": "^1.0.2",
     "@snowpack/plugin-svelte": "^1.2.0",
     "@testing-library/jest-dom": "^5.11.0",
     "doctoc": "^1.4.0",
+    "envinfo": "^7.5.1",
     "eslint": "^7.3.1",
     "find-up": "^4.1.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.1.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
+    "jest-extended": "^0.11.5",
     "manage-path": "^2.0.0",
     "nps": "^5.9.12",
+    "pkg-dir": "^4.2.0",
     "prettier": "^2.0.5",
     "snowpack": "^2.5.0",
     "svelte": "^3.21.0",
@@ -39,18 +41,28 @@
     "svelte-jester": "^1.0.6",
     "svelte-preprocess": "^3.9.10",
     "typescript": "^3.9.5",
-    "typescript-eslint-language-service": "^3.0.0"
+    "typescript-eslint-language-service": "^3.0.0",
+    "update-notifier": "^4.1.0"
   },
   "peerDependencies": {
+    "@carv/eslint-config": "^1.2.2",
+    "@carv/prettier-config": "^1.0.2",
+    "doctoc": "^1.4.0",
+    "envinfo": "^7.5.1",
     "eslint": "^7.3.1",
     "jest": "^26.1.0",
     "nps": "^5.9.12",
     "prettier": "^2.0.5",
+    "snowpack": "^2.5.0",
     "svelte": "^3.21.0",
+    "svelte-check": "^0.1.37",
     "typescript": "^3.9.5"
   },
   "peerDependenciesMeta": {
     "svelte": {
+      "optional": true
+    },
+    "svelte-check": {
       "optional": true
     },
     "typescript": {

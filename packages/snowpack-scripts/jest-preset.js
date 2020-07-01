@@ -23,6 +23,7 @@ module.exports = {
 
   setupFilesAfterEnv: [
     require.resolve('@testing-library/jest-dom'),
+    require.resolve('jest-extended'),
     fs.existsSync('./jest.setup.js') && './jest.setup.js',
   ].filter(Boolean),
 
