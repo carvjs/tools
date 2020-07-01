@@ -3,7 +3,8 @@
 A base for building shareable Svelte forms. Clone it with [degit](https://github.com/Rich-Harris/degit):
 
 ```bash
-npx degit @carvjs/snowpack/template/svelte-form my-new-form
+npm init @carv/form my-form
+yarn create @carv/form my-form
 cd my-new-form
 npm install # or yarn
 ```

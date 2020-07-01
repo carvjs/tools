@@ -17,6 +17,7 @@
   "license": "MIT",
   "author": "Sascha Tandel <s.tandel@kenoxa.de>",
   "scripts": {
+    "build": "nps build",
     "format": "nps format",
     "prepublishOnly": "echo 'Use `npm start release` instead of `npm publish`!' && exit 1",
     "release": "nps release",
@@ -40,8 +41,10 @@
     "jest": "^26.1.0",
     "nps": "^5.9.12",
     "svelte": "^3.21.0",
+    "svelte-check": "^0.1.37",
     "svelte-formup": "^0.2.0",
     "svelte-htm": "^1.1.0",
+    "typescript": "^3.9.5",
     "yup": "^0.29.1"
   },
   "peerDependencies": {
