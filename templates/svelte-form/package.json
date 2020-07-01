@@ -40,11 +40,11 @@
     "eslint": "^7.3.1",
     "jest": "^26.1.0",
     "nps": "^5.9.12",
+    "snowpack": "^2.5.0",
     "svelte": "^3.21.0",
     "svelte-check": "^0.1.37",
     "svelte-formup": "^0.2.0",
     "svelte-htm": "^1.1.0",
-    "snowpack": "^2.5.0",
     "typescript": "^3.9.5",
     "yup": "^0.29.1"
   },

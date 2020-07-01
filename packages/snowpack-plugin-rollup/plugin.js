@@ -54,7 +54,7 @@ module.exports = function rollupBundlePlugin(config, options) {
 
       const useTypescript = inputFile.endsWith('.ts') || inputFile.endsWith('.tsx')
 
-            /**
+      /**
        * Generate typescript definitions
        */
       const typesDirectory = path.join(srcDirectory, 'types')

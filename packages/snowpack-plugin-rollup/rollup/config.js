@@ -18,30 +18,33 @@ export default async function () {
     await fs.readFile(path.join(destDirectory, 'package.json'), { encoding: 'utf-8' }),
   )
 
-  return [{
-    input: {
-      [path.basename(pkg.main, '.js')]: inputFile,
-    },
-    output: [
-      {
-        format: 'esm',
-        dir: path.join(destDirectory, path.dirname(pkg.module)),
+  return [
+    {
+      input: {
+        [path.basename(pkg.main, '.js')]: inputFile,
       },
-      {
-        format: 'cjs',
-        dir: path.join(destDirectory, path.dirname(pkg.main)),
-      },
-    ],
+      output: [
+        {
+          format: 'esm',
+          dir: path.join(destDirectory, path.dirname(pkg.module)),
+        },
+        {
+          format: 'cjs',
+          dir: path.join(destDirectory, path.dirname(pkg.main)),
+        },
+      ],
 
-    plugins: [
-      json({ preferConst: true }),
-      yaml({ preferConst: true }),
-      snowpack({ srcDirectory, destDirectory, inputFile }),
-    ],
-  }, dtsFile && pkg.types && {
-    input: dtsFile,
-    output: [{ file: path.join(destDirectory, pkg.types), format: "es" }],
-    plugins: [dts()],
-  }
-].filter(Boolean)
+      plugins: [
+        json({ preferConst: true }),
+        yaml({ preferConst: true }),
+        snowpack({ srcDirectory, destDirectory, inputFile }),
+      ],
+    },
+    dtsFile &&
+      pkg.types && {
+        input: dtsFile,
+        output: [{ file: path.join(destDirectory, pkg.types), format: 'es' }],
+        plugins: [dts()],
+      },
+  ].filter(Boolean)
 }
