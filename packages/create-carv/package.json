@@ -1,6 +1,6 @@
 {
   "name": "create-carv",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "scaffolding out a carv package.",
   "keywords": [
     "init",
@@ -56,7 +56,7 @@
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
-    "@carv/snowpack-scripts": "^1.0.11",
+    "@carv/snowpack-scripts": "^1.1.0",
     "jest": "^26.1.0"
   },
   "engines": {
