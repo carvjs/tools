@@ -54,6 +54,44 @@ module.exports = function rollupBundlePlugin(config, options) {
 
       const useTypescript = inputFile.endsWith('.ts') || inputFile.endsWith('.tsx')
 
+            /**
+       * Generate typescript definitions
+       */
+      const typesDirectory = path.join(srcDirectory, 'types')
+      let dtsFile
+
+      if (useTypescript) {
+        // tsc
+        const tscPromise = execa(
+          'tsc',
+          ['--emitDeclarationOnly', '--noEmit', 'false', '--outDir', typesDirectory],
+          {
+            cwd,
+            env: {
+              ...npmRunPath.env(),
+            },
+            extendEnv: true,
+          },
+        )
+
+        if (tscPromise.stdout) {
+          tscPromise.stdout.on('data', (b) => log(b.toString()))
+        }
+
+        if (tscPromise.stderr) {
+          tscPromise.stderr.on('data', (b) => log(b.toString()))
+        }
+
+        await tscPromise
+
+        dtsFile = await require('find-up')(
+          path.basename(inputFile.replace(/\.(ts|tsx)$/, '.d.ts')),
+          {
+            cwd: path.join(typesDirectory, path.dirname(inputFile)),
+          },
+        )
+      }
+
       Object.assign(manifest, {
         // Allow publish
         private: undefined,
@@ -110,6 +148,7 @@ module.exports = function rollupBundlePlugin(config, options) {
           BUILD_SRC_DIRECTORY: srcDirectory,
           BUILD_DEST_DIRECTORY: destDirectory,
           BUILD_INPUT_FILE: inputFile,
+          BUILD_DTS_FILE: dtsFile,
         },
         extendEnv: true,
       })
@@ -123,94 +162,6 @@ module.exports = function rollupBundlePlugin(config, options) {
       }
 
       await rollupPromise
-
-      /**
-       * Generate typescript definitions
-       */
-      const typesDirectory = path.join(srcDirectory, 'types')
-
-      if (useTypescript) {
-        // tsc
-        const tscPromise = execa(
-          'tsc',
-          ['--emitDeclarationOnly', '--noEmit', 'false', '--outDir', typesDirectory],
-          {
-            cwd,
-            env: {
-              ...npmRunPath.env(),
-            },
-            extendEnv: true,
-          },
-        )
-
-        if (tscPromise.stdout) {
-          tscPromise.stdout.on('data', (b) => log(b.toString()))
-        }
-
-        if (tscPromise.stderr) {
-          tscPromise.stderr.on('data', (b) => log(b.toString()))
-        }
-
-        await tscPromise
-
-        // api-extractor run --local --verbose --config api-extractor.json
-        const apiExtractorConfigFile = path.join(srcDirectory, 'types', 'api-extractor.json')
-
-        const mainEntryPointFilePath = await require('find-up')(
-          path.basename(inputFile.replace(/\.(ts|tsx)$/, '.d.ts')),
-          {
-            cwd: path.join(typesDirectory, path.dirname(inputFile)),
-          },
-        )
-
-        await fs.writeFile(
-          apiExtractorConfigFile,
-          JSON.stringify(
-            {
-              mainEntryPointFilePath,
-              bundledPackages: Object.keys(manifest.dependencies || {}),
-              dtsRollup: {
-                enabled: true,
-                untrimmedFilePath: path.join(destDirectory, manifest.types),
-              },
-              apiReport: { enabled: false },
-              docModel: { enabled: false },
-              tsdocMetadata: { enabled: false },
-              messages: {
-                extractorMessageReporting: {
-                  'ae-missing-release-tag': {
-                    logLevel: 'none',
-                  },
-                },
-              },
-            },
-            null,
-            2,
-          ),
-        )
-
-        const apiExtractorPromise = execa(
-          'api-extractor',
-          ['run', '--local', '--verbose', '--config', apiExtractorConfigFile],
-          {
-            cwd,
-            env: {
-              ...npmRunPath.env(),
-            },
-            extendEnv: true,
-          },
-        )
-
-        if (apiExtractorPromise.stdout) {
-          apiExtractorPromise.stdout.on('data', (b) => log(b.toString()))
-        }
-
-        if (apiExtractorPromise.stderr) {
-          apiExtractorPromise.stderr.on('data', (b) => log(b.toString()))
-        }
-
-        await apiExtractorPromise
-      }
     },
   }
 }
