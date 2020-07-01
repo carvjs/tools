@@ -27,10 +27,14 @@ export default async function () {
         {
           format: 'esm',
           dir: path.join(destDirectory, path.dirname(pkg.module)),
+          sourcemap: true,
+          sourcemapExcludeSources: true,
         },
         {
           format: 'cjs',
           dir: path.join(destDirectory, path.dirname(pkg.main)),
+          sourcemap: true,
+          sourcemapExcludeSources: true,
         },
       ],
 

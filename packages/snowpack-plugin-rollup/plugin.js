@@ -119,6 +119,9 @@ module.exports = function rollupBundlePlugin(config, options) {
         source: undefined,
         scripts: undefined,
         devDependencies: undefined,
+        // reset bundledDependencies as rollup includes those into the bundle
+        bundledDependencies: undefined,
+        bundleDependencies: undefined,
 
         // Reset config sections
         eslintConfig: undefined,

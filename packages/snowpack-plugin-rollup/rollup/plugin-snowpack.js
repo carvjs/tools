@@ -6,13 +6,13 @@ export default function snowpack({
   inputFile,
   loadStylesheetModuleID = '@carv/load-stylesheet@1',
 } = {}) {
-  const imports = new Map()
+  const bundled = new Map()
   const externals = new Map()
 
   return {
     name: 'snowpack',
     async buildStart() {
-      imports.clear()
+      bundled.clear()
       externals.clear()
       externals.set(loadStylesheetModuleID, loadStylesheetModuleID)
 
@@ -26,19 +26,27 @@ export default function snowpack({
         }),
       )
 
+      // bundledDependencies are included into the output bundle
+      const bundledDependencies = []
+        .concat(pkg.bundledDependencies || [])
+        .concat(pkg.bundleDependencies || [])
+
       Object.entries(importMap.imports).forEach(([moduleId, file]) => {
         const source = path.join('/web_modules', file)
 
-        // check if external
-        for (const peerDependency of Object.keys(pkg.peerDependencies || {})) {
-          if (moduleId === peerDependency || moduleId.startsWith(`${peerDependency}/`)) {
-            externals.set(source, moduleId)
+        // check if bundled
+        for (const bundledDependency of bundledDependencies) {
+          if (moduleId === bundledDependency || moduleId.startsWith(`${bundledDependency}/`)) {
+            bundled.set(source, path.join(srcDirectory, source.slice(1)))
             return
           }
         }
 
-        // not external
-        imports.set(source, path.join(srcDirectory, source.slice(1)))
+        // mark external
+        // /web_modules/module
+        externals.set(source, moduleId)
+        // /project/directory/.build/web_modules/module
+        externals.set(path.join(srcDirectory, source.slice(1)), moduleId)
       })
     },
 
@@ -51,12 +59,13 @@ export default function snowpack({
         source = path.resolve(path.dirname(importer), source)
       }
 
+      // everything is external unless it is not
       if (externals.has(source)) {
         return { id: externals.get(source), external: true }
       }
 
-      if (imports.has(source)) {
-        return imports.get(source)
+      if (bundled.has(source)) {
+        return bundled.get(source)
       }
 
       if (source.startsWith('/__snowpack__/')) {

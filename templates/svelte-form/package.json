@@ -32,6 +32,11 @@
   "jest": {
     "preset": "@carv/snowpack-scripts"
   },
+  "dependencies": {
+    "svelte": "^3.21.0",
+    "svelte-formup": "^0.2.0",
+    "yup": "^0.29.1"
+  },
   "devDependencies": {
     "@carv/snowpack-scripts": "^1.0.2",
     "@testing-library/svelte": "^3.0.0",
@@ -41,18 +46,13 @@
     "jest": "^26.1.0",
     "nps": "^5.9.12",
     "snowpack": "^2.5.0",
-    "svelte": "^3.21.0",
     "svelte-check": "^0.1.37",
-    "svelte-formup": "^0.2.0",
     "svelte-htm": "^1.1.0",
-    "typescript": "^3.9.5",
-    "yup": "^0.29.1"
+    "typescript": "^3.9.5"
   },
-  "peerDependencies": {
-    "svelte": "^3.21.0",
-    "svelte-formup": "^0.0.2",
-    "yup": "^0.29.1"
-  },
+  "bundledDependencies": [
+    "svelte-formup"
+  ],
   "snowpack": {
     "extends": "@carv/snowpack-scripts"
   }

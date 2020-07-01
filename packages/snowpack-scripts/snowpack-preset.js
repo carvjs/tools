@@ -9,7 +9,7 @@ module.exports = {
   installOptions: {
     sourceMap: true,
     rollup: {
-      dedupe: ['svelte', 'svelte/internal'],
+      dedupe: ['svelte'],
     },
   },
   buildOptions: {
