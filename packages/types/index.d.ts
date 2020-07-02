@@ -1,4 +1,5 @@
 import './assets'
+import './modules'
 
 declare global {
   // snowpack import.meta extensions

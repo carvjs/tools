@@ -128,7 +128,7 @@ module.exports = function rollupBundlePlugin(config, options) {
         jest: undefined,
         prettier: undefined,
         snowpack: undefined,
-        np: undefined,
+        graphql: undefined,
       })
 
       await fs.writeFile(path.join(srcDirectory, 'package.json'), JSON.stringify(manifest, null, 2))

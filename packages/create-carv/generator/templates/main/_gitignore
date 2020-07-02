@@ -5,6 +5,7 @@ web_modules
 
 .cache
 dist
+__generated__
 
 # Logs
 logs
@@ -59,3 +60,5 @@ typings/
 .yarn-integrity
 
 .vscode
+!.vscode/extensions.json
+

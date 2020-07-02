@@ -23,6 +23,7 @@
     "@snowpack/app-scripts-svelte": "^1.0.2",
     "@snowpack/plugin-svelte": "^1.2.0",
     "@testing-library/jest-dom": "^5.11.0",
+    "cosmiconfig": "^6.0.0",
     "doctoc": "^1.4.0",
     "envinfo": "^7.5.1",
     "eslint": "^7.3.1",
@@ -44,6 +45,7 @@
     "svelte-check": "^0.1.37",
     "svelte-jester": "^1.0.6",
     "svelte-preprocess": "^3.9.10",
+    "ts-graphql-plugin": "^1.12.0",
     "typescript": "^3.9.5",
     "typescript-eslint-language-service": "^3.0.0",
     "update-notifier": "^4.1.0"

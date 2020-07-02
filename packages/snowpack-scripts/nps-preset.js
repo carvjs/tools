@@ -18,6 +18,11 @@ const pkgDir = require('pkg-dir').sync()
 const useSvelte = fs.existsSync(path.resolve(pkgDir, 'svelte.config.js'))
 const useTypescript = fs.existsSync(path.resolve(pkgDir, 'tsconfig.json'))
 const usePreview = fs.existsSync(path.resolve(pkgDir, 'src/__preview__'))
+const useGraphql = Boolean(require('./graphql/find-config')(pkgDir))
+const useTypescriptGraphql =
+  useTypescript &&
+  useGraphql &&
+  fs.readFileSync(path.resolve(pkgDir, 'tsconfig.json'), { encoding: 'utf-8' }).includes('graphql')
 
 const extensions = ['.js', '.jsx']
 if (useTypescript) extensions.push('.ts', '.tsx')
@@ -28,6 +33,7 @@ const prettier = 'prettier --ignore-path .gitignore .'
 exports.scripts = {
   // main entrypoints
   default: usePreview ? 'nps snowpack.dev' : 'nps test',
+
   test: {
     default: [
       'nps',
@@ -35,6 +41,7 @@ exports.scripts = {
       'eslint',
       useTypescript && 'tsc',
       useSvelte && 'svelte-check',
+      useTypescriptGraphql && 'graphql.validate',
       'jest.coverage',
     ]
       .filter(Boolean)
@@ -42,7 +49,11 @@ exports.scripts = {
     coverage: 'nps jest.coverage',
     watch: 'nps jest.watch',
   },
-  build: 'nps snowpack.build',
+
+  build: ['nps', useTypescriptGraphql && 'graphql.typegen', 'snowpack.build']
+    .filter(Boolean)
+    .join(' '),
+
   release: {
     default: {
       script: 'nps test doctoc.readme build release.publish',
@@ -53,7 +64,17 @@ exports.scripts = {
       hiddenFromHelp: true,
     },
   },
-  format: 'nps doctoc.readme prettier.write eslint.fix',
+
+  format: [
+    'nps',
+    'doctoc.readme',
+    useTypescriptGraphql && 'graphql.typegen',
+    'prettier.write',
+    'eslint.fix',
+  ]
+    .filter(Boolean)
+    .join(' '),
+
   envinfo: 'envinfo --system --browsers --IDEs --binary --npmPackages',
 
   // tools
@@ -88,5 +109,13 @@ if (useTypescript) {
   exports.scripts['tsc'] = {
     default: 'tsc --noEmit',
     watch: 'tsc --noEmit --watch',
+  }
+
+  if (useGraphql) {
+    exports.scripts['graphql'] = {
+      typegen: 'ts-graphql-plugin typegen',
+      validate: 'ts-graphql-plugin validate',
+      report: 'ts-graphql-plugin report',
+    }
   }
 }
