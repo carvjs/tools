@@ -13,9 +13,6 @@
   "license": "MIT",
   "author": "Sascha Tandel <s.tandel@kenoxa.de>",
   "main": "plugin.js",
-  "files": [
-    "rollup"
-  ],
   "dependencies": {
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-yaml": "^2.1.1",
@@ -23,8 +20,19 @@
     "find-up": "^4.1.0",
     "npm-run-path": "^4.0.1",
     "rollup": "^2.18.0",
-    "rollup-plugin-dts": "^1.4.7",
+    "rollup-plugin-dts": "^1.4.7"
+  },
+  "peerDependencies": {
+    "svelte": "^3.21.0",
     "typescript": "^3.9.5"
+  },
+  "peerDependenciesMeta": {
+    "svelte": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
   },
   "publishConfig": {
     "access": "public"

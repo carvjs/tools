@@ -10606,11 +10606,6 @@ svelte@^3.21.0:
   resolved "https://registry.npmjs.org/svelte/-/svelte-3.23.2.tgz#f3e500384261a2e77b29681ee744c3c790fbcdc3"
   integrity sha512-hE8GeTM83YVR4GY6/6PeDEcGct4JS5aCi+IYbCAa76oaPSfuF7L85DQYULQxlTK/KPWzw3L1GRGmC3oPG/PQoA==
 
-svelte@^3.23.2:
-  version "3.23.2"
-  resolved "https://npm.kenoxa.com/svelte/-/svelte-3.23.2.tgz#f3e500384261a2e77b29681ee744c3c790fbcdc3"
-  integrity sha512-hE8GeTM83YVR4GY6/6PeDEcGct4JS5aCi+IYbCAa76oaPSfuF7L85DQYULQxlTK/KPWzw3L1GRGmC3oPG/PQoA==
-
 symbol-tree@^3.2.4:
   version "3.2.4"
   resolved "https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"

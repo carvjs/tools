@@ -48,7 +48,25 @@ export default async function () {
       pkg.types && {
         input: path.relative(process.cwd(), dtsFile),
         output: [{ file: path.join(destDirectory, pkg.types), format: 'es' }],
-        plugins: [dts()],
+        plugins: [
+          {
+            name: 'svelte.d.ts',
+            async resolveId(source, importer) {
+              if (path.extname(source) === '.svelte') return `\0:svelte.d.ts:${source}`
+
+              return this.resolve(source, importer, { skipSelf: true })
+            },
+
+            async load(id) {
+              if (id.startsWith('\0:svelte.d.ts:')) {
+                return `export { SvelteComponent as default } from 'svelte'`
+              }
+
+              return null // use default behavior
+            },
+          },
+          dts(),
+        ],
       },
   ].filter(Boolean)
 }
