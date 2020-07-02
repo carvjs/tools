@@ -35,6 +35,8 @@
     "nps": "^5.9.12",
     "pkg-dir": "^4.2.0",
     "prettier": "^2.0.5",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "rollup-plugin-svelte": "^5.2.3",
     "snowpack": "^2.5.0",
     "svelte": "^3.21.0",
     "svelte-check": "^0.1.37",

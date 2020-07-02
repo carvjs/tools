@@ -1,4 +1,9 @@
 const path = require('path')
+const fs = require('fs')
+
+const pkgDir = require('pkg-dir').sync()
+const svelteConfig = path.resolve(pkgDir, 'svelte.config.js')
+const useSvelte = fs.existsSync(svelteConfig)
 
 module.exports = {
   scripts: {
@@ -10,6 +15,10 @@ module.exports = {
     sourceMap: true,
     rollup: {
       dedupe: ['svelte'],
+      plugins: [
+        require('rollup-plugin-node-polyfills')(),
+        useSvelte && require('rollup-plugin-svelte')(require(svelteConfig)),
+      ].filter(Boolean),
     },
   },
   buildOptions: {
