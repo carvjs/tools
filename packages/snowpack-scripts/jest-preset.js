@@ -32,6 +32,11 @@ module.exports = {
 
   moduleFileExtensions: ['svelte', 'cjs', 'js', 'jsx', 'ts', 'tsx', 'json', 'node'],
 
+  // Ignore all file in node_modules except for:
+  // - *.svelte
+  // - *.mjs
+  transformIgnorePatterns: ['/node_modules/(?!.+.(?:svelte|mjs)$)'],
+
   transform: {
     '^.+\\.[t|j]sx?$': require.resolve('./jest/transform-babel.js'),
     '^.+\\.svelte$': [require.resolve('svelte-jester'), { preprocess: true }],
