@@ -275,13 +275,13 @@ module.exports = {
         stdio: 'inherit',
       })
     } catch (error) {
-      throw new SAOError(error.message)
+      throw this.createError(error.message)
     }
 
     try {
       await require('execa')(this.npmClient, ['test'], { cwd: this.outDir, stdio: 'inherit' })
     } catch (error) {
-      throw new SAOError(error.message)
+      throw this.createError(error.message)
     }
 
     console.log()

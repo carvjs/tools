@@ -38,9 +38,12 @@ test.each([
 
   const pkg = JSON.parse(await stream.readFile('package.json'))
 
-  const deps = [...Object.keys(pkg.devDependencies)]
+  const dependencies = [...Object.keys(pkg.dependencies)]
+  const devDependencies = [...Object.keys(pkg.devDependencies)]
 
-  expect(deps).toIncludeAllMembers([
+  expect(dependencies).toIncludeAllMembers(['svelte', 'svelte-formup', 'yup'])
+
+  expect(devDependencies).toIncludeAllMembers([
     '@carv/eslint-config',
     '@carv/prettier-config',
     '@carv/snowpack-scripts',
@@ -53,12 +56,9 @@ test.each([
     'snowpack',
     '@testing-library/svelte',
     '@testing-library/user-event',
-    'svelte',
     'svelte-check',
     'svelte-htm',
-    '@types/yup',
     'svelte-formup',
-    'yup',
   ])
 
   if (answers.typescript) {
@@ -68,7 +68,8 @@ test.each([
       'src/types/index.ts',
       'tsconfig.json',
     ])
-    expect(deps).toIncludeAllMembers(['@carv/types', 'typescript'])
+
+    expect(devDependencies).toIncludeAllMembers(['@carv/types', '@types/yup', 'typescript'])
   } else {
     expect(stream.fileList).toIncludeAllMembers([
       'src/__preview__/start.js',

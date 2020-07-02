@@ -4,7 +4,6 @@
     "yup": "^0.29.1"
   },
   "devDependencies": {
-    "@types/yup": "^0.29.1",
     "svelte-formup": "^0.2.0",
     "yup": "^0.29.1"
   }
