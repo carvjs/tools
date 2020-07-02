@@ -1,5 +1,7 @@
 const fs = require('fs')
 
+const isCI = require('is-ci')
+
 const ignorePatterns = [
   '/node_modules/',
   '<rootDir>/dist/',
@@ -8,6 +10,10 @@ const ignorePatterns = [
 ]
 
 module.exports = {
+  maxWorkers: isCI ? 3 : '100%',
+
+  resolver: 'jest-svelte-resolver', // https://github.com/testing-library/svelte-testing-library/issues/82
+
   testMatch: [
     '<rootDir>/src/**/__tests__/*.{js,jsx,ts,tsx}',
     '<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}',

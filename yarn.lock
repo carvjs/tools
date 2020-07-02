@@ -7082,6 +7082,11 @@ jest-snapshot@^26.1.0:
     pretty-format "^26.1.0"
     semver "^7.3.2"
 
+jest-svelte-resolver@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/jest-svelte-resolver/-/jest-svelte-resolver-1.0.0.tgz#d9e8a4a43f9c00ece91de0ef5e27e7417cd6b119"
+  integrity sha512-f3UEluHzztKyt2FIsa8gBFpKtCgVqnIOd/CmD7b59FRKXU9OzSmzNTiKB72fS7S/fV3lxYFHmza8JZbZ/5mxDg==
+
 jest-transform-svelte@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/jest-transform-svelte/-/jest-transform-svelte-2.1.1.tgz#d25cb142195fa8906b38d9bd4bc4a7947324e952"
