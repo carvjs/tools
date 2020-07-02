@@ -41,7 +41,8 @@ module.exports = {
   // Ignore all file in node_modules except for:
   // - *.svelte
   // - *.mjs
-  transformIgnorePatterns: ['/node_modules/(?!.+.(?:svelte|mjs)$)'],
+  // - files within **/src/
+  transformIgnorePatterns: ['/node_modules/(?!.+.(?:svelte|mjs)$|.+/src/)'],
 
   transform: {
     '^.+\\.[t|j]sx?$': require.resolve('./jest/transform-babel.js'),
