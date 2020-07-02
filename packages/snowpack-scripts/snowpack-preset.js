@@ -31,7 +31,18 @@ module.exports = {
       dedupe: ['svelte'],
       plugins: [
         require('rollup-plugin-node-polyfills')(),
-        useSvelte && require('rollup-plugin-svelte')(require(svelteConfig)),
+        useSvelte &&
+          require('rollup-plugin-svelte')({
+            ...require(svelteConfig),
+            onwarn(warning) {
+              // Ignore warning for missing export declartion it maybe a module context export
+              if (warning.code === 'missing-declaration') {
+                return
+              }
+
+              console.warn(`[${warning.code}] ${warning.message}\n${warning.frame}`)
+            },
+          }),
       ].filter(Boolean),
     },
   },
