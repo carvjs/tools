@@ -21,6 +21,7 @@
     "@carv/eslint-config": "^1.2.2",
     "@carv/prettier-config": "^1.0.2",
     "@carv/snowpack-scripts": "^1.0.8",
+    "@carv/types": "^1.0.3",
     "doctoc": "^1.4.0",
     "envinfo": "^7.5.1",
     "eslint": "^7.3.1",

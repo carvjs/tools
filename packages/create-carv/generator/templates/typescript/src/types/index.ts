@@ -1,2 +1,4 @@
-// Declare common modules like importing assets
-import '@carv/types'
+/**
+ * This export is required for snowpack to include this file in the output.
+ */
+export default undefined

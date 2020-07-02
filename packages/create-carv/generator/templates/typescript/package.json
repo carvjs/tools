@@ -1,6 +1,5 @@
 {
   "devDependencies": {
-    "@carv/types": "^1.0.3",
     "typescript": "^3.9.5"
   }
 }

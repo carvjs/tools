@@ -37,10 +37,10 @@ test.each([
 
   const pkg = JSON.parse(await stream.readFile('package.json'))
 
-  const dependencies = [...Object.keys(pkg.dependencies)]
+  const peerDependencies = [...Object.keys(pkg.peerDependencies || [])]
   const devDependencies = [...Object.keys(pkg.devDependencies)]
 
-  expect(dependencies).toIncludeAllMembers(['svelte'])
+  expect(peerDependencies).toIncludeAllMembers(['svelte'])
 
   expect(devDependencies).toIncludeAllMembers([
     '@carv/eslint-config',

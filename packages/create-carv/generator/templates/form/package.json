@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "svelte-formup": "^0.0.2",
+    "svelte": "^3.21.0",
+    "svelte-formup": "^0.3.0",
     "yup": "^0.29.1"
   },
   "devDependencies": {
-    "svelte-formup": "^0.2.0",
-    "yup": "^0.29.1"
+    "@types/yup": "^0.29.1"
   }
 }

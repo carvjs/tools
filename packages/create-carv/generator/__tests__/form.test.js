@@ -38,7 +38,7 @@ test.each([
 
   const pkg = JSON.parse(await stream.readFile('package.json'))
 
-  const dependencies = [...Object.keys(pkg.dependencies)]
+  const dependencies = [...Object.keys(pkg.dependencies || [])]
   const devDependencies = [...Object.keys(pkg.devDependencies)]
 
   expect(dependencies).toIncludeAllMembers(['svelte', 'svelte-formup', 'yup'])
@@ -58,7 +58,6 @@ test.each([
     '@testing-library/user-event',
     'svelte-check',
     'svelte-htm',
-    'svelte-formup',
   ])
 
   if (answers.typescript) {
