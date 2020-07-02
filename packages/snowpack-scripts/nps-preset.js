@@ -19,7 +19,10 @@ const useSvelte = fs.existsSync(path.resolve(pkgDir, 'svelte.config.js'))
 const useTypescript = fs.existsSync(path.resolve(pkgDir, 'tsconfig.json'))
 const usePreview = fs.existsSync(path.resolve(pkgDir, 'src/__preview__'))
 
-const eslint = `eslint --ignore-path .gitignore${useTypescript ? ' --ext .js,.jsx,.ts,.tsx' : ''} .`
+const extensions = ['.js', '.jsx']
+if (useTypescript) extensions.push('.ts', '.tsx')
+
+const eslint = `eslint --ignore-path .gitignore --ext ${extensions.join(',')} .`
 const prettier = 'prettier --ignore-path .gitignore .'
 
 exports.scripts = {
