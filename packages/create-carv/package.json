@@ -37,7 +37,7 @@
     "test": "jest"
   },
   "jest": {
-    "preset": "@carv/snowpack-scripts",
+    "preset": "../snowpack-scripts/jest-preset",
     "testMatch": [
       "<rootDir>/generator/**/__tests__/*.{js,jsx,ts,tsx}"
     ],
@@ -56,7 +56,6 @@
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
-    "@carv/snowpack-scripts": "^1.3.4",
     "jest": "^26.1.0"
   },
   "engines": {
