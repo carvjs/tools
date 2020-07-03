@@ -16,6 +16,6 @@ module.exports = babelJest.createTransformer({
   ],
   plugins: [
     require('@snowpack/app-scripts-svelte/jest/importMetaBabelPlugin'),
-    require.resolve('dynamic-import-node'),
+    require.resolve('babel-plugin-dynamic-import-node'),
   ],
 })
