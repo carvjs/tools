@@ -1,2 +1,2 @@
 // Allow importing as module
-module.exports = undefined
+module.exports = void 0 // eslint-disable-line no-void

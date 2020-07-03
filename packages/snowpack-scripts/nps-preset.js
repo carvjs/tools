@@ -37,6 +37,7 @@ exports.scripts = {
   test: {
     default: [
       'nps',
+      'cleanup',
       'prettier.check',
       useTypescriptGraphql && 'graphql.validate',
       useTypescriptGraphql && 'graphql.typegen',
@@ -51,9 +52,12 @@ exports.scripts = {
     watch: 'nps jest.watch',
   },
 
-  build: ['nps', useTypescriptGraphql && 'graphql.typegen', 'snowpack.build']
-    .filter(Boolean)
-    .join(' '),
+  build: {
+    default: ['nps', 'cleanup', useTypescriptGraphql && 'graphql.typegen', 'build.package']
+      .filter(Boolean)
+      .join(' '),
+    package: 'carv-package',
+  },
 
   release: {
     default: {
@@ -77,6 +81,8 @@ exports.scripts = {
     .join(' '),
 
   envinfo: 'envinfo --system --browsers --IDEs --binary --npmPackages',
+
+  cleanup: 'rimraf .build build dist src/**/__generated__',
 
   // tools
   snowpack: {

@@ -9,7 +9,6 @@
     "noEmit": true,
     "declaration": true,
     "declarationMap": true,
-    // "types": ["node", "@carv/types", "jest", "@testing-library/jest-dom", "@testing-library/svelte"],
     "noEmitOnError": true,
     "noErrorTruncation": true,
     "allowJs": true,

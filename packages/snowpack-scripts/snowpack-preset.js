@@ -24,7 +24,10 @@ module.exports = {
     'mount:public': `mount ${path.relative(process.cwd(), path.join(__dirname, 'public'))} --to /`,
     'mount:src': 'mount src --to /_dist_',
   },
-  plugins: ['@snowpack/plugin-svelte', '@carv/snowpack-plugin-rollup'],
+  plugins: [
+    require.resolve('@snowpack/plugin-svelte'),
+    require.resolve('@carv/snowpack-plugin-rollup'),
+  ],
   installOptions: {
     sourceMap: true,
     rollup: {
