@@ -92,6 +92,8 @@ module.exports = function rollupBundlePlugin(config, options) {
         )
       }
 
+      const baseName = path.basename(inputFile, path.extname(inputFile))
+
       Object.assign(manifest, {
         // Allow publish
         private: undefined,
@@ -111,6 +113,15 @@ module.exports = function rollupBundlePlugin(config, options) {
           './package.json': './package.json',
         },
         types: useTypescript ? `./types/${unscopedPackageName}.d.ts` : undefined,
+
+        svelte:
+          manifest.svelte ||
+          (existsSync('svelte.config.js')
+            ? `${path.join(
+                path.dirname(inputFile),
+                path.basename(inputFile, path.extname(inputFile)),
+              )}.js`
+            : undefined),
 
         // Some defaults
         sideEffects: manifest.sideEffects === true,

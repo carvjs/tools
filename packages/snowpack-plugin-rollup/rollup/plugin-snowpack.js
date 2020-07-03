@@ -5,7 +5,7 @@ export default function snowpack({
   srcDirectory,
   inputFile,
   loadStylesheetModuleID = '@carv/load-stylesheet@1',
-} = {}) {
+}) {
   const bundled = new Map()
   const externals = new Map()
 

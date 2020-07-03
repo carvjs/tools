@@ -6,7 +6,6 @@ module.exports = {
   dev: isDev,
 
   preprocess: sveltePreprocess({
-    babel: false,
     typescript: {
       /**
        * Type checking can be skipped by setting 'transpileOnly: true'.
@@ -16,6 +15,9 @@ module.exports = {
        */
       transpileOnly: true,
     },
+    // postcss: true,
+    // scss: { includePaths: ['src', 'node_modules'] },
+    babel: false,
     pug: false,
     coffeescript: false,
   }),
