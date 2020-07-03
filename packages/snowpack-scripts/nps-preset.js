@@ -38,10 +38,11 @@ exports.scripts = {
     default: [
       'nps',
       'prettier.check',
+      useTypescriptGraphql && 'graphql.validate',
+      useTypescriptGraphql && 'graphql.typegen',
       'eslint',
       useTypescript && 'tsc',
       useSvelte && 'svelte-check',
-      useTypescriptGraphql && 'graphql.validate',
       'jest.coverage',
     ]
       .filter(Boolean)
@@ -90,7 +91,6 @@ exports.scripts = {
     check: `${prettier} --check`,
     write: `${prettier} --write`,
   },
-
   jest: {
     default: 'jest',
     coverage: 'jest --coverage --no-cache',
@@ -110,12 +110,12 @@ if (useTypescript) {
     default: 'tsc --noEmit',
     watch: 'tsc --noEmit --watch',
   }
+}
 
-  if (useGraphql) {
-    exports.scripts['graphql'] = {
-      typegen: 'ts-graphql-plugin typegen',
-      validate: 'ts-graphql-plugin validate',
-      report: 'ts-graphql-plugin report',
-    }
+if (useTypescriptGraphql) {
+  exports.scripts['graphql'] = {
+    typegen: 'ts-graphql-plugin typegen',
+    validate: 'ts-graphql-plugin validate',
+    report: 'ts-graphql-plugin report',
   }
 }

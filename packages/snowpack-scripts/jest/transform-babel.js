@@ -1,5 +1,4 @@
 const babelJest = require('babel-jest')
-const importMetaBabelPlugin = require('@snowpack/app-scripts-svelte/jest/importMetaBabelPlugin')
 
 module.exports = babelJest.createTransformer({
   presets: [
@@ -15,5 +14,8 @@ module.exports = babelJest.createTransformer({
     ],
     '@babel/preset-typescript',
   ],
-  plugins: [importMetaBabelPlugin],
+  plugins: [
+    require('@snowpack/app-scripts-svelte/jest/importMetaBabelPlugin'),
+    require.resolve('dynamic-import-node'),
+  ],
 })
