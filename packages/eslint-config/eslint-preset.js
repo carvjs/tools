@@ -41,6 +41,7 @@ module.exports = {
     ],
 
     'class-methods-use-this': 'off', // three words: "componentDidMount" :)
+    'default-param-last': 'off', // infers with destructering defaults
 
     'unicorn/no-null': 'off',
     'unicorn/filename-case': [
