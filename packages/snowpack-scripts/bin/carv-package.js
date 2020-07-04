@@ -7,6 +7,8 @@ const destDirectory = path.resolve('build')
 
 console.log(`Creating package in ./build`)
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'production'
+
 const { bundle } = require('@carv/snowpack-plugin-rollup')()
 
 rimraf.sync(srcDirectory, { glob: false })

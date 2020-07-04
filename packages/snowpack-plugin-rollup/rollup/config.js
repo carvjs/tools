@@ -58,9 +58,10 @@ export default async function () {
     //   'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
     //   'process.versions.node': 'undefined',
     //   'process.platform': JSON.stringify('browser'),
+    //    only SNOWPACK_PUBLIC_*, MODE, NODE_ENV
     //   'process.env.': '({}).',
     //    import.meta.env
-    //    'import.meta.hot': 'false',
+    //    'import.meta.hot': 'undefined',
     //   'typeof process': 'undefined',
     // },
 
@@ -69,39 +70,34 @@ export default async function () {
     }),
 
     commonjs(),
-
-    esbuild({
-      // minify: process.env.NODE_ENV === 'production',
-      target: 'esnext',
-    }),
   ]
 
   return [
-    // Used by nodejs and rollup: *.svelte production transpiled
+    // Used by nodejs: *.svelte production transpiled
+    // No sourcemap to debug within node_modules
     {
       input: {
-        [path.basename(inputFile, path.extname(inputFile))]: inputFile,
+        [path.basename(pkg.main, path.extname(pkg.main))]: inputFile,
       },
 
       output: [
         {
           format: 'esm',
-          dir: path.join(destDirectory, path.dirname(pkg.module)),
-          entryFileNames: path.basename(pkg.module),
+          dir: path.join(destDirectory, path.dirname(pkg.exports['.'].default)),
           assetFileNames: '_/[name]-[hash][extname]',
-          sourcemap: true,
+          preferConst: true,
         },
 
         {
           format: 'cjs',
           dir: path.join(destDirectory, path.dirname(pkg.main)),
-          entryFileNames: path.basename(pkg.main),
           assetFileNames: '_/[name]-[hash][extname]',
-          sourcemap: true,
+          preferConst: true,
         },
       ].filter(Boolean),
 
       external,
+      context: 'global', // value of this at the top level
       plugins: [
         ...plugins,
 
@@ -118,52 +114,115 @@ export default async function () {
               console.warn(`[${warning.code}] ${warning.message}\n${warning.frame}`)
             },
           }),
+
+        esbuild({ target: 'es2019' }),
+      ].filter(Boolean),
+    },
+
+    pkg['esnext'] && {
+      input: {
+        [path.basename(pkg['esnext'], path.extname(pkg['esnext']))]: inputFile,
+      },
+
+      output: {
+        format: 'esm',
+        dir: path.join(destDirectory, path.dirname(pkg['esnext'])),
+        assetFileNames: '_/[name]-[hash][extname]',
+        sourcemap: true,
+        sourcemapExcludeSources: true,
+        preferConst: true,
+        compact: true,
+      },
+
+      external,
+      context: 'globalThis', // value of this at the top level
+      plugins: [
+        ...plugins,
+
+        pkg.svelte && svelte({ ...svelteConfig, dev: false, onwarn: ignore }),
+
+        esbuild({ target: 'esnext', minify: true }),
+      ].filter(Boolean),
+    },
+
+    // Used by bundlers like rollup and cdn networks: *.svelte production transpiled
+    pkg.module && {
+      input: {
+        [path.basename(pkg.module, path.extname(pkg.module))]: inputFile,
+      },
+
+      output: {
+        format: 'esm',
+        dir: path.join(destDirectory, path.dirname(pkg.module)),
+        assetFileNames: '_/[name]-[hash][extname]',
+        sourcemap: true,
+        sourcemapExcludeSources: true,
+        preferConst: true,
+        compact: true,
+      },
+
+      external,
+      context: 'window', // value of this at the top level
+      plugins: [
+        ...plugins,
+
+        pkg.svelte && svelte({ ...svelteConfig, dev: false, onwarn: ignore }),
+
+        esbuild({ target: 'es2015', minify: true }),
       ].filter(Boolean),
     },
 
     // Used by snowpack dev: *.svelte development transpiled
     pkg['browser:module'] && {
       input: {
-        [path.basename(inputFile, path.extname(inputFile))]: inputFile,
+        [path.basename(pkg['browser:module'], path.extname(pkg['browser:module']))]: inputFile,
       },
 
       output: {
         format: 'esm',
         dir: path.join(destDirectory, path.dirname(pkg['browser:module'])),
-        entryFileNames: path.basename(pkg['browser:module']),
         assetFileNames: '_/[name]-[hash][extname]',
         sourcemap: true,
+        // include sources in sourcemap for better debugin experience
+        preferConst: true,
       },
 
       external,
+      context: 'globalThis', // value of this at the top level
       plugins: [
         ...plugins,
 
-        pkg.svelte &&
-          svelte({
-            ...svelteConfig,
-            dev: true,
-            onwarn: ignore,
-          }),
+        pkg.svelte && svelte({ ...svelteConfig, dev: false, onwarn: ignore }),
+
+        esbuild({ target: 'es2015' }),
       ].filter(Boolean),
     },
 
     // Used by svelte and jest: point to untranspiled *.svelte
     pkg.svelte && {
-      input: inputFile,
+      input: {
+        [path.basename(pkg['svelte'], path.extname(pkg['svelte']))]: inputFile,
+      },
 
       // For svelte we need to copy *.svelte files
-      // As they may import from other files we transpile the while source directory
+      // As they may import from other files we need to transpile the whole source directory
       output: {
         format: 'esm',
-        dir: path.join(destDirectory, path.dirname(inputFile)),
+        dir: path.join(destDirectory, path.dirname(pkg.svelte)),
         preserveModules: true,
         assetFileNames: '_/[name]-[hash][extname]',
         sourcemap: true,
+        sourcemapExcludeSources: true,
+        preferConst: true,
+        compact: true,
       },
 
       external,
-      plugins: [keepSvelte({ destDirectory }), ...plugins],
+      plugins: [
+        keepSvelte({ destDirectory }),
+        ...plugins,
+        esbuild({ target: 'esnext', minify: true }),
+      ],
     },
 
     // Generate typescript declarations
@@ -174,6 +233,7 @@ export default async function () {
           format: 'esm',
           file: path.join(destDirectory, pkg.types),
           sourcemap: true,
+          preferConst: true,
         },
         plugins: [
           {

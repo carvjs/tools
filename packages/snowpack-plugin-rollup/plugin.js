@@ -108,28 +108,25 @@ module.exports = function rollupBundlePlugin() {
       }
 
       Object.assign(manifest, {
-        // Allow publish
-        private: undefined,
-
-        // Include all files in the build folder
-        files: undefined,
-
         // Define package loading
 
-        // Used by nodejs: *.svelte production transpiled
-        main: `cjs/${unscopedPackageName}.js`,
+        // Used by nodejs
+        main: `node/cjs/${unscopedPackageName}.js`,
 
         // Modern declartions: *.svelte production transpiled
         exports: {
           '.': {
-            require: `./cjs/${unscopedPackageName}.js`,
-            default: `./esm/${unscopedPackageName}.js`,
+            require: `./node/cjs/${unscopedPackageName}.js`,
+            default: `./node/esm/${unscopedPackageName}.js`,
           },
           './package.json': './package.json',
         },
 
-        // Used by rollup: *.svelte production transpiled
-        module: `esm/${unscopedPackageName}.js`,
+        // Used by carv cdn: *.svelte production transpiled
+        esnext: `browser/esnext/${unscopedPackageName}.js`,
+
+        // Used by bundlers like rollup and cdn networks: *.svelte production transpiled
+        module: `browser/es2015/${unscopedPackageName}.js`,
 
         // Used by snowpack dev: *.svelte development transpiled
         'browser:module': useSvelte ? `dev/${unscopedPackageName}.js` : undefined,
@@ -149,6 +146,15 @@ module.exports = function rollupBundlePlugin() {
 
         // Some defaults
         sideEffects: manifest.sideEffects === true,
+
+        // Allow publish
+        private: undefined,
+
+        // Include all files in the build folder
+        files: undefined,
+
+        // Default to cjs
+        type: undefined,
 
         // These are not needed any more
         source: undefined,
@@ -173,12 +179,6 @@ module.exports = function rollupBundlePlugin() {
         JSON.stringify(manifest, null, 2),
       )
 
-      await fs.mkdir(path.join(destDirectory, 'esm'))
-      await fs.writeFile(
-        path.join(destDirectory, 'esm', 'package.json'),
-        JSON.stringify({ type: 'module' }, null, 2),
-      )
-
       await execa('rollup', ['-c', require.resolve(`./rollup/config.js`)], {
         cwd,
         env: {
@@ -192,6 +192,11 @@ module.exports = function rollupBundlePlugin() {
         stdout: 'inherit',
         stderr: 'inherit',
       })
+
+      await fs.writeFile(
+        path.join(destDirectory, path.dirname(manifest.exports['.'].default), 'package.json'),
+        JSON.stringify({ type: 'module' }, null, 2),
+      )
     },
   }
 }

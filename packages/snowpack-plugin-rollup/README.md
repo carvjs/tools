@@ -35,3 +35,17 @@ npm install --save-dev @carv/snowpack-plugin-rollup
 ## Plugin Options
 
 None
+
+## Generated Package Contents
+
+| directory        | format | target | svelte      | package.json           | comment                                            |
+| ---------------- | :----: | :----: | ----------- | ---------------------- | -------------------------------------------------- |
+| `node/cjs`       |  cjs   | es2019 | production  | `main` & `exports.cjs` | standard Node.JS                                   |
+| `node/esm`       |  esm   | es2019 | production  | `exports.default`      | modern Node.JS                                     |
+| `browser/esnext` |  esm   | esnext | production  | `esnext`               | used by carv cdn and specially configured bundlers |
+| `browser/es2015` |  esm   | es2015 | production  | `module`               | used by bundlers like rollup and cdn networks      |
+| `dev`            |  esm   | es2020 | development | `browser:module`       | used by snowpack                                   |
+| `src`            |  esm   | esnext | raw         | `svelte`               | used by svelte rollup plugin                       |
+| `types`          |  esm   | esnext | typed       | `types`                | typescript definitions                             |
+
+Additionally all assets are put into `assets` directory.
