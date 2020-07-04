@@ -35,7 +35,7 @@ Formats all sources using prettier.
 2. `<%= npmClient %> run format`
 3. `<%= npmClient %> test`
 4. git commit -a -m "chore: prepare release`
-5. [<%= npmClient %> version [<newversion> | major | minor | patch] -m "chore: release"](https://docs.npmjs.com/cli/version)
+5. [<%= npmClient %> version [\<newversion> | major | minor | patch] -m "chore: release"](https://docs.npmjs.com/cli/version)
 6. `<%= npmClient %> run release`
 
 ## Folder Structure
