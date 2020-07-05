@@ -182,6 +182,9 @@ export default async function () {
             env: 'process.env',
             hot: 'undefined',
           }),
+
+          // de-alias MODE to NODE_ENV
+          'process.env.MODE': 'process.env.NODE_ENV',
         }),
 
         // 3. Transpile to target
