@@ -168,11 +168,6 @@ module.exports = function rollupBundlePlugin() {
         stdout: 'inherit',
         stderr: 'inherit',
       })
-
-      await fs.writeFile(
-        path.join(destDirectory, path.dirname(manifest.exports['.'].default), 'package.json'),
-        JSON.stringify({ type: 'module' }, null, 2),
-      )
     },
   }
 }

@@ -9,11 +9,13 @@ import esbuild from 'rollup-plugin-esbuild'
 import svelte from 'rollup-plugin-svelte'
 import dts from 'rollup-plugin-dts'
 
-import relocateAssets from './plugin-relocate-assets'
+import carvAssets from './plugin-assets'
+import define from './plugin-define'
+import esmWrapper from './plugin-esm-wrapper'
 
 const ignore = () => {}
 
-const PUBLIC_ENV_REGEX = /^(?:CARV|SNOWPACK)_PUBLIC_/
+const PUBLIC_ENV_REGEX = /^SNOWPACK_PUBLIC_/
 function generateEnvObject({ source = process.env, mode = source.NODE_ENV || 'production' } = {}) {
   const envObject = {
     MODE: mode,
@@ -22,11 +24,25 @@ function generateEnvObject({ source = process.env, mode = source.NODE_ENV || 'pr
 
   for (const key of Object.keys(source)) {
     if (PUBLIC_ENV_REGEX.test(key)) {
-      envObject[key] = source[key]
+      envObject[key] = JSON.stringify(source[key])
     }
   }
 
   return envObject
+}
+
+function expand(prefixes, object) {
+  if (!Array.isArray(prefixes)) prefixes = [prefixes]
+
+  const result = {}
+
+  for (const key of Object.keys(object)) {
+    for (const prefix of prefixes) {
+      result[`${prefix}.${key}`] = object[key]
+    }
+  }
+
+  return result
 }
 
 export default async function () {
@@ -70,7 +86,7 @@ export default async function () {
     yaml({ preferConst: true }),
 
     // snowpack({ srcDirectory, destDirectory, inputFile }),
-    relocateAssets(),
+    carvAssets(),
 
     commonjs({ extensions }),
   ]
@@ -104,7 +120,7 @@ export default async function () {
     }
   }
 
-  const env = generateEnvObject({mode: 'production'})
+  const env = generateEnvObject({ mode: 'production' })
 
   return [
     // Used by nodejs: *.svelte production transpiled
@@ -114,24 +130,18 @@ export default async function () {
         [path.basename(pkg.main, path.extname(pkg.main))]: inputFile,
       },
 
-      output: [
-        {
-          format: 'esm',
-          ...fileNameConfig(pkg.exports['.'].default),
-          preferConst: true,
-        },
-
-        {
-          format: 'cjs',
-          ...fileNameConfig(pkg.main),
-          preferConst: true,
-        },
-      ].filter(Boolean),
+      output: {
+        format: 'cjs',
+        ...fileNameConfig(pkg.main),
+        preferConst: true,
+      },
 
       external,
       context: 'global', // value of this at the top level
       plugins: [
         logStart('Node.JS', pkg.main, pkg.exports['.'].default),
+
+        resolve({ dedupe, extensions, mainFields }),
 
         ...plugins,
 
@@ -158,27 +168,27 @@ export default async function () {
           },
         }),
 
-        resolve({ dedupe, extensions, mainFields }),
+        // 1. Transpile to js
+        esbuild({ target: 'esnext' }),
 
-        esbuild({
-          target: 'es2019',
-          define: {
-            'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV),
-            // 'process.env': JSON.stringify(env),
-            // 'process.platform': '"browser"',
-            'process.browser': 'false',
-            // 'process.versions.node': 'undefined',
-            // 'typeof process': 'object',
-
-            //  only SNOWPACK_PUBLIC_*, MODE, NODE_ENV
-            'import.meta.env.NODE_ENV': env.NODE_ENV,
-            'import.meta.env.MODE': env.MODE,
-            // 'import.meta.env': JSON.stringify(env),
-            // 'import.meta.platform': 'process.platform', // not for nodejs
-            'import.meta.browser': 'false', // not for nodejs
-            'import.meta.hot': 'undefined',
-          }
+        // 2. Apply replacements
+        define({
+          // Delegate to process.*
+          ...expand('import.meta', {
+            url: `require('url').pathToFileURL(__filename)`,
+            resolve: `(id, parent) => new Promise(resolve => resolve(parent ? require('module').createRequire(parent).resolve(id) : require.resolve(id)))`,
+            platform: 'process.platform',
+            browser: 'process.browser',
+            env: 'process.env',
+            hot: 'undefined',
+          }),
         }),
+
+        // 3. Transpile to target
+        esbuild({ target: 'es2019' }),
+
+        // Create esm wrapper: https://nodejs.org/api/esm.html#esm_approach_1_use_an_es_module_wrapper
+        esmWrapper({ file: pkg.exports['.'].default }),
       ].filter(Boolean),
     },
 
@@ -208,6 +218,19 @@ export default async function () {
         resolve({ dedupe, extensions, mainFields: ['esnext', ...mainFields] }),
 
         esbuild({ target: 'esnext', minify: true }),
+
+        define({
+          ...expand(['import.meta.env', 'process.env'], env),
+          ...expand(['import.meta', 'process'], {
+            platform: '"browser"',
+            browser: 'true',
+            env: JSON.stringify(env),
+          }),
+
+          'import.meta.hot': 'undefined',
+          'process.versions.node': 'undefined',
+          'typeof process': '"undefined"',
+        }),
       ].filter(Boolean),
     },
 
@@ -237,7 +260,34 @@ export default async function () {
 
         resolve({ dedupe, extensions, mainFields }),
 
+        // 1. Transpile to js
+        esbuild({ target: 'esnext' }),
+
+        // 2. Apply replacements
+        define({
+          ...expand(['import.meta.env', 'process.env'], env),
+          ...expand(['import.meta', 'process'], {
+            platform: '"browser"',
+            browser: 'true',
+            env: JSON.stringify(env),
+          }),
+
+          'import.meta.hot': 'undefined',
+          'process.versions.node': 'undefined',
+          'typeof process': '"undefined"',
+
+          'import.meta.url': '$$__HIDE_IMPORT_META_URL_FROM_ESBUILD_$$',
+          'import.meta.resolve': '$$__HIDE_IMPORT_META_RESOLVE_FROM_ESBUILD_$$',
+        }),
+
+        // 3. Transpile to target
         esbuild({ target: 'es2015', minify: true }),
+
+        // 4. Restore import.meta.url and import.meta.resolve
+        define({
+          $$__HIDE_IMPORT_META_URL_FROM_ESBUILD_$$: 'import.meta.url',
+          $$__HIDE_IMPORT_META_RESOLVE_FROM_ESBUILD_$$: 'import.meta.resolve',
+        }),
       ].filter(Boolean),
     },
 
@@ -267,6 +317,22 @@ export default async function () {
         resolve({ dedupe, extensions, mainFields: ['browser:module', ...mainFields] }),
 
         esbuild({ target: 'es2020' }),
+
+        define({
+          // No import.meta.env replacement as that is provided at runtime by snowpack
+          ...expand(['import.meta', 'process'], {
+            platform: '"browser"',
+            browser: 'true',
+          }),
+
+          // Delegate process.* to import.meta.*
+          ...expand('process', {
+            env: `import.meta.env`,
+            'versions.node': 'undefined',
+          }),
+
+          'typeof process': '"undefined"',
+        }),
       ].filter(Boolean),
     },
 

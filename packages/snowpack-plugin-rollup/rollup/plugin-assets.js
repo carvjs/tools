@@ -1,9 +1,9 @@
 import fs from 'fs-extra'
 import path from 'path'
 
-export default function snowpack({ loadStylesheetModuleID = '@carv/load-stylesheet@1' } = {}) {
+export default function carvAssets({ loadStylesheetModuleID = '@carv/load-stylesheet@1' } = {}) {
   return {
-    name: 'relocate-assets',
+    name: 'carv:assets',
 
     async load(id) {
       const extname = path.extname(id)

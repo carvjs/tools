@@ -37,6 +37,8 @@ module.exports = {
         useSvelte &&
           require('rollup-plugin-svelte')({
             ...require(svelteConfig),
+            dev: true,
+            css: true, // includ css in the JavaScript class and inject at runtime
             onwarn(warning) {
               // Ignore warning for missing export declartion it maybe a module context export
               if (warning.code === 'missing-declaration') {

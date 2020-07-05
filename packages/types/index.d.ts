@@ -10,6 +10,8 @@ declare global {
 
   // snowpack import.meta extensions
   interface ImportMeta {
+    readonly resolve: (id: string, from?: string) => Promise<string>
+
     readonly hot?: {
       readonly accept: (callback?: (args: { module: unknown; deps: string[] }) => void) => void
       readonly dispose: (callback: () => void) => void
