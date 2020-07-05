@@ -2,8 +2,6 @@
 const path = require('path')
 
 module.exports = function (request, options) {
-  console.log(request)
-
   const { defaultResolver } = options
 
   if (
