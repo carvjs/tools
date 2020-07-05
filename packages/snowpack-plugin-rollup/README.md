@@ -38,14 +38,15 @@ None
 
 ## Generated Package Contents
 
-| directory        | format | target | svelte      | package.json           | comment                                            |
-| ---------------- | :----: | :----: | ----------- | ---------------------- | -------------------------------------------------- |
-| `node/cjs`       |  cjs   | es2019 | production  | `main` & `exports.cjs` | standard Node.JS                                   |
-| `node/esm`       |  esm   | es2019 | production  | `exports.default`      | modern Node.JS                                     |
-| `browser/esnext` |  esm   | esnext | production  | `esnext`               | used by carv cdn and specially configured bundlers |
-| `browser/es2015` |  esm   | es2015 | production  | `module`               | used by bundlers like rollup and cdn networks      |
-| `dev`            |  esm   | es2020 | development | `browser:module`       | used by snowpack                                   |
-| `src`            |  esm   | esnext | raw         | `svelte`               | used by svelte rollup plugin                       |
-| `types`          |  esm   | esnext | typed       | `types`                | typescript definitions                             |
+| Directory        | Format | Target | Svelte                  | package.json field         | Used by                                    |
+| ---------------- | :----: | :----: | ----------------------- | -------------------------- | ------------------------------------------ |
+| `node/cjs`       |  cjs   | es2019 | `dev: false, ssr: true` | `main` & `exports.require` | Node.JS                                    |
+| `node/esm`       |  esm   | es2019 | `dev: false, ssr: true` | `exports.default`          | Node.JS                                    |
+| `browser/esnext` |  esm   | esnext | `dev: false`            | `esnext`                   | carv cdn and specially configured bundlers |
+| `browser/es2015` |  esm   | es2015 | `dev: false`            | `module`                   | bundlers like rollup and cdn networks      |
+| `dev`            |  esm   | es2020 | `dev: true`             | `browser:module`           | snowpack                                   |
+| `types`          |  esm   | esnext | typed                   | `types`                    | typescript definitions                     |
 
-Additionally all assets are put into `assets` directory.
+All assets are put into `assets` directory.
+
+> We are not using the `svelte` package.json field. This field is used by the `rollup-plugin-svelte` to transpile `*.svelte` files in `node_modules`. It would require to copy the **whole** `src` directory. If any dependency uses a svelte preprocessor each project would need to setup svelte preprocess in the same way.

@@ -10,15 +10,11 @@ export default function snowpack({ loadStylesheetModuleID = '@carv/load-styleshe
 
       if (id.includes('/node_modules/')) return
 
-      if (['.js', '.jsx', '.ts', '.tsx'].includes(extname)) {
+      if (/\.([tj]sx?|svelte)$/.test(extname)) {
         return null // use default behavior
       }
 
-      if (id.endsWith('.svelte')) {
-        // allow transpilation by svelte
-        return null
-      }
-
+      // TODO process css https://github.com/sebastian-software/rollup-plugin-rebase/blob/master/src/index.js#L36
       const referenceId = this.emitFile({
         type: 'asset',
         name: path.basename(id),

@@ -25,6 +25,7 @@ module.exports = function rollupBundlePlugin() {
     async bundle({ srcDirectory, destDirectory }) {
       const manifest = JSON.parse(await fs.readFile('package.json', { encoding: 'utf-8' }))
 
+      console.log('Copying common package files...')
       // copy readme, license, changelog to build
       const paths = await globby(
         [
@@ -39,7 +40,7 @@ module.exports = function rollupBundlePlugin() {
         },
       )
 
-      await paths.map((src) => fs.copy(src, path.join(destDirectory, src)))
+      await Promise.all(paths.map((src) => fs.copy(src, path.join(destDirectory, src))))
 
       // const packageName = manifest.name.replace(/^@/, '').replace(/\//g, '__')
       const unscopedPackageName = manifest.name.replace(/^@.*\//, '')
@@ -55,7 +56,6 @@ module.exports = function rollupBundlePlugin() {
       if (!inputFile) throw new Error('No input file found.')
 
       const useTypescript = inputFile.endsWith('.ts') || inputFile.endsWith('.tsx')
-      const useSvelte = Boolean(manifest.svelte) || existsSync('svelte.config.js')
 
       /**
        * Generate typescript definitions to build/src which allows them to be picked up by svelte
@@ -65,6 +65,7 @@ module.exports = function rollupBundlePlugin() {
       let dtsFile
 
       if (useTypescript) {
+        console.log('Generating typescript declarations...')
         // tsc
         await execa(
           'tsc',
@@ -86,25 +87,6 @@ module.exports = function rollupBundlePlugin() {
             cwd: path.join(typesDirectory, path.dirname(inputFile)),
           },
         )
-
-        if (useSvelte) {
-          const ignorePatterns = [
-            '**/__tests__/*.?(.d){js,jsx,ts,tsx}?(.map)',
-            ,
-            '**/*.{spec,test}?(.d).{js,jsx,ts,tsx}?(.map)',
-            '**/__fixtures__/**',
-            '**/__mocks__/**',
-            '**/__preview__/**',
-          ].map((pattern) => micromatch.matcher(pattern, { matchBase: true }))
-
-          await fs.copy(typesDirectory, path.join(destDirectory, path.dirname(inputFile)), {
-            filter(src, dest) {
-              const file = path.relative(destDirectory, dest)
-
-              return !ignorePatterns.some((isMatch) => isMatch(file))
-            },
-          })
-        }
       }
 
       Object.assign(manifest, {
@@ -129,20 +111,13 @@ module.exports = function rollupBundlePlugin() {
         module: `browser/es2015/${unscopedPackageName}.js`,
 
         // Used by snowpack dev: *.svelte development transpiled
-        'browser:module': useSvelte ? `dev/${unscopedPackageName}.js` : undefined,
-
-        // Used by svelte and jest: point to untranspiled *.svelte
-        svelte:
-          manifest.svelte ||
-          (useSvelte
-            ? `${path.join(
-                path.dirname(inputFile),
-                path.basename(inputFile, path.extname(inputFile)),
-              )}.js`
-            : undefined),
+        'browser:module': `browser/dev/${unscopedPackageName}.js`,
 
         // Typying
         types: useTypescript ? `types/${unscopedPackageName}.d.ts` : undefined,
+
+        // Not using it - see README
+        svelte: undefined,
 
         // Some defaults
         sideEffects: manifest.sideEffects === true,
@@ -179,6 +154,7 @@ module.exports = function rollupBundlePlugin() {
         JSON.stringify(manifest, null, 2),
       )
 
+      console.log('Starting bundling...')
       await execa('rollup', ['-c', require.resolve(`./rollup/config.js`)], {
         cwd,
         env: {
