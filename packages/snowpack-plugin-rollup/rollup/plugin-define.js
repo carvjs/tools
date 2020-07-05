@@ -47,12 +47,19 @@ export default function carvDefine({
         let replacement = replacements[keys[index]]
         if (typeof replacement === 'function') replacement = replacement(id)
 
-        if (verbose) {
-          console.log(`[${path.relative(process.cwd(), id)}]`, keys[index], '=>', replacement)
-        }
-
         if (markEdited(node, edits)) {
           magicString.overwrite(node.start, node.end, replacement)
+
+          if (verbose) {
+            console.log(`[${path.relative(process.cwd(), id)}]`, keys[index], '=>', replacement)
+          }
+        } else {
+          console.warn(
+            `[${path.relative(process.cwd(), id)}] pattern ${
+              keys[index]
+            } has already been edited, skipping this change. ` +
+              `This usually means you should re-order the patterns.`,
+          )
         }
       }
     })
