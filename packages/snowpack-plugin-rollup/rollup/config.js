@@ -175,6 +175,10 @@ export default async function () {
 
         // 2. Apply replacements
         define({
+          // de-alias MODE to NODE_ENV
+          'import.meta.env.MODE': 'process.env.NODE_ENV',
+          'process.env.MODE': 'process.env.NODE_ENV',
+
           // Delegate to process.*
           ...expand('import.meta', {
             url: `require('url').pathToFileURL(__filename)`,
@@ -184,9 +188,6 @@ export default async function () {
             env: 'process.env',
             hot: 'undefined',
           }),
-
-          // de-alias MODE to NODE_ENV
-          'process.env.MODE': 'process.env.NODE_ENV',
         }),
 
         // 3. Transpile to target
@@ -228,6 +229,10 @@ export default async function () {
 
         // 2. Apply replacements
         define({
+          // de-alias MODE to NODE_ENV
+          'import.meta.env.MODE': 'process.env.NODE_ENV',
+          'process.env.MODE': 'process.env.NODE_ENV',
+
           // Delegate to process.*
           ...expand('import.meta', {
             url: `require('url').pathToFileURL(__filename)`,
@@ -237,9 +242,6 @@ export default async function () {
             env: 'process.env',
             hot: 'undefined',
           }),
-
-          // de-alias MODE to NODE_ENV
-          'process.env.MODE': 'process.env.NODE_ENV',
         }),
 
         // 3. Transpile to target
