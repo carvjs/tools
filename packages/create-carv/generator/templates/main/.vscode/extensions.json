@@ -11,10 +11,10 @@
     "ibm.output-colorizer",
     "christian-kohler.path-intellisense",
     "dzhavat.css-initial-value",
-    "robinbentley.sass-indented",
     "kisstkondoros.vscode-gutter-preview",
     "philsinatra.nested-comments",
     "cssho.vscode-svgviewer",
-    "edhat.vscode-yaml"
+    "redhat.vscode-yaml",
+    "be5invis.toml"
   ]
 }
