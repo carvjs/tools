@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/svelte'
+import { render, screen } from '@carv/testing-library'
 import Extension from '../main.svelte'
 
 test('renders the extension', () => {

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/svelte'
+import { render, screen } from '@carv/testing-library'
 import Component from '../component.svelte'
 
 test('renders the Component', () => {

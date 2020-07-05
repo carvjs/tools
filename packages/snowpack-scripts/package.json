@@ -38,7 +38,6 @@
     "jest": "^26.1.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-extended": "^0.11.5",
-    "jest-svelte-resolver": "^1.0.0",
     "manage-path": "^2.0.0",
     "nps": "^5.9.12",
     "pkg-dir": "^4.2.0",

@@ -124,7 +124,6 @@ export default async function () {
 
   return [
     // Used by nodejs: *.svelte production transpiled
-    // No sourcemap to debug within node_modules
     {
       input: {
         [path.basename(pkg.main, path.extname(pkg.main))]: inputFile,
@@ -133,7 +132,10 @@ export default async function () {
       output: {
         format: 'cjs',
         ...fileNameConfig(pkg.main),
+        sourcemap: true,
+        sourcemapExcludeSources: true,
         preferConst: true,
+        compact: true,
       },
 
       external,
@@ -188,10 +190,60 @@ export default async function () {
         }),
 
         // 3. Transpile to target
-        esbuild({ target: 'es2019' }),
+        esbuild({ target: 'es2019', minify: true }),
 
         // Create esm wrapper: https://nodejs.org/api/esm.html#esm_approach_1_use_an_es_module_wrapper
         esmWrapper({ file: pkg.exports['.'].default }),
+      ].filter(Boolean),
+    },
+
+    // Used by jest: *.svelte development transpiled
+    pkg.exports['.'].jest && {
+      input: {
+        [path.basename(pkg.exports['.'].jest, path.extname(pkg.exports['.'].jest))]: inputFile,
+      },
+
+      output: {
+        format: 'cjs',
+        ...fileNameConfig(pkg.exports['.'].jest),
+        sourcemap: true,
+        // include sources in sourcemap for better debuging experience
+        sourcemapExcludeSources: false,
+        preferConst: true,
+      },
+
+      external,
+      context: 'global', // value of this at the top level
+      plugins: [
+        logStart('Jest', pkg.exports['.'].jest),
+
+        resolve({ dedupe, extensions, mainFields }),
+
+        ...plugins,
+
+        svelte({ ...svelteConfig, dev: true, onwarn: ignore }),
+
+        // 1. Transpile to js
+        esbuild({ target: 'esnext' }),
+
+        // 2. Apply replacements
+        define({
+          // Delegate to process.*
+          ...expand('import.meta', {
+            url: `require('url').pathToFileURL(__filename)`,
+            resolve: `(id, parent) => new Promise(resolve => resolve(parent ? require('module').createRequire(parent).resolve(id) : require.resolve(id)))`,
+            platform: 'process.platform',
+            browser: 'process.browser',
+            env: 'process.env',
+            hot: 'undefined',
+          }),
+
+          // de-alias MODE to NODE_ENV
+          'process.env.MODE': 'process.env.NODE_ENV',
+        }),
+
+        // 3. Transpile to target
+        esbuild({ target: 'es2019' }),
       ].filter(Boolean),
     },
 
@@ -304,7 +356,8 @@ export default async function () {
         format: 'esm',
         ...fileNameConfig(pkg['browser:module']),
         sourcemap: true,
-        // include sources in sourcemap for better debugin experience
+        // include sources in sourcemap for better debuging experience
+        sourcemapExcludeSources: false,
         preferConst: true,
       },
 

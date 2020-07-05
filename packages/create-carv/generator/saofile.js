@@ -175,7 +175,15 @@ module.exports = {
         files: '**',
         filters: {
           'package.json': false,
-          '.vscode/extensions.json': false,
+        },
+        templateData,
+      },
+      preview && {
+        type: 'add',
+        templateDir: `templates/preview-${typescript ? 'ts' : 'js'}`,
+        files: '**',
+        filters: {
+          'package.json': false,
         },
         templateData,
       },
@@ -185,7 +193,6 @@ module.exports = {
         files: '**',
         filters: {
           'package.json': false,
-          '.vscode/extensions.json': false,
         },
         templateData,
       },
@@ -195,7 +202,6 @@ module.exports = {
         files: '**',
         filters: {
           'package.json': false,
-          '.vscode/extensions.json': false,
         },
         templateData,
       },
@@ -218,6 +224,7 @@ module.exports = {
             typescript && require('./templates/typescript/package.json'),
             svelte && require('./templates/svelte/package.json'),
             preview && require('./templates/preview/package.json'),
+            preview && require(`./templates/preview-${typescript ? 'ts' : 'js'}/package.json`),
             require(`./templates/${starter}/package.json`),
             require(`./templates/${starter}-${typescript ? 'ts' : 'js'}/package.json`),
           ].filter(Boolean)
@@ -254,7 +261,7 @@ module.exports = {
               svelte && require('./templates/svelte/.vscode/extensions.json'),
             ]
               .filter(Boolean)
-              .map((extensions) => extensions.recommendations),
+              .flatMap((extensions) => extensions.recommendations),
           )
 
           manifest.recommendations = [...recommendations]

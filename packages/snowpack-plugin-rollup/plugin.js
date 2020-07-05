@@ -99,6 +99,7 @@ module.exports = function rollupBundlePlugin() {
         exports: {
           '.': {
             require: `./node/cjs/${unscopedPackageName}.js`,
+            jest: `./node/jest/${unscopedPackageName}.js`,
             default: `./node/esm/${unscopedPackageName}.js`,
           },
           './package.json': './package.json',
@@ -111,7 +112,7 @@ module.exports = function rollupBundlePlugin() {
         module: `browser/es2015/${unscopedPackageName}.js`,
 
         // Used by snowpack dev: *.svelte development transpiled
-        'browser:module': `browser/dev/${unscopedPackageName}.js`,
+        'browser:module': `browser/snowpack/${unscopedPackageName}.js`,
 
         // Typying
         types: useTypescript ? `types/${unscopedPackageName}.d.ts` : undefined,

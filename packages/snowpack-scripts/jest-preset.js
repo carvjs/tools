@@ -12,7 +12,7 @@ const ignorePatterns = [
 module.exports = {
   maxWorkers: isCI ? 3 : '100%',
 
-  resolver: require.resolve('jest-svelte-resolver'), // https://github.com/testing-library/svelte-testing-library/issues/82
+  resolver: require.resolve('./jest/resolver'),
 
   testMatch: [
     '<rootDir>/src/**/__tests__/*.{js,jsx,ts,tsx}',
