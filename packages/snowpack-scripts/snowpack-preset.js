@@ -4,7 +4,7 @@ const fs = require('fs')
 const pkgDir = require('pkg-dir').sync()
 const svelteConfigFile = path.resolve(pkgDir, 'svelte.config.js')
 const useSvelte = fs.existsSync(svelteConfigFile)
-const svelteConfig = useSvelte && require(svelteConfigFile)
+const svelteConfig = useSvelte && loadSvelteConfig(svelteConfigFile)
 
 // Like https://graphql-config.com/usage#config-search-places
 // https://github.com/kamilkisiela/graphql-config/blob/254dd12daaa73a72b149d63da5f77030979a2d5c/src/helpers/cosmiconfig.ts#L64
@@ -38,7 +38,6 @@ module.exports = {
         useSvelte &&
           require('rollup-plugin-svelte')({
             ...svelteConfig,
-            ...svelteConfig.compilerOptions,
             dev: true,
             css: true, // include css in the JavaScript class and inject at runtime
             onwarn(warning) {
@@ -58,4 +57,9 @@ module.exports = {
     baseUrl: '/',
   },
   proxy,
+}
+
+function loadSvelteConfig(file) {
+  const { compilerOptions, ...svelteConfig } = require(file)
+  return Object.assign(svelteConfig, compilerOptions)
 }

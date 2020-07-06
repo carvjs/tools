@@ -61,7 +61,11 @@ export default async function () {
     await fs.readFile(path.join(destDirectory, 'package.json'), { encoding: 'utf-8' }),
   )
 
-  const svelteConfig = require(path.resolve(process.cwd(), 'svelte.config.js'))
+  const { compilerOptions, ...svelteConfig } = require(path.resolve(
+    process.cwd(),
+    'svelte.config.js',
+  ))
+  Object.assign(svelteConfig, compilerOptions)
 
   // bundledDependencies are included into the output bundle
   const bundledDependencies = []
@@ -149,7 +153,6 @@ export default async function () {
 
         svelte({
           ...svelteConfig,
-          ...svelteConfig.compilerOptions,
 
           dev: false,
 
@@ -228,7 +231,6 @@ export default async function () {
 
         svelte({
           ...svelteConfig,
-          ...svelteConfig.compilerOptions,
 
           dev: true,
 
@@ -286,7 +288,6 @@ export default async function () {
 
         svelte({
           ...svelteConfig,
-          ...svelteConfig.compilerOptions,
 
           dev: false,
 
@@ -339,7 +340,6 @@ export default async function () {
 
         svelte({
           ...svelteConfig,
-          ...svelteConfig.compilerOptions,
 
           dev: false,
 
@@ -406,7 +406,6 @@ export default async function () {
 
         svelte({
           ...svelteConfig,
-          ...svelteConfig.compilerOptions,
 
           dev: true,
           css: false,
