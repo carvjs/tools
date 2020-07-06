@@ -313,6 +313,19 @@ module.exports = {
       },
     },
     {
+      files: [
+        '**/__generated__/*.js',
+        '**/__generated__/*.jsx',
+        '**/__generated__/*.ts',
+        '**/__generated__/*.tsx',
+      ],
+      rules: {
+        'eslint-comments/disable-enable-pair': 'off',
+        'eslint-comments/no-unlimited-disable': 'off',
+        'unicorn/no-abusive-eslint-disable': 'off',
+      },
+    },
+    {
       files: ['./*.config.js', './package-scripts.js'],
       env: {
         node: true,
