@@ -8,7 +8,8 @@
     "release": "nps release",
     "start": "nps",
     "test": "nps test",
-    "preversion": "nps test"
+    "preversion": "nps test",
+    "postversion": "nps release"
   },
   "prettier": "@carv/prettier-config",
   "eslintConfig": {
