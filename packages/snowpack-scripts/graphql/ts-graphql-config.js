@@ -23,13 +23,13 @@ module.exports = async (projectRootPath) => {
     )
     let schema
     try {
-      schema = await requestIntrospectionQuery(url, { timeout: 500 })
+      schema = await requestIntrospectionQuery(url, { timeout: 1500 })
 
       await fs.mkdir(path.dirname(cacheFile), { recursive: true })
       await fs.writeFile(cacheFile, schema)
     } catch (error) {
       // If that fails use previously cached schema
-      console.warn(error)
+      console.warn(`Failed to reach graphql endpoint at ${url}: ${error.message}`)
       try {
         schema = await fs.readFile(cacheFile)
       } catch (_) {}
