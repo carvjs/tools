@@ -38,6 +38,9 @@
     "typescript": "^3.9.5"
   },
   "peerDependenciesMeta": {
+    "rollup": {
+      "optional": true
+    },
     "svelte": {
       "optional": true
     },
