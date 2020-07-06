@@ -1,6 +1,6 @@
 {
   "name": "@carv/snowpack-plugin-rollup",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "homepage": "https://github.com/carvjs/snowpack#readme",
   "bugs": {
     "url": "https://github.com/carvjs/snowpack/issues"
