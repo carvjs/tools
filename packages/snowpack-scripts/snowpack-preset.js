@@ -2,8 +2,9 @@ const path = require('path')
 const fs = require('fs')
 
 const pkgDir = require('pkg-dir').sync()
-const svelteConfig = path.resolve(pkgDir, 'svelte.config.js')
-const useSvelte = fs.existsSync(svelteConfig)
+const svelteConfigFile = path.resolve(pkgDir, 'svelte.config.js')
+const useSvelte = fs.existsSync(svelteConfigFile)
+const svelteConfig = useSvelte && require(svelteConfigFile)
 
 // Like https://graphql-config.com/usage#config-search-places
 // https://github.com/kamilkisiela/graphql-config/blob/254dd12daaa73a72b149d63da5f77030979a2d5c/src/helpers/cosmiconfig.ts#L64
@@ -36,9 +37,10 @@ module.exports = {
         require('rollup-plugin-node-polyfills')(),
         useSvelte &&
           require('rollup-plugin-svelte')({
-            ...require(svelteConfig),
+            ...svelteConfig,
+            ...svelteConfig.compilerOptions,
             dev: true,
-            css: true, // includ css in the JavaScript class and inject at runtime
+            css: true, // include css in the JavaScript class and inject at runtime
             onwarn(warning) {
               // Ignore warning for missing export declartion it maybe a module context export
               if (warning.code === 'missing-declaration') {

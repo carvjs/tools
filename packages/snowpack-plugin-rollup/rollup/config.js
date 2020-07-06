@@ -149,8 +149,12 @@ export default async function () {
 
         svelte({
           ...svelteConfig,
+          ...svelteConfig.compilerOptions,
 
           dev: false,
+
+          css: false,
+          emitCss: true,
 
           // By default, the client-side compiler is used. You
           // can also use the server-side rendering compiler
@@ -222,7 +226,17 @@ export default async function () {
 
         ...plugins,
 
-        svelte({ ...svelteConfig, dev: true, onwarn: ignore }),
+        svelte({
+          ...svelteConfig,
+          ...svelteConfig.compilerOptions,
+
+          dev: true,
+
+          css: false,
+          emitCss: true,
+
+          onwarn: ignore,
+        }),
 
         // 1. Transpile to js
         esbuild({ target: 'esnext' }),
@@ -270,7 +284,17 @@ export default async function () {
 
         ...plugins,
 
-        svelte({ ...svelteConfig, dev: false, onwarn: ignore }),
+        svelte({
+          ...svelteConfig,
+          ...svelteConfig.compilerOptions,
+
+          dev: false,
+
+          css: false,
+          emitCss: true,
+
+          onwarn: ignore,
+        }),
 
         resolve({ dedupe, extensions, mainFields: ['esnext', ...mainFields] }),
 
@@ -313,7 +337,17 @@ export default async function () {
 
         ...plugins,
 
-        svelte({ ...svelteConfig, dev: false, onwarn: ignore }),
+        svelte({
+          ...svelteConfig,
+          ...svelteConfig.compilerOptions,
+
+          dev: false,
+
+          css: false,
+          emitCss: true,
+
+          onwarn: ignore,
+        }),
 
         resolve({ dedupe, extensions, mainFields }),
 
@@ -370,7 +404,16 @@ export default async function () {
 
         ...plugins,
 
-        svelte({ ...svelteConfig, dev: true, onwarn: ignore }),
+        svelte({
+          ...svelteConfig,
+          ...svelteConfig.compilerOptions,
+
+          dev: true,
+          css: false,
+          emitCss: true,
+
+          onwarn: ignore,
+        }),
 
         resolve({ dedupe, extensions, mainFields: ['browser:module', ...mainFields] }),
 

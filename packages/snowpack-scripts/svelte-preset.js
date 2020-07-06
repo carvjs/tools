@@ -3,7 +3,10 @@ const sveltePreprocess = require('svelte-preprocess')
 const isDev = process.env.NODE_ENV !== 'production'
 
 module.exports = {
-  dev: isDev,
+  compilerOptions: {
+    dev: isDev,
+    css: false,
+  },
 
   preprocess: sveltePreprocess({
     typescript: {
@@ -21,6 +24,4 @@ module.exports = {
     pug: false,
     coffeescript: false,
   }),
-
-  css: false,
 }
