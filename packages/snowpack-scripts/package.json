@@ -89,6 +89,9 @@
     "prettier": {
       "optional": true
     },
+    "jest": {
+      "optional": true
+    },
     "rimraf": {
       "optional": true
     },
