@@ -7,7 +7,6 @@ const sveltePreprocess = require('svelte-preprocess')
 const includePaths = ['src', 'node_modules', path.join(process.cwd(), 'src'), process.cwd()]
 let directory = findUp('node_modules', { cwd: process.cwd(), type: 'directory' })
 do {
-  console.log(directory)
   includePaths.push(directory)
 } while (
   (directory = findUp('node_modules', {
