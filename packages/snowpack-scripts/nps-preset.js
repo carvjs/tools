@@ -15,31 +15,37 @@ if (!require('at-least-node')('12.4.0')) {
 
 const fs = require('fs')
 const path = require('path')
+const findUp = require('find-up').sync
 
 // ensure the binaries installed here are available as scripts
 const managePath = require('manage-path')
 const alterPath = managePath(process.env)
-const npmBin = require('find-up').sync('node_modules/.bin', { cwd: __dirname, type: 'directory' })
+const npmBin = findUp('node_modules/.bin', { cwd: __dirname, type: 'directory' })
 if (npmBin) {
   alterPath.unshift(npmBin)
+}
+const rootDir = findUp('lerna.json')
+if (rootDir) {
+  alterPath.unshift(path.resolve(path.dirname(rootDir), 'node_modules', '.bin'))
 }
 
 const pkgDir = require('pkg-dir').sync()
 
-const useSvelte = fs.existsSync(path.resolve(pkgDir, 'svelte.config.js'))
-const useTypescript = fs.existsSync(path.resolve(pkgDir, 'tsconfig.json'))
+const useSvelte = findUp('svelte.config.js', { cwd: pkgDir })
+const useTypescript = findUp('tsconfig.json', { cwd: pkgDir })
 const usePreview = fs.existsSync(path.resolve(pkgDir, 'src/__preview__'))
 const useGraphql = Boolean(require('./graphql/find-config')(pkgDir))
 const useTypescriptGraphql =
   useTypescript &&
   useGraphql &&
-  fs.readFileSync(path.resolve(pkgDir, 'tsconfig.json'), { encoding: 'utf-8' }).includes('graphql')
+  fs.readFileSync(useTypescript, { encoding: 'utf-8' }).includes('graphql')
 
 const extensions = ['.js', '.jsx']
 if (useTypescript) extensions.push('.ts', '.tsx')
 
-const eslint = `eslint --ignore-path .gitignore --ext ${extensions.join(',')} .`
-const prettier = 'prettier --ignore-path .gitignore .'
+const gitignore = path.relative(process.cwd(), require('find-up').sync('.gitignore'))
+const eslint = `eslint --ignore-path ${gitignore} --ext ${extensions.join(',')} .`
+const prettier = `prettier --ignore-path ${gitignore} .`
 
 exports.scripts = {
   // main entrypoints

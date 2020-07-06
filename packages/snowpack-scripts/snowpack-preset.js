@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 const pkgDir = require('pkg-dir').sync()
-const svelteConfigFile = path.resolve(pkgDir, 'svelte.config.js')
+const svelteConfigFile = require('find-up').sync('svelte.config.js', { cwd: pkgDir })
 const useSvelte = fs.existsSync(svelteConfigFile)
 const svelteConfig = useSvelte && loadSvelteConfig(svelteConfigFile)
 

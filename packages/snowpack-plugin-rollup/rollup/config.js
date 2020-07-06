@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs'
 import path from 'path'
+import findUp from 'find-up'
 
 import json from '@rollup/plugin-json'
 import yaml from '@rollup/plugin-yaml'
@@ -61,10 +62,8 @@ export default async function () {
     await fs.readFile(path.join(destDirectory, 'package.json'), { encoding: 'utf-8' }),
   )
 
-  const { compilerOptions, ...svelteConfig } = require(path.resolve(
-    process.cwd(),
-    'svelte.config.js',
-  ))
+  const svelteConfigFile = await findUp('svelte.config.js')
+  const { compilerOptions, ...svelteConfig } = svelteConfigFile ? require(svelteConfigFile) : {}
   Object.assign(svelteConfig, compilerOptions)
 
   // bundledDependencies are included into the output bundle
