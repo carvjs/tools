@@ -3,7 +3,7 @@ const babelJest = require('babel-jest')
 module.exports = babelJest.createTransformer({
   presets: [
     [
-      '@babel/preset-env',
+      require.resolve('@babel/preset-env'),
       {
         bugfixes: true,
         shippedProposals: true,
@@ -12,7 +12,7 @@ module.exports = babelJest.createTransformer({
         },
       },
     ],
-    '@babel/preset-typescript',
+    require.resolve('@babel/preset-typescript'),
   ],
   plugins: [
     require('@snowpack/app-scripts-svelte/jest/importMetaBabelPlugin'),

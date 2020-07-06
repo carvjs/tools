@@ -148,8 +148,6 @@ export default async function () {
 
         resolve({ dedupe, extensions, mainFields }),
 
-        ...plugins,
-
         svelte({
           ...svelteConfig,
 
@@ -175,6 +173,8 @@ export default async function () {
             console.warn(`[${warning.code}] ${warning.message}\n${warning.frame}`)
           },
         }),
+
+        ...plugins,
 
         // 1. Transpile to js
         esbuild({ target: 'esnext' }),
@@ -226,8 +226,6 @@ export default async function () {
 
         resolve({ dedupe, extensions, mainFields }),
 
-        ...plugins,
-
         svelte({
           ...svelteConfig,
 
@@ -238,6 +236,8 @@ export default async function () {
 
           onwarn: ignore,
         }),
+
+        ...plugins,
 
         // 1. Transpile to js
         esbuild({ target: 'esnext' }),
@@ -283,7 +283,7 @@ export default async function () {
       plugins: [
         logStart('Carv CDN', pkg.esnext),
 
-        ...plugins,
+        resolve({ dedupe, extensions, mainFields: ['esnext', ...mainFields] }),
 
         svelte({
           ...svelteConfig,
@@ -296,7 +296,7 @@ export default async function () {
           onwarn: ignore,
         }),
 
-        resolve({ dedupe, extensions, mainFields: ['esnext', ...mainFields] }),
+        ...plugins,
 
         esbuild({ target: 'esnext', minify: true }),
 
@@ -335,7 +335,7 @@ export default async function () {
       plugins: [
         logStart('Bundlers & CDNs', pkg.module),
 
-        ...plugins,
+        resolve({ dedupe, extensions, mainFields }),
 
         svelte({
           ...svelteConfig,
@@ -348,7 +348,7 @@ export default async function () {
           onwarn: ignore,
         }),
 
-        resolve({ dedupe, extensions, mainFields }),
+        ...plugins,
 
         // 1. Transpile to js
         esbuild({ target: 'esnext' }),
@@ -401,7 +401,7 @@ export default async function () {
       plugins: [
         logStart('Snowpack', pkg['browser:module']),
 
-        ...plugins,
+        resolve({ dedupe, extensions, mainFields: ['browser:module', ...mainFields] }),
 
         svelte({
           ...svelteConfig,
@@ -413,7 +413,7 @@ export default async function () {
           onwarn: ignore,
         }),
 
-        resolve({ dedupe, extensions, mainFields: ['browser:module', ...mainFields] }),
+        ...plugins,
 
         esbuild({ target: 'es2020' }),
 
