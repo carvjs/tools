@@ -12,7 +12,7 @@ const graphql = require('./graphql/find-config')(pkgDir)
 const proxy = {}
 
 if (graphql) {
-  const url = graphql.url || graphql.schema
+  const url = graphql.endpoint || graphql.schema
 
   if (url && /^https?:\/\//.test(url)) {
     proxy['/-/graphql'] = url

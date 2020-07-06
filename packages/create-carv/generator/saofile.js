@@ -74,6 +74,13 @@ module.exports = {
         required: true,
       },
       {
+        name: 'graphqlEndpoint',
+        message: 'What is the URL to you identity-hub? [blank for none]',
+        store: true,
+        filter: (url) => (url.endsWith('/graphql') ? url : url + '/graphql'),
+        validate: isValidWebURL,
+      },
+      {
         name: 'typescript',
         message: 'Do you want to use Typescript?',
         type: 'confirm',
@@ -102,7 +109,7 @@ module.exports = {
         message: 'Which npm registry to use for installing packages? [blank for npmjs.org]',
         filter: (registry) => defaultRegistryBlank(registry),
         default: () => defaultRegistryBlank(require('registry-url')()),
-        validate: isValidRegistryURL,
+        validate: isValidWebURL,
       },
       {
         name: 'publishRegistry',
@@ -111,7 +118,7 @@ module.exports = {
           defaultRegistryBlank(publishRegistry, registry),
         default: ({ projectScope, registry }) =>
           defaultRegistryBlank(require('registry-url')(projectScope), registry),
-        validate: isValidRegistryURL,
+        validate: isValidWebURL,
       },
     ]
   },
@@ -123,6 +130,7 @@ module.exports = {
       author,
       email,
       starter,
+      graphqlEndpoint,
       typescript,
       npmClient,
       registry,
@@ -136,6 +144,7 @@ module.exports = {
     const preview = ['form', 'extension', 'components'].includes(starter)
 
     const packageName = projectScope ? `${projectScope}/${projectName}` : projectName
+
     const templateData = {
       nodeMajorVersion,
       packageName,
@@ -187,6 +196,24 @@ module.exports = {
         },
         templateData,
       },
+      graphqlEndpoint && {
+        type: 'add',
+        templateDir: `templates/graphql`,
+        files: '**',
+        filters: {
+          'package.json': false,
+        },
+        templateData,
+      },
+      graphqlEndpoint && {
+        type: 'add',
+        templateDir: `templates/graphql-${typescript ? 'ts' : 'js'}`,
+        files: '**',
+        filters: {
+          'package.json': false,
+        },
+        templateData,
+      },
       {
         type: 'add',
         templateDir: `templates/${starter}`,
@@ -225,6 +252,9 @@ module.exports = {
             svelte && require('./templates/svelte/package.json'),
             preview && require('./templates/preview/package.json'),
             preview && require(`./templates/preview-${typescript ? 'ts' : 'js'}/package.json`),
+            graphqlEndpoint && require('./templates/graphql/package.json'),
+            graphqlEndpoint &&
+              require(`./templates/graphql-${typescript ? 'ts' : 'js'}/package.json`),
             require(`./templates/${starter}/package.json`),
             require(`./templates/${starter}-${typescript ? 'ts' : 'js'}/package.json`),
           ].filter(Boolean)
@@ -259,6 +289,7 @@ module.exports = {
               require(`./templates/main/.vscode/extensions.json`),
               typescript && require('./templates/typescript/.vscode/extensions.json'),
               svelte && require('./templates/svelte/.vscode/extensions.json'),
+              graphqlEndpoint && require('./templates/graphql/.vscode/extensions.json'),
             ]
               .filter(Boolean)
               .flatMap((extensions) => extensions.recommendations),
@@ -317,10 +348,10 @@ module.exports = {
   },
 }
 
-function isValidRegistryURL(value) {
+function isValidWebURL(value) {
   try {
-    new URL(value)
-    return true
+    const url = new URL(value)
+    return /^https?:$/.test(url.protocol)
   } catch (_) {
     return false
   }

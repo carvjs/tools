@@ -18,6 +18,9 @@
   "jest": {
     "preset": "@carv/snowpack-scripts"
   },
+  "dependencies": {
+    "@carv/runtime": "^0.3.2"
+  },
   "devDependencies": {
     "@carv/eslint-config": "^1.2.2",
     "@carv/prettier-config": "^1.0.2",

@@ -3,8 +3,7 @@
     "@carv/runtime": "^0.3.2"
   },
   "devDependencies": {
-    "@carv/testing-library": "^1.0.0",
-    "svelte-check": "^0.1.37",
-    "svelte-htm": "^1.1.0"
+    "@carv/testing-library": "^0.2.0",
+    "svelte-check": "^0.1.37"
   }
 }

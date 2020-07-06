@@ -18,5 +18,12 @@ module.exports = (projectRootPath) => {
     })
     .search(projectRootPath)
 
+  // schema: 'schema.graphql'
+  // endpoint:
+  //   url: '<graphql-api-url>'
+  //   method: 'GET'
+  //   headers:
+  //     auth: Basic <public-key>
+
   return graphql && graphql.config
 }
