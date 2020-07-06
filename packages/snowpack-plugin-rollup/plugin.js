@@ -42,6 +42,8 @@ module.exports = function rollupBundlePlugin() {
 
       await Promise.all(paths.map((src) => fs.copy(src, path.join(destDirectory, src))))
 
+      await fs.mkdirp(srcDirectory)
+
       // const packageName = manifest.name.replace(/^@/, '').replace(/\//g, '__')
       const unscopedPackageName = manifest.name.replace(/^@.*\//, '')
 
