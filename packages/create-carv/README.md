@@ -22,6 +22,7 @@ When you run one of the above scripts, you will be prompted with a few questions
   - Workflow Form
   - Extension Point
   - Component Library
+- Optional url to graphql endpoint
 - Optional use of typescript
 - Optional a custom NPM registry
 
@@ -33,3 +34,4 @@ When you run one of the above scripts, you will be prompted with a few questions
 - ESLint for linting
 - Optional svelte with svelte-preprocess
 - Optional typing using typescript
+- VS Code extension recommendations

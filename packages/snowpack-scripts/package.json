@@ -27,6 +27,7 @@
     "@snowpack/app-scripts-svelte": "^1.0.2",
     "@snowpack/plugin-svelte": "^1.2.0",
     "@testing-library/jest-dom": "^5.11.0",
+    "at-least-node": "^1.0.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "cosmiconfig": "^6.0.0",
     "doctoc": "^1.4.0",
@@ -79,6 +80,9 @@
     "typescript": {
       "optional": true
     }
+  },
+  "engines": {
+    "node": ">=12.4"
   },
   "publishConfig": {
     "access": "public"

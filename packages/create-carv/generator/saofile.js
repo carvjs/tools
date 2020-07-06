@@ -85,6 +85,7 @@ module.exports = {
         message: 'Do you want to use Typescript?',
         type: 'confirm',
         default: false,
+        store: true,
       },
       {
         name: 'npmClient',
