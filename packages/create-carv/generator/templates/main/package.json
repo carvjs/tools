@@ -20,12 +20,12 @@
     "preset": "@carv/snowpack-scripts"
   },
   "dependencies": {
-    "@carv/runtime": "^0.3.2"
+    "@carv/runtime": "^0.5.5"
   },
   "devDependencies": {
-    "@carv/eslint-config": "^1.2.2",
+    "@carv/eslint-config": "^1.2.5",
     "@carv/prettier-config": "^1.0.2",
-    "@carv/snowpack-scripts": "^1.3.9",
+    "@carv/snowpack-scripts": "^1.3.21",
     "@carv/types": "^1.1.1",
     "doctoc": "^1.4.0",
     "envinfo": "^7.5.1",
