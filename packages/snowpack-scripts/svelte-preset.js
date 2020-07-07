@@ -19,6 +19,8 @@ includePaths.push(...module.paths.filter((directory) => fs.existsSync(directory)
 
 module.exports = {
   preprocess: sveltePreprocess({
+    sourceMap: true,
+
     babel: {
       presets: [
         [
@@ -38,18 +40,27 @@ module.exports = {
       plugins: [require.resolve('babel-plugin-dynamic-import-node')],
     },
 
-    typescript: {
-      /**
-       * Type checking can be skipped by setting 'transpileOnly: true'.
-       * This speeds up your build process.
-       *
-       * Checking is done using svelte-check
-       */
-      transpileOnly: true,
-    },
+    // https://github.com/evanw/esbuild/blob/master/docs/js-api.md#use-a-service-for-optimal-performance
+    // https://github.com/evanw/esbuild/blob/master/lib/api-types.ts
+    // babel: false,
+    // javascript({ content, filename }) {
+    //   const { js: code, jsSourceMap: map, warnings } = transformSync(content, {
+    //     loader: 'js',
+    //     target: 'es2019',
+    //     sourcemap: true,
+    //     minify: false,
+    //   });
 
+    //   return { code, map };
+    // },
+
+    typescript: true,
+
+    globalStyle: true, // <style global>...</style>
     scss: {
       includePaths,
+      // use the sync render method which is faster for dart sass
+      renderSync: true,
       implementation: require('sass'),
     },
 
