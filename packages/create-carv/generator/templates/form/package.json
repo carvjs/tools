@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "svelte": "^3.21.0",
-    "svelte-formup": "^0.3.0",
+    "svelte": "^3.24.0",
+    "svelte-formup": "^0.5.1",
     "yup": "^0.29.1"
   },
   "devDependencies": {

@@ -34,7 +34,7 @@
     "rollup-plugin-svelte": "^5.2.3"
   },
   "peerDependencies": {
-    "svelte": "^3.21.0",
+    "svelte": "^3.24.0",
     "typescript": "^3.9.5"
   },
   "peerDependenciesMeta": {
