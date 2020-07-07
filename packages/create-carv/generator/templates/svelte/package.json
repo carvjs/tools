@@ -4,6 +4,6 @@
   },
   "devDependencies": {
     "@carv/testing-library": "^0.2.0",
-    "svelte-check": "^0.1.37"
+    "svelte-check": "^0.1.45"
   }
 }

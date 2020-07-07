@@ -19,7 +19,7 @@ includePaths.push(...module.paths.filter((directory) => fs.existsSync(directory)
 
 module.exports = {
   preprocess: sveltePreprocess({
-    sourceMap: true,
+    // sourceMap: true, once svelte-preprocess@4
 
     babel: {
       presets: [
@@ -40,21 +40,15 @@ module.exports = {
       plugins: [require.resolve('babel-plugin-dynamic-import-node')],
     },
 
-    // https://github.com/evanw/esbuild/blob/master/docs/js-api.md#use-a-service-for-optimal-performance
-    // https://github.com/evanw/esbuild/blob/master/lib/api-types.ts
-    // babel: false,
-    // javascript({ content, filename }) {
-    //   const { js: code, jsSourceMap: map, warnings } = transformSync(content, {
-    //     loader: 'js',
-    //     target: 'es2019',
-    //     sourcemap: true,
-    //     minify: false,
-    //   });
-
-    //   return { code, map };
-    // },
-
-    typescript: true,
+    typescript: {
+      /**
+       * Type checking can be skipped by setting 'transpileOnly: true'.
+       * This speeds up your build process.
+       *
+       * Checking is done using svelte-check
+       */
+      transpileOnly: true,
+    },
 
     globalStyle: true, // <style global>...</style>
     scss: {
