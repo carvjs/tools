@@ -1,1 +1,5 @@
-{}
+{
+  "devDependencies": {
+    "graphql": "^14.7.0"
+  }
+}

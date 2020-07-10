@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "@carv/runtime": "^0.3.2"
+    "@carv/runtime": "^0.6.1"
   },
   "devDependencies": {
-    "@carv/testing-library": "^0.2.0",
+    "@carv/testing-library": "^0.4.0",
     "svelte-check": "^0.1.45"
   }
 }
