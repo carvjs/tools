@@ -45,11 +45,12 @@ export default function carvAssets({ loadStylesheetModuleID = '@carv/load-styles
         source: code,
       })
 
+      // TODO only loadStylesheet if `import 'some.css'` not `import url from 'some.css'`
       return {
         code: `
-          import injectStyle from "${loadStylesheetModuleID}"
+          import loadStylesheet from "${loadStylesheetModuleID}"
 
-          export default injectStyle(import.meta.ROLLUP_FILE_URL_${referenceId});
+          export default loadStylesheet(import.meta.ROLLUP_FILE_URL_${referenceId}).href;
         `,
         map: { mappings: '' },
       }
