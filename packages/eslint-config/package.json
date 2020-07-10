@@ -1,6 +1,6 @@
 {
   "name": "@carv/eslint-config",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "homepage": "https://github.com/carvjs/snowpack#readme",
   "bugs": {
     "url": "https://github.com/carvjs/snowpack/issues"
