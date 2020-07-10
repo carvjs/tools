@@ -326,7 +326,7 @@ module.exports = {
       },
     },
     {
-      files: ['**/*.config.js', '**/package-scripts.js'],
+      files: ['**/*.config.js', '**/*.setup.js', '**/package-scripts.js'],
       env: {
         node: true,
       },
