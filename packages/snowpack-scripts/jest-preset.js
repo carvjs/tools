@@ -46,7 +46,10 @@ module.exports = {
 
   transform: {
     '^.+\\.[t|j]sx?$': require.resolve('./jest/transform-babel.js'),
-    '^.+\\.svelte$': [require.resolve('svelte-jester'), { preprocess: true }],
+    '^.+\\.svelte$': [
+      require.resolve('svelte-jester'),
+      { preprocess: true, compilerOptions: { css: false } },
+    ],
 
     // asset module declarations
     // keep in sync with types/assets.d.ts
