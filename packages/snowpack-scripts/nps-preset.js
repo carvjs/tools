@@ -52,31 +52,23 @@ exports.scripts = {
   test: {
     default: [
       'nps',
-      'cleanup',
-      'prettier.check',
+      'prepare',
       useTypescriptGraphql && 'graphql.validate',
-      useTypescriptGraphql && 'graphql.typegen',
       'eslint',
-      useTypescript && 'tsc',
-      useSvelte && 'svelte-check',
+      'test.package',
       'jest.coverage',
     ]
       .filter(Boolean)
       .join(' '),
     coverage: 'nps jest.coverage',
     watch: 'nps jest.watch',
+    package: ['nps', useTypescript && 'tsc', useSvelte && 'svelte-check'].filter(Boolean).join(' '),
   },
 
+  prepare: ['nps', 'cleanup', useTypescriptGraphql && 'graphql.typegen'].filter(Boolean).join(' '),
+
   build: {
-    default: [
-      'nps',
-      'cleanup',
-      'doctoc.readme',
-      useTypescriptGraphql && 'graphql.typegen',
-      'build.package',
-    ]
-      .filter(Boolean)
-      .join(' '),
+    default: ['nps', 'prepare', 'build.package'].filter(Boolean).join(' '),
     package: 'carv-package',
   },
 
@@ -91,19 +83,16 @@ exports.scripts = {
     },
   },
 
-  format: [
-    'nps',
-    'doctoc.readme',
-    useTypescriptGraphql && 'graphql.typegen',
-    'prettier.write',
-    'eslint.fix',
-  ]
-    .filter(Boolean)
-    .join(' '),
+  format: {
+    default: ['nps', 'format.package', 'prettier.write', 'eslint.fix'].filter(Boolean).join(' '),
+    package: ['nps', 'doctoc.readme', useTypescriptGraphql && 'graphql.typegen']
+      .filter(Boolean)
+      .join(' '),
+  },
 
   envinfo: 'envinfo --system --browsers --IDEs --binary --npmPackages',
 
-  cleanup: 'rimraf .build build dist src/**/__generated__',
+  cleanup: 'rimraf .build build dist src/**/__generated__ src/**/__generated__',
 
   // tools
   snowpack: {
