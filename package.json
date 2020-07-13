@@ -2,8 +2,7 @@
   "name": "@carv/snowpack-workspace",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "templates/*"
+    "packages/*"
   ],
   "scripts": {
     "format": "prettier --ignore-path .gitignore --write .",
