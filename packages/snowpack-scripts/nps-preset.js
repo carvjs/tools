@@ -24,10 +24,8 @@ const npmBin = findUp('node_modules/.bin', { cwd: __dirname, type: 'directory' }
 if (npmBin) {
   alterPath.unshift(npmBin)
 }
-const rootDir = findUp('lerna.json')
-if (rootDir) {
-  alterPath.unshift(path.resolve(path.dirname(rootDir), 'node_modules', '.bin'))
-}
+const rootDir = require('project-root-directory')
+alterPath.unshift(path.resolve(rootDir, 'node_modules', '.bin'))
 
 const pkgDir = require('pkg-dir').sync()
 
@@ -45,7 +43,7 @@ if (useTypescript) extensions.push('.ts', '.tsx')
 
 const gitignore = path.relative(process.cwd(), require('find-up').sync('.gitignore'))
 const eslint = `eslint --ignore-path ${gitignore} --ext ${extensions.join(',')} .`
-const prettier = `prettier --ignore-path ${gitignore} .`
+const prettier = `prettier --ignore-path ${gitignore}`
 
 exports.scripts = {
   // main entrypoints
@@ -70,7 +68,13 @@ exports.scripts = {
   },
 
   build: {
-    default: ['nps', 'cleanup', useTypescriptGraphql && 'graphql.typegen', 'build.package']
+    default: [
+      'nps',
+      'cleanup',
+      'doctoc.readme',
+      useTypescriptGraphql && 'graphql.typegen',
+      'build.package',
+    ]
       .filter(Boolean)
       .join(' '),
     package: 'carv-package',
@@ -78,7 +82,7 @@ exports.scripts = {
 
   release: {
     default: {
-      script: 'nps test doctoc.readme build release.publish',
+      script: 'nps test build release.publish',
       description: 'create a release',
     },
     publish: {
@@ -111,8 +115,9 @@ exports.scripts = {
     fix: `${eslint} --fix`,
   },
   prettier: {
-    check: `${prettier} --check`,
-    write: `${prettier} --write`,
+    check: `${prettier} --check .`,
+    write: `${prettier} --write .`,
+    changelog: `${prettier} --write CHANGELOG.md`,
   },
   jest: {
     default: 'jest',

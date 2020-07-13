@@ -82,12 +82,16 @@ module.exports = function rollupBundlePlugin() {
           },
         )
 
-        const rootDir = await require('find-up')('lerna.json')
+        const rootDir = require('project-root-directory')
 
         dtsFile = await require('find-up')(
           path.basename(inputFile.replace(/\.(ts|tsx)$/, '.d.ts')),
           {
-            cwd: path.join(typesDirectory, rootDir ? path.relative(path.dirname(rootDir), process.cwd()) : '.', path.dirname(inputFile)),
+            cwd: path.join(
+              typesDirectory,
+              path.relative(rootDir, process.cwd()),
+              path.dirname(inputFile),
+            ),
           },
         )
       }

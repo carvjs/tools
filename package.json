@@ -5,9 +5,10 @@
     "packages/*"
   ],
   "scripts": {
-    "preinstall": "npx only-allow yarn",
     "format": "prettier --ignore-path .gitignore --write .",
-    "publish": "npx lerna publish"
+    "preinstall": "npx only-allow yarn",
+    "publish": "lerna publish",
+    "version": "npm run format"
   },
   "prettier": "@carv/prettier-config",
   "jest": {
