@@ -3,7 +3,6 @@ const { existsSync } = require('fs')
 const fs = require('fs-extra')
 const execa = require('execa')
 const npmRunPath = require('npm-run-path')
-const micromatch = require('micromatch')
 const globby = require('globby')
 const cwd = process.cwd()
 
@@ -83,10 +82,12 @@ module.exports = function rollupBundlePlugin() {
           },
         )
 
+        const rootDir = await require('find-up')('lerna.json')
+
         dtsFile = await require('find-up')(
           path.basename(inputFile.replace(/\.(ts|tsx)$/, '.d.ts')),
           {
-            cwd: path.join(typesDirectory, path.dirname(inputFile)),
+            cwd: path.join(typesDirectory, rootDir ? path.relative(path.dirname(rootDir), process.cwd()) : '.', path.dirname(inputFile)),
           },
         )
       }

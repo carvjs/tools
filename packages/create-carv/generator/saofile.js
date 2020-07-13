@@ -75,7 +75,7 @@ module.exports = {
       },
       {
         name: 'graphqlEndpoint',
-        message: 'What is the URL to you identity-hub? [blank for none]',
+        message: 'What is the URL to your identity-hub? [blank for none]',
         store: true,
         filter: (url) => url && (url.endsWith('/graphql') ? url : url + '/graphql'),
         validate: isValidWebURL,
