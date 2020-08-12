@@ -118,10 +118,12 @@ module.exports = function rollupBundlePlugin() {
         esnext: useBrowser ? `browser/esnext/${unscopedPackageName}.js` : undefined,
 
         // Used by bundlers like rollup and cdn networks: *.svelte production transpiled
-        module: useBrowser ? `browser/es2015/${unscopedPackageName}.js` : `./node/esm/${unscopedPackageName}.js`,
+        module: useBrowser
+          ? `browser/es2015/${unscopedPackageName}.js`
+          : `./node/esm/${unscopedPackageName}.js`,
 
         // Used by snowpack dev: *.svelte development transpiled
-        'browser:module': useBrowser ? `browser/snowpack/${unscopedPackageName}.js`: undefined,
+        'browser:module': useBrowser ? `browser/snowpack/${unscopedPackageName}.js` : undefined,
 
         // Typying
         types: useTypescript ? `types/${unscopedPackageName}.d.ts` : undefined,
