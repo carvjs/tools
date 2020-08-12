@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/carvjs/snowpack/compare/@carv/snowpack-scripts@1.3.28...@carv/snowpack-scripts@1.4.0) (2020-08-12)
+
+### Features
+
+- allow node only builds ([f789cc2](https://github.com/carvjs/snowpack/commit/f789cc24fef32513bdde08be05fd5de18c93d638))
+
 ## [1.3.28](https://github.com/carvjs/snowpack/compare/@carv/snowpack-scripts@1.3.27...@carv/snowpack-scripts@1.3.28) (2020-07-13)
 
 ### Bug Fixes
