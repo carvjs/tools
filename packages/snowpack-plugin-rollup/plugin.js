@@ -96,6 +96,8 @@ module.exports = function rollupBundlePlugin() {
         )
       }
 
+      const useBrowser = manifest.browser !== false
+
       Object.assign(manifest, {
         // Define package loading
 
@@ -106,20 +108,20 @@ module.exports = function rollupBundlePlugin() {
         exports: {
           '.': {
             require: `./node/cjs/${unscopedPackageName}.js`,
-            jest: `./node/jest/${unscopedPackageName}.js`,
+            jest: useBrowser ? `./node/jest/${unscopedPackageName}.js` : undefined,
             default: `./node/esm/${unscopedPackageName}.js`,
           },
           './package.json': './package.json',
         },
 
         // Used by carv cdn: *.svelte production transpiled
-        esnext: `browser/esnext/${unscopedPackageName}.js`,
+        esnext: useBrowser ? `browser/esnext/${unscopedPackageName}.js` : undefined,
 
         // Used by bundlers like rollup and cdn networks: *.svelte production transpiled
-        module: `browser/es2015/${unscopedPackageName}.js`,
+        module: useBrowser ? `browser/es2015/${unscopedPackageName}.js` : `./node/esm/${unscopedPackageName}.js`,
 
         // Used by snowpack dev: *.svelte development transpiled
-        'browser:module': `browser/snowpack/${unscopedPackageName}.js`,
+        'browser:module': useBrowser ? `browser/snowpack/${unscopedPackageName}.js`: undefined,
 
         // Typying
         types: useTypescript ? `types/${unscopedPackageName}.d.ts` : undefined,

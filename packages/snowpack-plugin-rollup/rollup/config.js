@@ -264,7 +264,7 @@ export default async function () {
       ].filter(Boolean),
     },
 
-    {
+    pkg['esnext'] && {
       input: {
         [path.basename(pkg['esnext'], path.extname(pkg['esnext']))]: inputFile,
       },
@@ -316,7 +316,7 @@ export default async function () {
     },
 
     // Used by bundlers like rollup and cdn networks: *.svelte production transpiled
-    {
+    pkg.module && {
       input: {
         [path.basename(pkg.module, path.extname(pkg.module))]: inputFile,
       },
@@ -382,7 +382,7 @@ export default async function () {
     },
 
     // Used by snowpack dev: *.svelte development transpiled
-    {
+    pkg['browser:module'] && {
       input: {
         [path.basename(pkg['browser:module'], path.extname(pkg['browser:module']))]: inputFile,
       },

@@ -11,6 +11,11 @@
     "declarationMap": true,
     "noEmitOnError": true,
     "noErrorTruncation": true,
+    /**
+      Svelte Preprocess cannot figure out whether you have a value or a type, so tell TypeScript
+      to enforce using `import type` instead of `import` for Types.
+     */
+    "importsNotUsedAsValues": "error",
     "allowJs": true,
     // Generate sourcemaps
     "sourceMap": true,
@@ -30,15 +35,6 @@
     "plugins": [
       {
         "name": "typescript-eslint-language-service"
-      },
-      {
-        "name": "ts-graphql-plugin",
-        "tag": "gql",
-        "schema": {
-          "http": {
-            "fromScript": "./node_modules/@carv/snowpack-scripts/graphql/ts-graphql-config.js"
-          }
-        }
       }
     ]
   }
