@@ -53,13 +53,6 @@ export default function carvDefine({
           if (verbose) {
             console.log(`[${path.relative(process.cwd(), id)}]`, keys[index], '=>', replacement)
           }
-        } else {
-          console.warn(
-            `[${path.relative(process.cwd(), id)}] pattern ${
-              keys[index]
-            } has already been edited, skipping this change. ` +
-              `This usually means you should re-order the patterns.`,
-          )
         }
       }
     })

@@ -106,6 +106,7 @@ module.exports = function rollupBundlePlugin() {
 
         // Modern declartions: *.svelte production transpiled
         exports: {
+          ...manifest.exports,
           '.': {
             require: `./node/cjs/${unscopedPackageName}.js`,
             jest: useBrowser ? `./node/jest/${unscopedPackageName}.js` : undefined,
