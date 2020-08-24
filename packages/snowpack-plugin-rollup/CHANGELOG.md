@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.1](https://github.com/carvjs/snowpack/compare/@carv/snowpack-plugin-rollup@1.4.0...@carv/snowpack-plugin-rollup@1.4.1) (2020-08-24)
+
+### Bug Fixes
+
+- keep existing exports ([145c03b](https://github.com/carvjs/snowpack/commit/145c03b321c9c7a56f9979b8ef9c27aa1e99060d))
+
 # [1.4.0](https://github.com/carvjs/snowpack/compare/@carv/snowpack-plugin-rollup@1.3.17...@carv/snowpack-plugin-rollup@1.4.0) (2020-08-12)
 
 ### Features
