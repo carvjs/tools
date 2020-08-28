@@ -1,5 +1,10 @@
 require('@rushstack/eslint-patch/modern-module-resolution')
 
+const path = require('path')
+const pkgDirectory = require('pkg-dir').sync()
+
+const pkg = require(path.join(pkgDirectory, 'package.json'))
+
 module.exports = {
   extends: [
     'eslint:recommended',
@@ -16,6 +21,16 @@ module.exports = {
     // Disabled until preprocess is supported: https://github.com/sveltejs/eslint-plugin-svelte3/pull/62
     // 'svelte3'
   ],
+  parserOptions: {
+    ecmaVersion: 11,
+    sourceType: 'module',
+  },
+  "env": {
+    "es2020": true,
+    "node": pkg.browser === false,
+    "browser": pkg.browser === true,
+    "shared-node-browser": pkg.browser === undefined,
+  },
   rules: {
     'require-atomic-updates': 'off',
 

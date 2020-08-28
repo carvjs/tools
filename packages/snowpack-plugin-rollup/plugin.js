@@ -43,7 +43,7 @@ module.exports = function rollupBundlePlugin() {
 
       await fs.mkdirp(srcDirectory)
 
-      // const packageName = manifest.name.replace(/^@/, '').replace(/\//g, '__')
+      const packageName = manifest.name.replace(/^@/, '').replace(/\//g, '__')
       const unscopedPackageName = manifest.name.replace(/^@.*\//, '')
 
       const inputFile =
@@ -102,32 +102,36 @@ module.exports = function rollupBundlePlugin() {
         // Define package loading
 
         // Used by nodejs
-        main: `node/cjs/${unscopedPackageName}.js`,
+        main: `node/cjs/${packageName}.js`,
 
-        // Modern declartions: *.svelte production transpiled
+        // https://gist.github.com/sokra/e032a0f17c1721c71cfced6f14516c62
         exports: {
           ...manifest.exports,
           '.': {
-            require: `./node/cjs/${unscopedPackageName}.js`,
-            jest: useBrowser ? `./node/jest/${unscopedPackageName}.js` : undefined,
-            default: `./node/esm/${unscopedPackageName}.js`,
+            node: {
+              test: maybe(useBrowser, `./node/test/${packageName}.js`),
+              require: `./node/cjs/${packageName}.js`,
+              default: `./node/esm/${packageName}.js`,
+            },
+            development: maybe(useBrowser, `./browser/development/${packageName}.js`),
+            esnext:  maybe(useBrowser, `./browser/esnext/${packageName}.js`),
+            default: maybe(useBrowser, `./browser/es2015/${packageName}.js`, `./node/esm/${packageName}.js`),
+            types: maybe(useTypescript, `./types/${packageName}.d.ts`),
           },
           './package.json': './package.json',
         },
 
         // Used by carv cdn: *.svelte production transpiled
-        esnext: useBrowser ? `browser/esnext/${unscopedPackageName}.js` : undefined,
+        esnext: maybe(useBrowser, `./browser/esnext/${packageName}.js`),
 
         // Used by bundlers like rollup and cdn networks: *.svelte production transpiled
-        module: useBrowser
-          ? `browser/es2015/${unscopedPackageName}.js`
-          : `./node/esm/${unscopedPackageName}.js`,
+        module: maybe(useBrowser, `./browser/es2015/${packageName}.js`, `./node/esm/${packageName}.js`),
 
         // Used by snowpack dev: *.svelte development transpiled
-        'browser:module': useBrowser ? `browser/snowpack/${unscopedPackageName}.js` : undefined,
+        'browser:module': maybe(useBrowser, `./browser/development/${packageName}.js`),
 
         // Typying
-        types: useTypescript ? `types/${unscopedPackageName}.d.ts` : undefined,
+        types: maybe(useTypescript, `./types/${packageName}.d.ts`),
 
         // Not using it - see README
         svelte: undefined,
@@ -183,4 +187,8 @@ module.exports = function rollupBundlePlugin() {
       })
     },
   }
+}
+
+function maybe(condition, truthy, falsy) {
+  return condition ? truthy : falsy
 }

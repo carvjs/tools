@@ -74,7 +74,7 @@ exports.scripts = {
 
   release: {
     default: {
-      script: 'nps test build release.publish',
+      script: 'nps test build.package release.publish',
       description: 'create a release',
     },
     publish: {

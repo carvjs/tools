@@ -1,0 +1,123 @@
+{
+  "name": "@carv/scripts",
+  "version": "1.0.0",
+  "homepage": "https://github.com/carvjs/tools#readme",
+  "bugs": {
+    "url": "https://github.com/carvjs/tools/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carvjs/tools.git",
+    "directory": "packages/scripts"
+  },
+  "license": "MIT",
+  "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "browser": false,
+  "types": "./types/index.d.ts",
+  "scripts": {
+    "format": "nps format",
+    "start": "nps",
+    "test": "nps test"
+  },
+  "prettier": "@carv/prettier-config",
+  "eslintConfig": {
+    "extends": "@carv/eslint-config",
+    "root": true
+  },
+  "dependencies": {
+    "@carv/polyfills": "^1.1.3",
+    "@carv/types": "^1.1.1",
+    "@rollup/plugin-commonjs": "^15.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "@rollup/plugin-yaml": "^2.1.1",
+    "at-least-node": "^1.0.0",
+    "convert-source-map": "^1.7.0",
+    "cosmiconfig": "^6.0.0",
+    "cssnano": "^4.1.10",
+    "cssnano-preset-default": "^4.0.7",
+    "doctoc": "^1.4.0",
+    "envinfo": "^7.5.1",
+    "es-module-lexer": "^0.3.24",
+    "esbuild": "^0.6.27",
+    "eslint": "^7.3.1",
+    "execa": "^4.0.3",
+    "find-up": "^4.1.0",
+    "fs-extra": "^9.0.1",
+    "globby": "^11.0.1",
+    "identity-obj-proxy": "^3.0.0",
+    "is-ci": "^2.0.0",
+    "jest": "^26.1.0",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
+    "jest-environment-node": "^26.1.0",
+    "jest-extended": "^0.11.5",
+    "jest-svelte-resolver": "^1.0.0",
+    "manage-path": "^2.0.0",
+    "npm-run-path": "^4.0.1",
+    "nps": "^5.9.12",
+    "pkg-dir": "^4.2.0",
+    "postcss": "^7.0.32",
+    "postcss-preset-env": "^6.7.0",
+    "postcss-value-parser": "^4.1.0",
+    "prettier": "^2.0.5",
+    "project-root-directory": "^1.0.3",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.26.6",
+    "rollup-plugin-define": "^1.0.1",
+    "rollup-plugin-dts": "^1.4.12",
+    "rollup-plugin-svelte": "^6.0.0",
+    "sass": "^1.26.9",
+    "sourcemap-codec": "^1.4.8",
+    "svelte-jester": "^1.0.6",
+    "svelte-preprocess": "^4.1.1",
+    "typescript-eslint-language-service": "^3.0.0",
+    "update-notifier": "^4.1.0"
+  },
+  "devDependencies": {
+    "@carv/eslint-config": "^1.2.6",
+    "@carv/prettier-config": "^1.0.2",
+    "@testing-library/dom": "^7.22.6",
+    "@testing-library/jest-dom": "^5.11.0",
+    "@testing-library/svelte": "^3.0.0",
+    "svelte": "^3.24.1"
+  },
+  "peerDependencies": {
+    "@testing-library/jest-dom": "*",
+    "eslint": "^7.3.1",
+    "jest": "^26.1.0",
+    "nps": "^5.9.12",
+    "prettier": "^2.0.5",
+    "svelte": "^3.24.0",
+    "typescript": "^4.0.2"
+  },
+  "peerDependenciesMeta": {
+    "@testing-library/jest-dom": {
+      "optional": true
+    },
+    "eslint": {
+      "optional": true
+    },
+    "jest": {
+      "optional": true
+    },
+    "prettier": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "svelte-check": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=12.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "a703a79c23b2a15884ef57e393745f1ea57b0a23"
+}

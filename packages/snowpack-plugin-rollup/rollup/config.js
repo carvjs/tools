@@ -75,6 +75,7 @@ export default async function () {
     if (id.startsWith('./') || id.startsWith('../') || path.isAbsolute(id) || id[0] === '\0') {
       return false
     }
+
     for (const bundledDependency of bundledDependencies) {
       if (id === bundledDependency || id.startsWith(`${bundledDependency}/`)) {
         return false
@@ -205,14 +206,14 @@ export default async function () {
     },
 
     // Used by jest: *.svelte development transpiled
-    pkg.exports['.'].jest && {
+    pkg.exports['.'].test && {
       input: {
-        [path.basename(pkg.exports['.'].jest, path.extname(pkg.exports['.'].jest))]: inputFile,
+        [path.basename(pkg.exports['.'].test, path.extname(pkg.exports['.'].test))]: inputFile,
       },
 
       output: {
         format: 'cjs',
-        ...fileNameConfig(pkg.exports['.'].jest),
+        ...fileNameConfig(pkg.exports['.'].test),
         sourcemap: true,
         // include sources in sourcemap for better debuging experience
         sourcemapExcludeSources: false,
@@ -222,7 +223,7 @@ export default async function () {
       external,
       context: 'global', // value of this at the top level
       plugins: [
-        logStart('Jest', pkg.exports['.'].jest),
+        logStart('Jest', pkg.exports['.'].test),
 
         resolve({ dedupe, extensions, mainFields }),
 
@@ -279,7 +280,7 @@ export default async function () {
       },
 
       external,
-      context: 'globalThis', // value of this at the top level
+      context: 'self', // value of this at the top level
       plugins: [
         logStart('Carv CDN', pkg.esnext),
 
@@ -331,7 +332,7 @@ export default async function () {
       },
 
       external,
-      context: 'window', // value of this at the top level
+      context: 'self', // value of this at the top level
       plugins: [
         logStart('Bundlers & CDNs', pkg.module),
 
@@ -397,7 +398,7 @@ export default async function () {
       },
 
       external,
-      context: 'globalThis', // value of this at the top level
+      context: 'self', // value of this at the top level
       plugins: [
         logStart('Snowpack', pkg['browser:module']),
 
@@ -464,6 +465,7 @@ export default async function () {
               return null // use default behavior
             },
           },
+
           dts(),
         ],
       },
