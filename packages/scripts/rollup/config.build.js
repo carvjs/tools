@@ -5,7 +5,6 @@ const path = require('path')
 const execa = require('execa')
 const npmRunPath = require('npm-run-path')
 
-// eslint-disable-next-line complexity
 module.exports = async (commandLineArguments) => {
   console.log('commandLineArguments', commandLineArguments)
 

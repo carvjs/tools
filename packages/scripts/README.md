@@ -1,21 +1,12 @@
+# @carv/scripts
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [@carv/scripts](#carvscripts)
-  - [Usage](#usage)
-  - [Features](#features)
-    - [Detect platform](#detect-platform)
-    - [CSS Imports (@import)](#css-imports-import)
-    - [Svelte](#svelte)
-      - [Postprocessing](#postprocessing)
-    - [package.json](#packagejson)
-    - [Configuration fields](#configuration-fields)
-      - [Generated for publish](#generated-for-publish)
-    - [Jest](#jest)
+- [Usage](#usage)
+- [Features](#features)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# @carv/scripts
 
 ## Usage
 
