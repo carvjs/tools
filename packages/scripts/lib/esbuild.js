@@ -28,7 +28,7 @@ exports.renderChunk = async (code, fileName, options, context) => {
     const output = await require('rollup-plugin-define')({
       replacements: {
         'import.meta': '$$__HIDE_IMPORT_META_FROM_ESBUILD_$$',
-      }
+      },
     }).transform.call(context, code, fileName)
 
     if (output) {
@@ -65,8 +65,8 @@ exports.renderChunk = async (code, fileName, options, context) => {
   if (options.format === 'esm' && options.target < 'es2020') {
     const output = await require('rollup-plugin-define')({
       replacements: {
-        '$$__HIDE_IMPORT_META_FROM_ESBUILD_$$': 'import.meta',
-      }
+        $$__HIDE_IMPORT_META_FROM_ESBUILD_$$: 'import.meta',
+      },
     }).transform.call(context, result.js, fileName)
 
     if (output) {

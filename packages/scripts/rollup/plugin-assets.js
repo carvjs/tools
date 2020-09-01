@@ -7,12 +7,22 @@ const convert = require('convert-source-map')
 const { encode, decode } = require('sourcemap-codec')
 
 const STYLE_LOADERS = {
-  '.css': async ({ code, id, target, minify, resolveFile }) => {
+  '.css': async ({ code, id, target, minify, modules, resolveFile }) => {
+    let classNames
     const output = await require('postcss')(
       [
         require('./postcss-assets')({ resolveFile }),
 
         require('postcss-nested')(),
+
+        modules &&
+          require('postcss-modules')({
+            generateScopedName: '_[local]_[hash:base64:8]',
+            localsConvention: 'camelCase',
+            getJSON: (cssFileName, json) => {
+              classNames = json
+            },
+          }),
 
         target !== 'esnext' &&
           require('postcss-preset-env')({
@@ -55,6 +65,7 @@ const STYLE_LOADERS = {
     return {
       code: output.css,
       warnings: output.warnings(),
+      classNames,
     }
   },
   '.scss': async (options) => {
@@ -62,17 +73,20 @@ const STYLE_LOADERS = {
       file: options.id,
       data: options.code,
       outFile: options.id,
-      includePaths: [path.join(require('../lib/package-paths').source, 'theme'), ...require('../lib/include-paths')],
+      includePaths: [
+        path.join(require('../lib/package-paths').source, 'theme'),
+        ...require('../lib/include-paths'),
+      ],
       sourceMap: true,
       sourceMapContents: true,
       sourceMapEmbed: true,
     })
 
     return {
-      ...(await STYLE_LOADERS['.css']({...options, code: result.css.toString()})),
+      ...(await STYLE_LOADERS['.css']({ ...options, code: result.css.toString() })),
       dependencies: result.stats.includedFiles,
     }
-  }
+  },
 }
 
 // eslint-disable-next-line func-names
@@ -161,37 +175,53 @@ module.exports = function assets({
       if (loader) {
         const dependencies = new Set()
 
-        const result = await loader({code, id, target, minify, resolveFile: async (dependency, isAtImport) => {
-          const resolved = await this.resolve(dependency, id, { skipSelf: true })
+        const result = await loader({
+          code,
+          id,
+          target,
+          minify,
+          modules: id.endsWith('.module' + extname),
+          resolveFile: async (dependency, isAtImport) => {
+            const resolved = await this.resolve(dependency, id, { skipSelf: true })
 
-          if (!resolved) {
-            return null
-          }
+            if (!resolved) {
+              return null
+            }
 
-          if (resolved.external) {
-            return `~${dependency}`
-          }
+            if (resolved.external) {
+              return `~${dependency}`
+            }
 
-          if (isAtImport && resolved.id.endsWith('.css')) {
-            dependencies.add(resolved.id)
-            return true
-          }
+            if (isAtImport && resolved.id.endsWith('.css')) {
+              dependencies.add(resolved.id)
+              return true
+            }
 
-          const asset = await resolveAsset(this, resolved.id)
+            const asset = await resolveAsset(this, resolved.id)
 
-          return asset.relativePath
-        }
+            return asset.relativePath
+          },
         })
 
-        for (const warning of (result.warnings || [])) {
+        for (const warning of result.warnings || []) {
           this.warn(warning)
         }
 
-        for (const dependency of (result.dependencies || [])) {
+        for (const dependency of result.dependencies || []) {
           this.addWatchFile(dependency)
         }
 
         code = result.code
+
+        const exportedClassNames =
+          result.classNames &&
+          require('@rollup/pluginutils').dataToEsm(result.classNames, {
+            compact: false,
+            indent: '  ',
+            preferConst: true,
+            objectShorthand: true,
+            namedExports: false,
+          })
 
         if (!minify) {
           const referenceId = this.emitFile({
@@ -214,7 +244,10 @@ module.exports = function assets({
             )}`,
             `const element = await load(import.meta.ROLLUP_FILE_URL_${referenceId})`,
             `import.meta.hot?.dispose(() => element.remove())`,
-          ].join('\n')
+            exportedClassNames,
+          ]
+            .filter(Boolean)
+            .join('\n')
 
           return {
             code: loader,
@@ -248,11 +281,12 @@ module.exports = function assets({
 
         return {
           code: [
-            ...[...dependencies].map(
-              (dependency) => `import ${JSON.stringify(dependency)}`,
-            ),
+            ...[...dependencies].map((dependency) => `import ${JSON.stringify(dependency)}`),
             `import ${JSON.stringify(toStyleModuleId(styleReferenceId))}`,
-          ].join('\n'),
+            exportedClassNames,
+          ]
+            .filter(Boolean)
+            .join('\n'),
           map: {
             version: 3,
             file: id,
@@ -343,15 +377,17 @@ module.exports = function assets({
         }
 
         return {
-          left: [`(function(h,e){return `,
-                `e=document.createElement('link'),`,
-                `e.type='text/css',`,
-                `e.rel='stylesheet',`,
-                `e.href=new URL(h,(document.currentScript && document.currentScript.src) || document.baseURI).href,`,
-                `document.head.appendChild(e),`,
-                `e})(`
-              ].join(''),
-          right: ')' }
+          left: [
+            `(function(h,e){return `,
+            `e=document.createElement('link'),`,
+            `e.type='text/css',`,
+            `e.rel='stylesheet',`,
+            `e.href=new URL(h,(document.currentScript && document.currentScript.src) || document.baseURI).href,`,
+            `document.head.appendChild(e),`,
+            `e})(`,
+          ].join(''),
+          right: ')',
+        }
       }
     },
 

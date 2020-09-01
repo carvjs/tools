@@ -1,0 +1,9 @@
+.article {
+  font-size: 16px;
+}
+
+/* mixins.css */
+.title {
+  color: black;
+  font-size: 40px;
+}
