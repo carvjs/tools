@@ -77,38 +77,38 @@ module.exports = postcss.plugin('postcss-assets-plugin', ({ resolveFile }) => {
       const isRelative = url.startsWith('./') || url.startsWith('../')
 
       const id = path.startsWith('~')
-          ? path.slice(1) // Node module
-          : isRelative
-          ? path
-          : './' + path
+        ? path.slice(1) // Node module
+        : isRelative
+        ? path
+        : './' + path
 
       pending.push(
         resolveFile(id, isAtImport)
-        .then((resolved) => {
-          if (resolved || path.startsWith('~') || isRelative) {
-            return resolved
-          }
+          .then((resolved) => {
+            if (resolved || path.startsWith('~') || isRelative) {
+              return resolved
+            }
 
-          return resolveFile(path, isAtImport)
-        })
-        .then((resolved) => {
-          if (resolved === true) {
-            return apply(resolved)
-          }
+            return resolveFile(path, isAtImport)
+          })
+          .then((resolved) => {
+            if (resolved === true) {
+              return apply(resolved)
+            }
 
-          if (resolved) {
-            node.value = resolved + parameters
-            return apply(parsed.toString())
-          }
+            if (resolved) {
+              node.value = resolved + parameters
+              return apply(parsed.toString())
+            }
 
-          let message = `Could not resolve: "${url}".`
+            let message = `Could not resolve: "${url}".`
 
-          if (!isRelative) {
-            message += ` If this is a relative dependency prefix it with "./".`
-          }
+            if (!isRelative) {
+              message += ` If this is a relative dependency prefix it with "./".`
+            }
 
-          throw rule.error(message)
-        }),
+            throw rule.error(message)
+          }),
       )
     }
   }

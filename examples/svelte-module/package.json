@@ -16,6 +16,9 @@
   "jest": {
     "preset": "@carv/scripts"
   },
+  "dependencies": {
+    "spectre.css": "^0.5.9"
+  },
   "devDependencies": {
     "@carv/eslint-config": "^1.2.5",
     "@carv/prettier-config": "^1.0.2",
@@ -36,8 +39,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "spectre.css": "^0.5.9"
   }
 }

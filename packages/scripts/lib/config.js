@@ -4,7 +4,7 @@ const { cosmiconfigSync } = require('cosmiconfig')
 
 const paths = require('./package-paths')
 
-const {config = {}, filepath} = cosmiconfigSync('carv').search(paths.root) || {}
+const { config = {}, filepath } = cosmiconfigSync('carv').search(paths.root) || {}
 
 // eslint-disable-next-line unicorn/prevent-abbreviations
 const devOptions = {

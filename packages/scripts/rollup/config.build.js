@@ -278,10 +278,10 @@ module.exports = async (commandLineArguments) => {
 
   const configs = [
     // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
-    ...(Object.values(outputs.node || {}).map(createRollupConfig)),
+    ...Object.values(outputs.node || {}).map(createRollupConfig),
 
     // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
-    ...(Object.values(outputs.browser || {}).map(createRollupConfig)),
+    ...Object.values(outputs.browser || {}).map(createRollupConfig),
 
     // Generate typescript declarations
     dtsFile &&

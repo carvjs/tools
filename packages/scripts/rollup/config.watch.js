@@ -76,8 +76,8 @@ module.exports = async (commandLineArguments) => {
         // Set true to enable support for Nollup (note: when not specified, this
         // is automatically detected based on the NOLLUP env variable)
         nollup: false,
-      }
-    }
+      },
+    },
   })
 
   const define = require('rollup-plugin-define')
@@ -121,58 +121,55 @@ module.exports = async (commandLineArguments) => {
 
           ...(options.platform === 'node'
             ? {
-              // De-alias MODE to NODE_ENV
-              'import.meta.env.MODE': 'process.env.NODE_ENV',
-              'process.env.MODE': 'process.env.NODE_ENV',
+                // De-alias MODE to NODE_ENV
+                'import.meta.env.MODE': 'process.env.NODE_ENV',
+                'process.env.MODE': 'process.env.NODE_ENV',
 
-              // Delegate to process.*
-              'import.meta.platform': 'process.platform',
-              'import.meta.env': 'process.env',
+                // Delegate to process.*
+                'import.meta.platform': 'process.platform',
+                'import.meta.env': 'process.env',
 
-              'process.versions.node': JSON.stringify(process.versions.node),
-              'typeof process': JSON.stringify(typeof process),
-            }
+                'process.versions.node': JSON.stringify(process.versions.node),
+                'typeof process': JSON.stringify(typeof process),
+              }
             : {
-              'import.meta.env.NODE_ENV': '"development"',
-              'process.env.NODE_ENV': '"development"',
+                'import.meta.env.NODE_ENV': '"development"',
+                'process.env.NODE_ENV': '"development"',
 
-              'import.meta.env.MODE': '"development"',
-              'process.env.MODE': '"development"',
+                'import.meta.env.MODE': '"development"',
+                'process.env.MODE': '"development"',
 
-              'import.meta.platform': '"browser"',
-              'process.platform': '"browser"',
+                'import.meta.platform': '"browser"',
+                'process.platform': '"browser"',
 
-              'process.env': '(import.meta.env || {})',
+                'process.env': '(import.meta.env || {})',
 
-              'process.versions.node': 'undefined',
-              'typeof process': '"undefined"',
-            }
-          ),
-        }
+                'process.versions.node': 'undefined',
+                'typeof process': '"undefined"',
+              }),
+        },
       }),
 
       html({
         publicPath: baseUrl,
-        meta: [{ charset: 'utf-8' }, {name: "viewport", content: "width=device-width"}],
+        meta: [{ charset: 'utf-8' }, { name: 'viewport', content: 'width=device-width' }],
         template: ({ attributes, meta, publicPath, title }) => {
-          const metas = meta
-            .map((input) => `<meta${html.makeHtmlAttributes(input)}>`)
-            .join('\n')
+          const metas = meta.map((input) => `<meta${html.makeHtmlAttributes(input)}>`).join('\n')
 
           return `
             <!DOCTYPE html>
             <html${html.makeHtmlAttributes(attributes.html)}>
               <head>
                 ${metas}
-                <base${html.makeHtmlAttributes({href: publicPath})}>
+                <base${html.makeHtmlAttributes({ href: publicPath })}>
                 <title>${title}</title>
-                <script${html.makeHtmlAttributes({src: outputName +'.js', defer: ''})}></script>
+                <script${html.makeHtmlAttributes({ src: outputName + '.js', defer: '' })}></script>
               </head>
               <body>
               </body>
             </html>
           `
-        }
+        },
       }),
 
       {
@@ -182,47 +179,49 @@ module.exports = async (commandLineArguments) => {
 
           if (cache?.code === code) {
             return cache.result
-
           }
 
           const result = await esbuild.renderChunk(code, chunk.fileName, options, (message) => {
             this.warn(message)
           })
 
-          codeCache.set(chunk.fileName, {code, result})
+          codeCache.set(chunk.fileName, { code, result })
 
           return result
         },
       },
 
-      watchSvelteCSS(use.svelte, hmr({
-        ...config.devOptions, // Default: true
+      watchSvelteCSS(
+        use.svelte,
+        hmr({
+          ...config.devOptions, // Default: true
 
-        // When false, the plugin will do nothing at all (useful for prod build).
-        enabled: true, // Default: true
+          // When false, the plugin will do nothing at all (useful for prod build).
+          enabled: true, // Default: true
 
-        // These two are used to map output filenames to URLs, because Rollup
-        // knows about filenames but SystemJS knows about URLs.
-        //
-        // FS path to public directory
-        // NOTE this is only used to compute URLs from FS paths... see mount
-        // option bellow if you want to serve static content
-        public: paths.build, // Default: ''
+          // These two are used to map output filenames to URLs, because Rollup
+          // knows about filenames but SystemJS knows about URLs.
+          //
+          // FS path to public directory
+          // NOTE this is only used to compute URLs from FS paths... see mount
+          // option bellow if you want to serve static content
+          public: paths.build, // Default: ''
 
-        // Serve additional static content: the key is a FS path, the value is
-        // the base URL. Static content will always be served _after_ files from
-        // the bundle.
-        mount: {
-          ...config.mount,
+          // Serve additional static content: the key is a FS path, the value is
+          // the base URL. Static content will always be served _after_ files from
+          // the bundle.
+          mount: {
+            ...config.mount,
 
-          // /@hot/assets/spectre-addons-a3359140.css => /build/assets/
-          [path.join(paths.build, 'assets')]: baseUrl + '@hot/assets/',
-        },
+            // /@hot/assets/spectre-addons-a3359140.css => /build/assets/
+            [path.join(paths.build, 'assets')]: baseUrl + '@hot/assets/',
+          },
 
-        // Enable html5 client side routing
-        fallback: path.join(paths.build, 'index.html'),
-      })),
-    ].filter(Boolean)
+          // Enable html5 client side routing
+          fallback: path.join(paths.build, 'index.html'),
+        }),
+      ),
+    ].filter(Boolean),
   }
 }
 

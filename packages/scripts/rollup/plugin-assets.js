@@ -49,7 +49,7 @@ module.exports = function assets({
 
     resolveId(id) {
       if (isStyleModuleId(styleReferenceId, id)) {
-        return {id, external: false, moduleSideEffects: 'no-treeshake'}
+        return { id, external: false, moduleSideEffects: 'no-treeshake' }
       }
 
       return null
@@ -93,60 +93,64 @@ module.exports = function assets({
       if (extname === '.css') {
         const dependencies = new Set()
 
-        const output = await require('postcss')([
-          require('./postcss-assets')({
-            resolveFile: async (dependency, isAtImport) => {
-              const resolved = await this.resolve(dependency, id, { skipSelf: true })
+        const output = await require('postcss')(
+          [
+            require('./postcss-assets')({
+              resolveFile: async (dependency, isAtImport) => {
+                const resolved = await this.resolve(dependency, id, { skipSelf: true })
 
-              if (!resolved) {
-                return null
-              }
+                if (!resolved) {
+                  return null
+                }
 
-              if (resolved.external) {
-                return webpackCompat ? `~${dependency}` : dependency
-              }
+                if (resolved.external) {
+                  return webpackCompat ? `~${dependency}` : dependency
+                }
 
-              if (isAtImport && resolved.id.endsWith('.css')) {
-                dependencies.add(resolved.id)
-                return true
-              }
+                if (isAtImport && resolved.id.endsWith('.css')) {
+                  dependencies.add(resolved.id)
+                  return true
+                }
 
-              const asset = await resolveAsset(this, resolved.id)
+                const asset = await resolveAsset(this, resolved.id)
 
-              return asset.relativePath
-            },
-          }),
-
-          require('postcss-nested')(),
-
-          target !== 'esnext' && require('postcss-preset-env')({
-            browsers: require('@carv/polyfills').getBrowserlistForTarget(target),
-            // https://preset-env.cssdb.org/features#stage-2
-            stage: 2,
-            // https://github.com/csstools/postcss-preset-env/blob/master/src/lib/plugins-by-id.js#L36
-            features: {
-              'any-link-pseudo-class': false,
-              'case-insensitive-attributes': false,
-              'dir-pseudo-class': false,
-              'gray-function': false,
-            },
-            autoprefixer: {
-              // https://github.com/postcss/autoprefixer#options
-              grid: true,
-            },
-          }),
-
-          minify && require('cssnano')({
-            preset: require('cssnano-preset-default')({
-              calc: false,
-              convertValues: false,
-              orderedValues: false,
-              discardOverridden: false,
-              discardDuplicates: false,
-              cssDeclarationSorter: false,
+                return asset.relativePath
+              },
             }),
-          }),
-        ].filter(Boolean)).process(code, {
+
+            require('postcss-nested')(),
+
+            target !== 'esnext' &&
+              require('postcss-preset-env')({
+                browsers: require('@carv/polyfills').getBrowserlistForTarget(target),
+                // https://preset-env.cssdb.org/features#stage-2
+                stage: 2,
+                // https://github.com/csstools/postcss-preset-env/blob/master/src/lib/plugins-by-id.js#L36
+                features: {
+                  'any-link-pseudo-class': false,
+                  'case-insensitive-attributes': false,
+                  'dir-pseudo-class': false,
+                  'gray-function': false,
+                },
+                autoprefixer: {
+                  // https://github.com/postcss/autoprefixer#options
+                  grid: true,
+                },
+              }),
+
+            minify &&
+              require('cssnano')({
+                preset: require('cssnano-preset-default')({
+                  calc: false,
+                  convertValues: false,
+                  orderedValues: false,
+                  discardOverridden: false,
+                  discardDuplicates: false,
+                  cssDeclarationSorter: false,
+                }),
+              }),
+          ].filter(Boolean),
+        ).process(code, {
           from: id,
           to: id,
           map: {
@@ -176,7 +180,9 @@ module.exports = function assets({
             [...dependencies]
               .map((dependency) => `import ${JSON.stringify(dependency)}`)
               .join('\n'),
-            `import load from ${JSON.stringify(path.dirname(require.resolve('@carv/cdn-css-loader/package.json')))}`,
+            `import load from ${JSON.stringify(
+              path.dirname(require.resolve('@carv/cdn-css-loader/package.json')),
+            )}`,
             `const element = await load(import.meta.ROLLUP_FILE_URL_${referenceId})`,
             `import.meta.hot?.dispose(() => element.remove())`,
           ].join('\n')
@@ -213,10 +219,9 @@ module.exports = function assets({
 
         return {
           code: [
-            [...dependencies]
-              .map((dependency) => `import ${JSON.stringify(dependency)}`)
-              .join('\n'),
-            `import ${JSON.stringify(toStyleModuleId(styleReferenceId))}`,
+            ...[...dependencies].map(
+              (dependency) => `import ${JSON.stringify(dependency)}`,
+            )`import ${JSON.stringify(toStyleModuleId(styleReferenceId))}`,
           ].join('\n'),
           map: {
             version: 3,
@@ -297,13 +302,13 @@ module.exports = function assets({
       })
     },
 
-    renderDynamicImport({format, moduleId}) {
+    renderDynamicImport({ format, moduleId }) {
       if (isStyleModuleId(styleReferenceId, moduleId)) {
         if (format === 'cjs') {
-          return { left: 'require(', right: ')'}
+          return { left: 'require(', right: ')' }
         }
 
-        return { left: 'import ', right: ''}
+        return { left: 'import ', right: '' }
       }
     },
 

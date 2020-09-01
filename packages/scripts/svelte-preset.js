@@ -27,9 +27,7 @@ module.exports = {
 
     globalStyle: true, // <style global>...</style>
     postcss: {
-      plugins: [
-        require('postcss-nested')
-      ]
+      plugins: [require('postcss-nested')],
     },
     scss: {
       includePaths: require('./lib/include-paths'),

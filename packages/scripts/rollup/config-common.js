@@ -21,7 +21,9 @@ module.exports = (options) => {
     emitCss: true,
   })
 
-  const svelte = use.svelte && (svelteConfig.hot ? require('rollup-plugin-svelte-hot') : require('rollup-plugin-svelte'))
+  const svelte =
+    use.svelte &&
+    (svelteConfig.hot ? require('rollup-plugin-svelte-hot') : require('rollup-plugin-svelte'))
   const json = require('@rollup/plugin-json')
   const yaml = require('@rollup/plugin-yaml')
   const { default: nodeResolve } = require('@rollup/plugin-node-resolve')
@@ -63,6 +65,6 @@ module.exports = (options) => {
       commonjs({ requireReturnsDefault: 'auto', extensions }),
 
       assets({ assetFileNames, target: options.target, minify: options.minify !== false }),
-    ].filter(Boolean)
+    ].filter(Boolean),
   }
 }

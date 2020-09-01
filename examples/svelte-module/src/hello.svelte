@@ -8,7 +8,7 @@
 <h1>Hello {name}!</h1>
 
 <svelte:head>
-  <link rel="icon" href="{icon}" type="image/x-icon" />
+  <link rel="icon" href={icon} type="image/x-icon" />
 </svelte:head>
 
 {#if process.env.NODE_ENV === 'development'}
@@ -16,8 +16,8 @@
 {/if}
 
 <style>
-  @import "~spectre.css";
-  @import "./spectre-addons.css";
+  @import '~spectre.css';
+  @import './spectre-addons.css';
 
   h1 {
     font-family: system-ui;

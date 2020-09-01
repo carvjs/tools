@@ -38,7 +38,9 @@ declare global {
        * If the module needs specific work to reflect the code change, it is expected to be handled
        * by the provided accept handler function.
        */
-      readonly accept: (callback?: (args: { id: string, bubbled: boolean }) => void | Promise<void>) => void
+      readonly accept: (
+        callback?: (args: { id: string; bubbled: boolean }) => void | Promise<void>,
+      ) => void
 
       readonly dispose: (callback: (data: Record<string, unknown>) => void | Promise<void>) => void
       readonly afterUpdate: (callback: () => void | Promise<void>) => void

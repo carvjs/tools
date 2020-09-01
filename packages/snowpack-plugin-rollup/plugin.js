@@ -114,8 +114,12 @@ module.exports = function rollupBundlePlugin() {
               default: `./node/esm/${packageName}.js`,
             },
             development: maybe(useBrowser, `./browser/development/${packageName}.js`),
-            esnext:  maybe(useBrowser, `./browser/esnext/${packageName}.js`),
-            default: maybe(useBrowser, `./browser/es2015/${packageName}.js`, `./node/esm/${packageName}.js`),
+            esnext: maybe(useBrowser, `./browser/esnext/${packageName}.js`),
+            default: maybe(
+              useBrowser,
+              `./browser/es2015/${packageName}.js`,
+              `./node/esm/${packageName}.js`,
+            ),
             types: maybe(useTypescript, `./types/${packageName}.d.ts`),
           },
           './package.json': './package.json',
@@ -125,7 +129,11 @@ module.exports = function rollupBundlePlugin() {
         esnext: maybe(useBrowser, `./browser/esnext/${packageName}.js`),
 
         // Used by bundlers like rollup and cdn networks: *.svelte production transpiled
-        module: maybe(useBrowser, `./browser/es2015/${packageName}.js`, `./node/esm/${packageName}.js`),
+        module: maybe(
+          useBrowser,
+          `./browser/es2015/${packageName}.js`,
+          `./node/esm/${packageName}.js`,
+        ),
 
         // Used by snowpack dev: *.svelte development transpiled
         'browser:module': maybe(useBrowser, `./browser/development/${packageName}.js`),

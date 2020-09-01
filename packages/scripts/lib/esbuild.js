@@ -37,9 +37,9 @@ exports.renderChunk = async (code, fileName, options, warn) => {
     for (const warning of result.warnings) {
       let message = ''
       if (warning.location) {
-        message += `(${path.relative(process.cwd(), fileName)}:${
-          warning.location.line
-        }:${warning.location.column}) `
+        message += `(${path.relative(process.cwd(), fileName)}:${warning.location.line}:${
+          warning.location.column
+        }) `
       }
 
       message += warning.text

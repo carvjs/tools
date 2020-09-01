@@ -25,11 +25,11 @@ module.exports = {
     ecmaVersion: 11,
     sourceType: 'module',
   },
-  "env": {
-    "es2020": true,
-    "node": pkg.browser === false,
-    "browser": pkg.browser === true,
-    "shared-node-browser": pkg.browser === undefined,
+  env: {
+    es2020: true,
+    node: pkg.browser === false,
+    browser: pkg.browser === true,
+    'shared-node-browser': pkg.browser === undefined,
   },
   rules: {
     'require-atomic-updates': 'off',
