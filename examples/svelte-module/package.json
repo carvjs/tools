@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nps build",
     "format": "nps format",
-    "start": "nps",
+    "start": "nps build.watch",
     "test": "nps test"
   },
   "prettier": "@carv/prettier-config",

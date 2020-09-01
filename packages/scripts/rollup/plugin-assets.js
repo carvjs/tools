@@ -10,6 +10,9 @@ const { encode, decode } = require('sourcemap-codec')
 module.exports = function assets({
   assetFileNames = path.join('assets', '[name]-[hash][extname]'),
   target = 'es2015',
+  minify = true,
+  /* Use tilde prefix for external resources */
+  webpackCompat = true,
 } = {}) {
   // The final name of the combined css file
   let styleFileName = null
@@ -44,7 +47,22 @@ module.exports = function assets({
       emittedAssets.clear()
     },
 
+    resolveId(id) {
+      if (isStyleModuleId(styleReferenceId, id)) {
+        return {id, external: false, moduleSideEffects: 'no-treeshake'}
+      }
+
+      return null
+    },
+
     async load(id) {
+      if (isStyleModuleId(styleReferenceId, id)) {
+        return {
+          code: `import(import.meta.ROLLUP_FILE_URL_${styleReferenceId})`,
+          map: '',
+        }
+      }
+
       if (id.includes('\0')) return null
       if (id.includes('/node_modules/')) return null
 
@@ -68,7 +86,7 @@ module.exports = function assets({
 
     async transform(code, id) {
       if (id.includes('\0')) return null
-      if (id.includes('/node_modules/')) return null
+      if (minify && id.includes('/node_modules/')) return null
 
       const extname = path.extname(id)
 
@@ -85,7 +103,7 @@ module.exports = function assets({
               }
 
               if (resolved.external) {
-                return `~${dependency}`
+                return webpackCompat ? `~${dependency}` : dependency
               }
 
               if (isAtImport && resolved.id.endsWith('.css')) {
@@ -98,6 +116,8 @@ module.exports = function assets({
               return asset.relativePath
             },
           }),
+
+          require('postcss-nested')(),
 
           target !== 'esnext' && require('postcss-preset-env')({
             browsers: require('@carv/polyfills').getBrowserlistForTarget(target),
@@ -116,7 +136,7 @@ module.exports = function assets({
             },
           }),
 
-          require('cssnano')({
+          minify && require('cssnano')({
             preset: require('cssnano-preset-default')({
               calc: false,
               convertValues: false,
@@ -140,6 +160,41 @@ module.exports = function assets({
 
         code = output.css
 
+        if (!minify) {
+          const referenceId = this.emitFile({
+            type: 'asset',
+            name: path.basename(id),
+            source: code,
+          })
+
+          for (const dependency of [...dependencies, id]) {
+            this.addWatchFile(dependency)
+            this.addWatchFile(dependency + '.js')
+          }
+
+          const loader = [
+            [...dependencies]
+              .map((dependency) => `import ${JSON.stringify(dependency)}`)
+              .join('\n'),
+            `import load from ${JSON.stringify(path.dirname(require.resolve('@carv/cdn-css-loader/package.json')))}`,
+            `const element = await load(import.meta.ROLLUP_FILE_URL_${referenceId})`,
+            `import.meta.hot?.dispose(() => element.remove())`,
+          ].join('\n')
+
+          return {
+            code: loader,
+            map: {
+              version: 3,
+              file: id,
+              sources: [],
+              sourcesContent: [],
+              names: [],
+              mappings: '',
+            },
+            moduleSideEffects: 'no-treeshake',
+          }
+        }
+
         const converter = convert.fromSource(code)
 
         if (converter) {
@@ -161,7 +216,7 @@ module.exports = function assets({
             [...dependencies]
               .map((dependency) => `import ${JSON.stringify(dependency)}`)
               .join('\n'),
-            `import.meta.ROLLUP_FILE_URL_${styleReferenceId}`,
+            `import ${JSON.stringify(toStyleModuleId(styleReferenceId))}`,
           ].join('\n'),
           map: {
             version: 3,
@@ -242,18 +297,25 @@ module.exports = function assets({
       })
     },
 
-    resolveFileUrl({ fileName, format, referenceId, relativePath }) {
+    renderDynamicImport({format, moduleId}) {
+      if (isStyleModuleId(styleReferenceId, moduleId)) {
+        if (format === 'cjs') {
+          return { left: 'require(', right: ')'}
+        }
+
+        return { left: 'import ', right: ''}
+      }
+    },
+
+    resolveFileUrl({ fileName, referenceId, relativePath }) {
       if (referenceId === styleReferenceId && fileName.endsWith('.css')) {
         // Use generated style file; this should have been generated in the same folder
         const importPath = path.posix.join(
           path.posix.dirname(relativePath),
           path.posix.basename(styleFileName),
         )
-        const importCode = toImport(format, importPath)
 
-        if (importCode) {
-          return importCode
-        }
+        return JSON.stringify(importPath)
       }
 
       return null
@@ -265,17 +327,6 @@ module.exports = function assets({
         delete bundle[this.getFileName(styleReferenceId)]
       }
     },
-  }
-}
-
-function toImport(format, relativePath) {
-  // eslint-disable-next-line default-case
-  switch (format) {
-    case 'es':
-      return `import${JSON.stringify(relativePath)}`
-
-    case 'cjs':
-      return `require(${JSON.stringify(relativePath)})`
   }
 }
 
@@ -311,4 +362,12 @@ function toAssetFileName(id, source, assetFileNames) {
       .replace('[extname]', extname)
       .replace('[ext]', extname.slice(1))
   )
+}
+
+function toStyleModuleId(styleReferenceId) {
+  return '\0' + styleReferenceId
+}
+
+function isStyleModuleId(styleReferenceId, id) {
+  return styleReferenceId && toStyleModuleId(styleReferenceId) === id
 }

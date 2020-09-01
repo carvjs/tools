@@ -4,61 +4,18 @@ const fs = require('fs-extra')
 const path = require('path')
 const execa = require('execa')
 const npmRunPath = require('npm-run-path')
-const globby = require('globby')
-const paths = require('../lib/package-paths')
-
-const EXTNAMES = ['', '.svelte', '.tsx', '.ts', '.mjs', '.jsx', '.js', '.cjs', '.json']
-
-function resolveFile(base) {
-  for (const extname of EXTNAMES) {
-    const file = path.resolve(paths.root, base + extname)
-    if (fs.existsSync(file)) {
-      return file
-    }
-  }
-}
 
 // eslint-disable-next-line complexity
 module.exports = async (commandLineArguments) => {
   console.log('commandLineArguments', commandLineArguments)
 
+  const paths = require('../lib/package-paths')
   const manifest = require('../lib/package-manifest')
   const use = require('../lib/package-use')
 
-  // TODO copy additional exports
-  console.log('Copying common package files...')
-  await fs.mkdirp(paths.dist)
+  await require('./copy-files')()
 
-  /**
-   * Copy readme, license, changelog to dist
-   */
-  const files = await globby(
-    [
-      ...(manifest.files || []),
-      '{changes,changelog,history,license,licence,notice,readme}?(.md|.txt)',
-    ],
-    {
-      cwd: paths.root,
-      absolute: false,
-      gitignore: true,
-      caseSensitiveMatch: false,
-      dot: true,
-    },
-  )
-
-  await Promise.all(files.map((file) => fs.copy(file, path.join(paths.dist, file))))
-
-  // Const packageName = manifest.name.replace(/^@/, '').replace(/\//g, '__')
-  const unscopedPackageName = manifest.name.replace(/^@.*\//, '')
-
-  const inputFile =
-    resolveFile(manifest.source) ||
-    resolveFile(manifest.svelte) ||
-    resolveFile(manifest.main) ||
-    resolveFile(path.join(paths.source, unscopedPackageName)) ||
-    resolveFile(path.join(paths.source, 'index'))
-
-  if (!inputFile) throw new Error('No input file found.')
+  const inputFile = require('./get-input-file')()
 
   const useTypescript = use.typescript && (inputFile.endsWith('.ts') || inputFile.endsWith('.tsx'))
 
@@ -88,58 +45,7 @@ module.exports = async (commandLineArguments) => {
     })
   }
 
-  const outputs = {
-    node: {
-      require: {
-        platform: 'node',
-        target: 'es2019',
-        format: 'cjs',
-        mainFields: ['main'],
-        svelte: { dev: true, generate: 'dom' },
-        file: `./node/cjs/${unscopedPackageName}.js`,
-        esmWrapper: `./node/esm/${unscopedPackageName}.js`,
-      },
-
-      default: {
-        // This is created by the esmWrapper above
-        file: `./node/esm/${unscopedPackageName}.js`,
-      },
-    },
-
-    browser: maybe(use.browser, {
-      development: {
-        platform: 'browser',
-        target: 'es2020',
-        format: 'esm',
-        mainFields: ['browser:module', 'esnext', 'es2015'],
-        svelte: { dev: true, generate: 'dom' },
-        file: `./browser/dev/${unscopedPackageName}.js`,
-      },
-
-      esnext: {
-        platform: 'browser',
-        target: 'esnext',
-        format: 'esm',
-        mainFields: ['esnext', 'es2015'],
-        svelte: { dev: false, generate: 'dom' },
-        file: `./browser/esnext/${unscopedPackageName}.js`,
-      },
-
-      default: {
-        platform: 'browser',
-        target: 'es2015',
-        format: 'esm',
-        mainFields: ['esnext', 'es2015'],
-        svelte: { dev: false, generate: 'dom' },
-        file: `./browser/es2015/${unscopedPackageName}.js`,
-      },
-    }),
-
-    types: maybe(useTypescript, {
-      format: 'typesscript',
-      file: `./types/${unscopedPackageName}.d.ts`,
-    }),
-  }
+  const outputs = require('./get-outputs')(useTypescript)
 
   const publishManifest = {
     ...manifest,
@@ -169,7 +75,8 @@ module.exports = async (commandLineArguments) => {
           ),
         types: outputs.types && outputs.types.file,
       },
-      './package.json': './package.json',
+      // All access to all files (including package.json, assets, chunks, ...)
+      './': './',
     },
 
     // Used by nodejs
@@ -223,14 +130,6 @@ module.exports = async (commandLineArguments) => {
     JSON.stringify(publishManifest, null, 2),
   )
 
-  const dedupe = ['svelte', '@carv/runtime']
-
-  const extensions = ['.mjs', '.js', '.cjs', '.json']
-  if (use.svelte) extensions.unshift('.svelte')
-
-  // Like snowpack: hhttps://github.com/pikapkg/snowpack/blob/master/src/commands/install.ts#L216
-  const mainFields = ['module', 'main:esnext', 'main']
-
   // Bundled dependencies are included into the output bundle
   const bundledDependencies = []
     .concat(manifest.bundledDependencies || [])
@@ -253,10 +152,6 @@ module.exports = async (commandLineArguments) => {
     return true
   }
 
-  const { compilerOptions, ...svelteConfig } = use.svelte ? require(paths.svelteConfig) : {}
-  Object.assign(svelteConfig, compilerOptions)
-
-  const assetFileNames = path.join('assets', '[name]-[hash][extname]')
   const fileNameConfig = (outputFile) => {
     const outputDirectory = path.join(paths.dist, path.dirname(outputFile))
     const base = path.relative(paths.dist, outputDirectory)
@@ -265,25 +160,20 @@ module.exports = async (commandLineArguments) => {
       dir: paths.dist,
       entryFileNames: path.join(base, '[name].js'),
       chunkFileNames: path.join(base, '[name]-[hash].js'),
-      assetFileNames,
     }
   }
 
-  const { startService } = require('esbuild')
-  let service
-  const stopService = () => service && service.stop()
-
-  const json = require('@rollup/plugin-json')
-  const yaml = require('@rollup/plugin-yaml')
-  const { default: nodeResolve } = require('@rollup/plugin-node-resolve')
-  const commonjs = require('@rollup/plugin-commonjs')
+  const esbuild = require('../lib/esbuild')
   const define = require('rollup-plugin-define')
-  const assets = require('./plugin-assets')
 
   function createRollupConfig(options) {
     if (!(options && options.format)) return
 
+    const common = require('./config-common')(options)
+
     return {
+      ...common,
+
       input: {
         [path.basename(options.file, path.extname(options.file))]: path.relative(
           process.cwd(),
@@ -292,44 +182,14 @@ module.exports = async (commandLineArguments) => {
       },
 
       output: {
-        format: options.format,
+        ...common.output,
         ...fileNameConfig(options.file),
-        sourcemap: true,
-        sourcemapExcludeSources: false,
-        preferConst: true,
-        compact: options.minify !== false,
-        interop: 'auto',
-        exports: 'auto',
       },
 
       external,
 
-      // Value of this at the top level
-      context: options.platform === 'node' ? 'global' : 'self',
-
       plugins: [
-        nodeResolve({
-          dedupe,
-          extensions,
-          mainFields: [...(options.mainFields || []), ...mainFields],
-        }),
-
-        use.svelte &&
-          require('rollup-plugin-svelte')({
-            ...svelteConfig,
-
-            ...options.svelte,
-
-            // Create external css files
-            emitCss: true,
-          }),
-
-        commonjs({ requireReturnsDefault: 'auto', extensions }),
-
-        json({ preferConst: true }),
-        yaml({ preferConst: true }),
-
-        assets({ assetFileNames, target: options.target }),
+        ...common.plugins,
 
         define({
           replacements: {
@@ -355,11 +215,14 @@ module.exports = async (commandLineArguments) => {
                   // No hot mode
                   'import.meta.hot': 'undefined',
 
-                  // No meta
+                  // No other meta propeteries
                   'import.meta': '{}',
                 }
               : {
                   // Browser & ESM
+                  'import.meta.env.MODE': '(import.meta.env?.MODE || import.meta.env?.NODE_ENV)',
+                  'process.env.MODE': '(import.meta.env?.MODE || import.meta.env?.NODE_ENV)',
+
                   'import.meta.platform': '"browser"',
                   'process.platform': '"browser"',
 
@@ -368,9 +231,11 @@ module.exports = async (commandLineArguments) => {
 
                   ...(options.svelte.dev
                     ? {
+                        // For the development builds delegate to import.meta.*
                         'process.env': '(import.meta.env || {})',
                       }
                     : {
+                        // For the productions builds optimize the production code path
                         'process.env.NODE_ENV': '"production"',
                         'process.env.MODE': '"production"',
                         'process.env': '{}',
@@ -389,55 +254,20 @@ module.exports = async (commandLineArguments) => {
         {
           name: 'esbuild',
 
-          async buildStart() {
-            if (!service) {
-              service = await startService()
-            }
-          },
-
           buildEnd(error) {
             // Stop the service early if there's error
             if (error) {
-              stopService()
+              esbuild.stopService()
             }
           },
 
-          async renderChunk(code, chunk) {
-            const result = await service.transform(code, {
-              sourcefile: chunk.fileName,
-              loader: 'js',
-              target: options.target,
-              platform: options.platform,
-              minify: options.minify !== false,
-              sourcemap: 'external',
+          renderChunk(code, chunk) {
+            return esbuild.renderChunk(code, chunk.fileName, options, (message) => {
+              this.warn(message)
             })
-
-            if (result.warnings) {
-              for (const warning of result.warnings) {
-                let message = ''
-                if (warning.location) {
-                  message += `(${path.relative(process.cwd(), chunk.fileName)}:${
-                    warning.location.line
-                  }:${warning.location.column}) `
-                }
-
-                message += warning.text
-
-                this.warn(message)
-              }
-            }
-
-            if (result.js) {
-              return {
-                code: result.js,
-                map: result.jsSourceMap || null,
-              }
-            }
-
-            return null
           },
 
-          renderError: stopService,
+          renderError: esbuild.stopService,
         },
 
         // Create esm wrapper: https://nodejs.org/api/esm.html#esm_approach_1_use_an_es_module_wrapper
@@ -448,10 +278,10 @@ module.exports = async (commandLineArguments) => {
 
   const configs = [
     // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
-    ...(outputs.node && Object.values(outputs.node).map(createRollupConfig)),
+    ...(Object.values(outputs.node || {}).map(createRollupConfig)),
 
     // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
-    ...(outputs.browser && Object.values(outputs.browser).map(createRollupConfig)),
+    ...(Object.values(outputs.browser || {}).map(createRollupConfig)),
 
     // Generate typescript declarations
     dtsFile &&
@@ -494,12 +324,8 @@ module.exports = async (commandLineArguments) => {
   // TODO remove build folder
   configs[configs.length - 1].plugins.push({
     name: 'cleanup',
-    generateBundle: stopService,
+    generateBundle: esbuild.stopService,
   })
 
   return configs
-}
-
-function maybe(condition, truthy, falsy) {
-  return condition ? truthy : falsy
 }

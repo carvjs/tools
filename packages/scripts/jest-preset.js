@@ -44,10 +44,9 @@ module.exports = {
   moduleFileExtensions: ['cjs', 'js', 'jsx', 'ts', 'tsx', 'mjs', 'json', 'node'],
 
   // Ignore all file in node_modules except for:
-  // - *.svelte
-  // - *.mjs
+  // - *.svelte, *.mjs, *.jsx, *.ts, *.tsx
   // - files within **/src/
-  transformIgnorePatterns: ['/node_modules/(?!.+.(?:svelte|mjs)$|.+/src/)'],
+  transformIgnorePatterns: ['/node_modules/(?!.+.(?:svelte|mjs|jsx|tsx?)$|.+/src/)'],
 
   transform: {
     '^.+\\.([mc]js|[jt]sx?)$': require.resolve('./jest/transform-esbuild.js'),

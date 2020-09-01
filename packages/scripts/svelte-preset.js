@@ -5,9 +5,7 @@ const sveltePreprocess = require('svelte-preprocess')
 async function transform({ content, filename }) {
   const isTest = process.env.NODE_ENV === 'test'
 
-  const { transform } = require('esbuild')
-
-  const { js, jsSourceMap, warnings } = await transform(content, {
+  const { js, jsSourceMap, warnings } = await require('./lib/esbuild').transform(content, {
     sourcefile: filename,
     write: false,
     platform: isTest ? 'node' : 'browser',
@@ -28,6 +26,11 @@ module.exports = {
     typescript: transform,
 
     globalStyle: true, // <style global>...</style>
+    postcss: {
+      plugins: [
+        require('postcss-nested')
+      ]
+    },
     scss: {
       includePaths: require('./lib/include-paths'),
       // Use the sync render method which is faster for dart sass

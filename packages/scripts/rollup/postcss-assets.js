@@ -14,6 +14,12 @@ module.exports = postcss.plugin('postcss-assets-plugin', ({ resolveFile }) => {
       parsed.walk((node) => {
         if (found) return false
 
+        if (node.type === 'function' && node.value === 'url') {
+          // Keep url imports as is
+          found = true
+          return false
+        }
+
         if (node.type === 'string') {
           found = true
           handleAsset(rule, parsed, node, (resolved) => {
@@ -74,10 +80,18 @@ module.exports = postcss.plugin('postcss-assets-plugin', ({ resolveFile }) => {
           ? path.slice(1) // Node module
           : isRelative
           ? path
-          : `./${path}` // Ensure relative
+          : './' + path
 
       pending.push(
-        resolveFile(id, isAtImport).then((resolved) => {
+        resolveFile(id, isAtImport)
+        .then((resolved) => {
+          if (resolved || path.startsWith('~') || isRelative) {
+            return resolved
+          }
+
+          return resolveFile(path, isAtImport)
+        })
+        .then((resolved) => {
           if (resolved === true) {
             return apply(resolved)
           }
@@ -90,7 +104,7 @@ module.exports = postcss.plugin('postcss-assets-plugin', ({ resolveFile }) => {
           let message = `Could not resolve: "${url}".`
 
           if (!isRelative) {
-            message += ` If this is a node modules dependency prefix it with "~".`
+            message += ` If this is a relative dependency prefix it with "./".`
           }
 
           throw rule.error(message)
@@ -105,6 +119,8 @@ function isAbsolute(url) {
     // Absolute urls
     url.startsWith('/') ||
     url.startsWith('http://') ||
-    url.startsWith('https://')
+    url.startsWith('https://') ||
+    // Data uris
+    url.startsWith('data:')
   )
 }

@@ -4,7 +4,7 @@
 
 Error.stackTraceLimit = Infinity
 module.exports = (commandLineArguments) => {
-  if (commandLineArguments.watch === true) {
+  if (commandLineArguments.watch) {
     return require('./config.watch')(commandLineArguments)
   }
 
