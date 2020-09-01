@@ -17,7 +17,7 @@ const STYLE_LOADERS = {
 
         modules &&
           require('postcss-modules')({
-            generateScopedName: '_[local]_[hash:base64:8]',
+            generateScopedName: '[local]__[sha256:hash:base62:8]',
             localsConvention: 'camelCase',
             getJSON: (cssFileName, json) => {
               classNames = json
