@@ -11,6 +11,7 @@ module.exports = async (commandLineArguments) => {
   const paths = require('../lib/package-paths')
   const manifest = require('../lib/package-manifest')
   const use = require('../lib/package-use')
+  const config = require('../lib/config')
 
   await require('./copy-files')()
 
@@ -44,7 +45,7 @@ module.exports = async (commandLineArguments) => {
     })
   }
 
-  const outputs = require('./get-outputs')(useTypescript)
+  const outputs = require('./get-outputs')({ useTypescript })
 
   const publishManifest = {
     ...manifest,
@@ -72,26 +73,29 @@ module.exports = async (commandLineArguments) => {
               })
               .filter(Boolean),
           ),
-        types: outputs.types && outputs.types.file,
+        types: outputs.types?.file,
       },
       // All access to all files (including package.json, assets, chunks, ...)
       './': './',
     },
 
     // Used by nodejs
-    main: outputs.node && outputs.node.require.file,
+    main: outputs.node?.require?.file,
 
     // Used by carv cdn: *.svelte production transpiled
-    esnext: outputs.browser && outputs.browser.esnext.file,
+    esnext: outputs.browser?.esnext?.file,
 
     // Used by bundlers like rollup and cdn networks: *.svelte production transpiled
-    module: outputs.browser && outputs.browser.default.file,
+    module: outputs.browser?.import?.file,
 
     // Used by snowpack dev: *.svelte development transpiled
-    'browser:module': outputs.browser && outputs.browser.development.file,
+    'browser:module': outputs.browser?.development?.file,
+
+    // Can be used from a normal script tag without module system.
+    unpkg: outputs.browser?.script?.file,
 
     // Typying
-    types: outputs.types && outputs.types.file,
+    types: outputs.types?.file,
 
     // Not using it - see README
     svelte: undefined,
@@ -183,9 +187,10 @@ module.exports = async (commandLineArguments) => {
       output: {
         ...common.output,
         ...fileNameConfig(options.file),
+        name: config.umdName,
       },
 
-      external,
+      external: options.format === 'umd' ? undefined : external,
 
       plugins: [
         ...common.plugins,
@@ -261,9 +266,7 @@ module.exports = async (commandLineArguments) => {
           },
 
           renderChunk(code, chunk) {
-            return esbuild.renderChunk(code, chunk.fileName, options, (message) => {
-              this.warn(message)
-            })
+            return esbuild.renderChunk(code, chunk.fileName, options, this)
           },
 
           renderError: esbuild.stopService,

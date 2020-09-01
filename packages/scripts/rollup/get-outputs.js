@@ -1,7 +1,10 @@
 /* eslint-env node */
 
 // eslint-disable-next-line func-names
-module.exports = function getOutputs(useTypescript = require('../lib/package-use').typescript) {
+module.exports = function getOutputs({
+  useTypescript = require('../lib/package-use').typescript,
+  mode = require('../lib/config').mode,
+} = {}) {
   const manifest = require('../lib/package-manifest')
   const unscopedPackageName = require('./unscoped-package-name')
 
@@ -33,23 +36,32 @@ module.exports = function getOutputs(useTypescript = require('../lib/package-use
         file: `./browser/dev/${unscopedPackageName}.js`,
       },
 
-      esnext: {
+      esnext: maybe(mode === 'library', {
         platform: 'browser',
         target: 'esnext',
         format: 'esm',
         mainFields: ['esnext', 'es2015'],
         svelte: { dev: false, generate: 'dom' },
         file: `./browser/esnext/${unscopedPackageName}.js`,
-      },
+      }),
 
-      default: {
+      import: {
         platform: 'browser',
         target: 'es2015',
         format: 'esm',
         mainFields: ['esnext', 'es2015'],
         svelte: { dev: false, generate: 'dom' },
-        file: `./browser/es2015/${unscopedPackageName}.js`,
+        file: `./browser/import/${unscopedPackageName}.js`,
       },
+
+      script: maybe(mode === 'app', {
+        platform: 'browser',
+        target: 'es2015',
+        format: 'umd',
+        mainFields: ['esnext', 'es2015'],
+        svelte: { dev: false, generate: 'dom' },
+        file: `./${unscopedPackageName}.js`,
+      }),
     }),
 
     types: maybe(useTypescript, {

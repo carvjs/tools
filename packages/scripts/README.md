@@ -31,6 +31,67 @@
 - Asset relocations
   - within javascript (`import './path/to/asset/style.css'` and `import pathToAsset from 'path/to/asset'`)
   - within stylesheets (`@import "path/to/style.css"`, `@import "~nodeModule/style.css"`, `url("path/to/asset")` and `url("~nodeModule/path/to/asset")`)
+- Built-in support for the following file types, no configuration required:
+  - JavaScript (`.js`, `.mjs`, `.cjs`)
+  - TypeScript (`.ts, .tsx`)
+  - JSX (`.jsx`, `.tsx`)
+  - CSS (`.css`)
+  - CSS Modules (`.module.css`)
+  - SASS (`.scss`)
+  - SASS Modules (`.module.scss`)
+  - JSON (`.json`)
+  - YAML (`.yaml`)
+  - Assets (`.svg`, `.jpg`, `.png`, `.woff`, etc.)
+
+### Import JSON
+
+```js
+// Returns the JSON object via the default import
+import json from './data.json'
+```
+
+Importing JSON files is supported and returns the full JSON object in the default import.
+
+### Import CSS
+
+```js
+// Loads './style.css' onto the page
+import './style.css'
+```
+
+Basic CSS imports inside of JavaScript files is supported. When importing a CSS file via the import keyword, those style are automatically applyed to the page. This works for CSS and compile-to-CSS languages like Sass.
+
+### Import CSS Modules
+
+```css
+/* src/style.module.css */
+.error {
+  background-color: red;
+}
+```
+
+```jsx
+// 1. Converts './style.module.css' classnames to unique, scoped values.
+// 2. Returns an object mapping the original classnames to their final, scoped value.
+import styles from './style.module.css'
+
+// This example uses JSX, but you can use CSS Modules with any framework.
+return <div className={styles.error}>Your Error Message</div>
+```
+
+CSS Modules are supported using the `[name].module.css` naming convention. CSS Modules work just like normal CSS imports, but with a special default styles export that maps the original classnames to unique identifiers.
+
+### Import Images & Other Assets
+
+```jsx
+import img from './image.png' // img === '/src/image.png'
+import svg from './image.svg' // svg === '/src/image.svg'
+
+// This example uses JSX, but you can use these references with any framework.
+;<img src={img} />
+```
+
+All other assets not explicitly mentioned above can be imported and will return a URL reference to the final built asset. This can be useful for referencing non-JS assets by URL, like creating an image element with a `src` attribute pointing to that image.
 
 ### Detect platform
 
@@ -93,6 +154,15 @@ Additionally `~` imports (`@import '~package/...'`, URL starting with a tilde) t
 
 Note: During bundling “bare” imports are re-written to use `~` import.
 
+### SASS
+
+The following include paths are search for imports:
+
+- `./src/theme`
+- `./src`
+- project root
+- `node_modules` (including all parent `node_modules`)
+
 ### Svelte
 
 #### Postprocessing
@@ -130,7 +200,8 @@ Note: During bundling “bare” imports are re-written to use `~` import.
       "browser": {
         "esnext": "// target=esnext; svelte=dev:false; usedBy=@carv/cdn",
         "development": "// target=es2020; svelte=dev:true",
-        "default": "// target=es2015; svelte=dev:false; usedBy=webpack,rollup,parcel",
+        "import": "// target=es2015; svelte=dev:false; usedBy=webpack,rollup,parcel",
+        "script": "// umd; target=es2015; svelte=dev:false; usedBy=script",
       },
       "types": "// typescript definitions",
     },
@@ -144,6 +215,7 @@ Note: During bundling “bare” imports are re-written to use `~` import.
   "esnext": "// target=esnext; svelte=dev:false; usedBy=@carv/cdn",
   "module": "// target=es2015; svelte=dev:false; usedBy=webpack,rollup,parcel",
   "browser:module": "// target=es2020; svelte=dev:true; usedBy=snowpack",
+  "unpkg": "// umd; target=es2015; svelte=dev:false; usedBy=script",
   "types": "// typescript definitions"
 }
 ```

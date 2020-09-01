@@ -15,7 +15,7 @@ module.exports = async (commandLineArguments) => {
 
   const useTypescript = use.typescript && (inputFile.endsWith('.ts') || inputFile.endsWith('.tsx'))
 
-  const outputs = require('./get-outputs')(useTypescript)
+  const outputs = require('./get-outputs')({ useTypescript, mode: 'library' })
 
   const options = {
     ...(outputs.browser?.development || outputs.node?.test || outputs.node?.require),
@@ -109,6 +109,7 @@ module.exports = async (commandLineArguments) => {
       entryFileNames: '[name].js',
       chunkFileNames: '[name]-[hash].js',
       preserveModules: true,
+      exports: 'named',
     },
 
     plugins: [
@@ -181,9 +182,7 @@ module.exports = async (commandLineArguments) => {
             return cache.result
           }
 
-          const result = await esbuild.renderChunk(code, chunk.fileName, options, (message) => {
-            this.warn(message)
-          })
+          const result = await esbuild.renderChunk(code, chunk.fileName, options, this)
 
           codeCache.set(chunk.fileName, { code, result })
 

@@ -23,7 +23,19 @@ exports.stopService = () => {
 
 require('signal-exit')(exports.stopService)
 
-exports.renderChunk = async (code, fileName, options, warn) => {
+exports.renderChunk = async (code, fileName, options, context) => {
+  if (options.format === 'esm' && options.target < 'es2020') {
+    const output = await require('rollup-plugin-define')({
+      replacements: {
+        'import.meta': '$$__HIDE_IMPORT_META_FROM_ESBUILD_$$',
+      }
+    }).transform.call(context, code, fileName)
+
+    if (output) {
+      code = output.code
+    }
+  }
+
   const result = await exports.transform(code, {
     sourcefile: fileName,
     loader: 'js',
@@ -44,16 +56,26 @@ exports.renderChunk = async (code, fileName, options, warn) => {
 
       message += warning.text
 
-      warn(message)
+      context.warn(message)
     }
   }
 
-  if (result.js) {
-    return {
-      code: result.js,
-      map: result.jsSourceMap || null,
+  if (!result.js) return null
+
+  if (options.format === 'esm' && options.target < 'es2020') {
+    const output = await require('rollup-plugin-define')({
+      replacements: {
+        '$$__HIDE_IMPORT_META_FROM_ESBUILD_$$': 'import.meta',
+      }
+    }).transform.call(context, result.js, fileName)
+
+    if (output) {
+      return output
     }
   }
 
-  return null
+  return {
+    code: result.js,
+    map: result.jsSourceMap || null,
+  }
 }

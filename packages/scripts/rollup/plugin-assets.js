@@ -6,13 +6,80 @@ const { createHash } = require('crypto')
 const convert = require('convert-source-map')
 const { encode, decode } = require('sourcemap-codec')
 
+const STYLE_LOADERS = {
+  '.css': async ({ code, id, target, minify, resolveFile }) => {
+    const output = await require('postcss')(
+      [
+        require('./postcss-assets')({ resolveFile }),
+
+        require('postcss-nested')(),
+
+        target !== 'esnext' &&
+          require('postcss-preset-env')({
+            browsers: require('@carv/polyfills').getBrowserlistForTarget(target),
+            // https://preset-env.cssdb.org/features#stage-2
+            stage: 2,
+            // https://github.com/csstools/postcss-preset-env/blob/master/src/lib/plugins-by-id.js#L36
+            features: {
+              'any-link-pseudo-class': false,
+              'case-insensitive-attributes': false,
+              'dir-pseudo-class': false,
+              'gray-function': false,
+            },
+            autoprefixer: {
+              // https://github.com/postcss/autoprefixer#options
+              grid: true,
+            },
+          }),
+
+        minify &&
+          require('cssnano')({
+            preset: require('cssnano-preset-default')({
+              calc: false,
+              convertValues: false,
+              orderedValues: false,
+              discardOverridden: false,
+              discardDuplicates: false,
+              cssDeclarationSorter: false,
+            }),
+          }),
+      ].filter(Boolean),
+    ).process(code, {
+      from: id,
+      to: id,
+      map: {
+        inline: true,
+      },
+    })
+
+    return {
+      code: output.css,
+      warnings: output.warnings(),
+    }
+  },
+  '.scss': async (options) => {
+    const result = require('sass').renderSync({
+      file: options.id,
+      data: options.code,
+      outFile: options.id,
+      includePaths: [path.join(require('../lib/package-paths').source, 'theme'), ...require('../lib/include-paths')],
+      sourceMap: true,
+      sourceMapContents: true,
+      sourceMapEmbed: true,
+    })
+
+    return {
+      ...(await STYLE_LOADERS['.css']({...options, code: result.css.toString()})),
+      dependencies: result.stats.includedFiles,
+    }
+  }
+}
+
 // eslint-disable-next-line func-names
 module.exports = function assets({
   assetFileNames = path.join('assets', '[name]-[hash][extname]'),
   target = 'es2015',
   minify = true,
-  /* Use tilde prefix for external resources */
-  webpackCompat = true,
 } = {}) {
   // The final name of the combined css file
   let styleFileName = null
@@ -72,7 +139,7 @@ module.exports = function assets({
         return null
       }
 
-      if (extname === '.css') {
+      if (STYLE_LOADERS[extname]) {
         return null // Handled in transform
       }
 
@@ -86,88 +153,50 @@ module.exports = function assets({
 
     async transform(code, id) {
       if (id.includes('\0')) return null
-      if (minify && id.includes('/node_modules/')) return null
 
       const extname = path.extname(id)
 
-      if (extname === '.css') {
+      const loader = STYLE_LOADERS[extname]
+
+      if (loader) {
         const dependencies = new Set()
 
-        const output = await require('postcss')(
-          [
-            require('./postcss-assets')({
-              resolveFile: async (dependency, isAtImport) => {
-                const resolved = await this.resolve(dependency, id, { skipSelf: true })
+        const result = await loader({code, id, target, minify, resolveFile: async (dependency, isAtImport) => {
+          const resolved = await this.resolve(dependency, id, { skipSelf: true })
 
-                if (!resolved) {
-                  return null
-                }
+          if (!resolved) {
+            return null
+          }
 
-                if (resolved.external) {
-                  return webpackCompat ? `~${dependency}` : dependency
-                }
+          if (resolved.external) {
+            return `~${dependency}`
+          }
 
-                if (isAtImport && resolved.id.endsWith('.css')) {
-                  dependencies.add(resolved.id)
-                  return true
-                }
+          if (isAtImport && resolved.id.endsWith('.css')) {
+            dependencies.add(resolved.id)
+            return true
+          }
 
-                const asset = await resolveAsset(this, resolved.id)
+          const asset = await resolveAsset(this, resolved.id)
 
-                return asset.relativePath
-              },
-            }),
-
-            require('postcss-nested')(),
-
-            target !== 'esnext' &&
-              require('postcss-preset-env')({
-                browsers: require('@carv/polyfills').getBrowserlistForTarget(target),
-                // https://preset-env.cssdb.org/features#stage-2
-                stage: 2,
-                // https://github.com/csstools/postcss-preset-env/blob/master/src/lib/plugins-by-id.js#L36
-                features: {
-                  'any-link-pseudo-class': false,
-                  'case-insensitive-attributes': false,
-                  'dir-pseudo-class': false,
-                  'gray-function': false,
-                },
-                autoprefixer: {
-                  // https://github.com/postcss/autoprefixer#options
-                  grid: true,
-                },
-              }),
-
-            minify &&
-              require('cssnano')({
-                preset: require('cssnano-preset-default')({
-                  calc: false,
-                  convertValues: false,
-                  orderedValues: false,
-                  discardOverridden: false,
-                  discardDuplicates: false,
-                  cssDeclarationSorter: false,
-                }),
-              }),
-          ].filter(Boolean),
-        ).process(code, {
-          from: id,
-          to: id,
-          map: {
-            inline: true,
-          },
+          return asset.relativePath
+        }
         })
 
-        for (const warning of output.warnings()) {
+        for (const warning of (result.warnings || [])) {
           this.warn(warning)
         }
 
-        code = output.css
+        for (const dependency of (result.dependencies || [])) {
+          this.addWatchFile(dependency)
+        }
+
+        code = result.code
 
         if (!minify) {
           const referenceId = this.emitFile({
             type: 'asset',
-            name: path.basename(id),
+            name: path.basename(id, extname) + '.css',
             source: code,
           })
 
@@ -221,7 +250,8 @@ module.exports = function assets({
           code: [
             ...[...dependencies].map(
               (dependency) => `import ${JSON.stringify(dependency)}`,
-            )`import ${JSON.stringify(toStyleModuleId(styleReferenceId))}`,
+            ),
+            `import ${JSON.stringify(toStyleModuleId(styleReferenceId))}`,
           ].join('\n'),
           map: {
             version: 3,
@@ -305,10 +335,23 @@ module.exports = function assets({
     renderDynamicImport({ format, moduleId }) {
       if (isStyleModuleId(styleReferenceId, moduleId)) {
         if (format === 'cjs') {
-          return { left: 'require(', right: ')' }
+          return { left: 'process.env.NODE_ENV === "test" && require(', right: ')' }
         }
 
-        return { left: 'import ', right: '' }
+        if (format === 'es') {
+          return { left: 'import ', right: '' }
+        }
+
+        return {
+          left: [`(function(h,e){return `,
+                `e=document.createElement('link'),`,
+                `e.type='text/css',`,
+                `e.rel='stylesheet',`,
+                `e.href=new URL(h,(document.currentScript && document.currentScript.src) || document.baseURI).href,`,
+                `document.head.appendChild(e),`,
+                `e})(`
+              ].join(''),
+          right: ')' }
       }
     },
 

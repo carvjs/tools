@@ -17,6 +17,7 @@
     "preset": "@carv/scripts"
   },
   "dependencies": {
+    "@smui/paper": "^1.0.0",
     "spectre.css": "^0.5.9"
   },
   "devDependencies": {
@@ -39,5 +40,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "carv": {
+    "mode": "app"
   }
 }

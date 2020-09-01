@@ -3,6 +3,7 @@
 const { cosmiconfigSync } = require('cosmiconfig')
 
 const paths = require('./package-paths')
+const manifest = require('./package-manifest')
 
 const { config = {}, filepath } = cosmiconfigSync('carv').search(paths.root) || {}
 
@@ -42,6 +43,18 @@ const devOptions = {
 }
 
 module.exports = {
+  /**
+   * Two variants:
+   *
+   * - 'library': creates a publishable package (use `package.json#browser` to enable node and/or browser builds)
+   * - 'app': an all dependency included bundle
+   *    - `iife` (es2015) for the browser unless `package.json#browser === false`
+   *    - `esm` (es2015) for the browser unless `package.json#browser === false`
+   *    - `cjs` (es2019) for node unless `package.json#browser === true`
+   */
+  mode: 'library',
+  umdName: manifest.amdName || safeVariableName(manifest.name),
+
   ...config,
   filepath,
 
@@ -54,4 +67,20 @@ module.exports = {
     [paths.build]: devOptions.baseUrl,
     ...config.mount,
   },
+}
+
+/**
+ * Turn a package name into a valid reasonably-unique variable name
+ * @param {string} name
+ */
+function safeVariableName(name) {
+  const INVALID_ES3_IDENT = /((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z\d]+$)/g
+
+  /** Remove a @scope/ prefix from a package name string */
+  const identifier = name
+    .replace(/^@.*\//, '')
+    .toLowerCase()
+    .replace(INVALID_ES3_IDENT, '')
+
+  return require('camelcase')(identifier)
 }
