@@ -4,20 +4,20 @@ const path = require('path')
 
 const { startService } = require('esbuild')
 
-let service
+let servicePromise
 
 exports.transform = async (code, options) => {
-  if (!service) {
-    service = await startService()
+  if (!servicePromise) {
+    servicePromise = startService()
   }
 
-  return service.transform(code, options)
+  return (await servicePromise).transform(code, options)
 }
 
-exports.stopService = () => {
-  if (service) {
-    service.stop()
-    service = undefined
+exports.stopService = async () => {
+  if (servicePromise) {
+    (await servicePromise).stop()
+    servicePromise = undefined
   }
 }
 

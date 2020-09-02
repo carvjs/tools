@@ -114,11 +114,13 @@ module.exports = async () => {
     source: undefined,
     scripts: undefined,
     devDependencies: undefined,
+
     // Reset bundledDependencies as rollup includes those into the bundle
     bundledDependencies: undefined,
     bundleDependencies: undefined,
 
     // Reset config sections
+    carv: undefined,
     eslintConfig: undefined,
     jest: undefined,
     prettier: undefined,
@@ -187,6 +189,7 @@ module.exports = async () => {
         ...common.output,
         ...fileNameConfig(options.file),
         name: config.buildOptions.umdName,
+        inlineDynamicImports: options.format === 'umd',
       },
 
       external: options.format === 'umd' ? undefined : external,
@@ -325,6 +328,12 @@ module.exports = async () => {
   // TODO remove build folder
   configs[configs.length - 1].plugins.push({
     name: 'cleanup',
+    buildEnd(error) {
+      if (error) {
+        return esbuild.stopService()
+      }
+    },
+    renderError: esbuild.stopService,
     generateBundle: esbuild.stopService,
   })
 

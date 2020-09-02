@@ -1,3 +1,4 @@
+/* eslint-env node */
 import path from 'path'
 import fs from 'fs/promises'
 
@@ -19,6 +20,12 @@ test('import json', async () => {
     data: 'json',
     default: { data: 'json' },
   })
+})
+
+test('import svelte', async () => {
+  const result = await import('./fixtures/import-svelte')
+
+  expect(result.Hello).toBeFunction()
 })
 
 // Test('import dynamic js', async () => {

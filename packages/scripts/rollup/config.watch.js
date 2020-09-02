@@ -6,6 +6,7 @@ module.exports = async () => {
   const paths = require('../lib/package-paths')
   const use = require('../lib/package-use')
   const config = require('../lib/config')
+  const manifest = require('../lib/package-manifest')
 
   await require('./copy-files')(paths.build)
 
@@ -92,7 +93,8 @@ module.exports = async () => {
   return {
     ...common,
 
-    perf: true,
+    perf: false,
+
     watch: {
       clearScreen: false,
       exclude: 'node_modules/**',
@@ -152,11 +154,12 @@ module.exports = async () => {
 
       html({
         publicPath: baseUrl,
-        meta: [{ charset: 'utf-8' }, { name: 'viewport', content: 'width=device-width' }],
+        title: manifest.name,
+        meta: [{ charset: 'utf-8' }, { name: 'viewport', content: 'width=device-width,initial-scale=1' }],
         template: ({ attributes, meta, publicPath, title }) => {
-          const metas = meta.map((input) => `<meta${html.makeHtmlAttributes(input)}>`).join('\n')
+          const metas = meta.map((input) => `<meta${html.makeHtmlAttributes(input)}>`).join('                \n')
 
-          return `
+          return require('common-tags').stripIndent`
             <!DOCTYPE html>
             <html${html.makeHtmlAttributes(attributes.html)}>
               <head>

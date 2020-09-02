@@ -36,6 +36,7 @@
     "@rollup/pluginutils": "^4.0.0",
     "at-least-node": "^1.0.0",
     "camelcase": "^6.0.0",
+    "common-tags": "^1.8.0",
     "cosmiconfig": "^7.0.0",
     "cssnano": "^4.1.10",
     "cssnano-preset-default": "^4.0.7",
@@ -76,8 +77,11 @@
     "sass": "^1.26.9",
     "signal-exit": "^3.0.3",
     "sourcemap-codec": "^1.4.8",
+    "svelte": "^3.24.0",
+    "svelte-check": "^1.0.33",
     "svelte-jester": "^1.0.6",
     "svelte-preprocess": "^4.1.1",
+    "typescript": "^4.0.2",
     "typescript-eslint-language-service": "^3.0.0",
     "update-notifier": "^4.1.0",
     "v8-compile-cache": "^2.1.1"
@@ -87,8 +91,7 @@
     "@carv/prettier-config": "^1.0.2",
     "@testing-library/dom": "^7.22.6",
     "@testing-library/jest-dom": "^5.11.0",
-    "@testing-library/svelte": "^3.0.0",
-    "svelte": "^3.24.1"
+    "@testing-library/svelte": "^3.0.0"
   },
   "peerDependencies": {
     "@testing-library/jest-dom": "*",
@@ -96,7 +99,9 @@
     "jest": "^26.1.0",
     "nps": "^5.9.12",
     "prettier": "^2.0.5",
+    "rollup": "^2.26.6",
     "svelte": "^3.24.0",
+    "svelte-check": "^1.0.33",
     "typescript": "^4.0.2"
   },
   "peerDependenciesMeta": {
@@ -110,6 +115,9 @@
       "optional": true
     },
     "prettier": {
+      "optional": true
+    },
+    "rollup": {
       "optional": true
     },
     "svelte": {

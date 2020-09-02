@@ -17,12 +17,14 @@ module.exports = {
       return source
     }
 
-    const isESM = /\bimport|export\b/.test(source)
+    const maybeEsm = /\bimport|export\b/.test(source)
 
-    if (isESM) {
-      const [imports] = global.__ES_MODULE_LEXER__PARSE(source)
+    // console.log('transform', filename, {maybeEsm})
+    if (maybeEsm) {
+      const [imports, exports] = global.__ES_MODULE_LEXER__PARSE(source)
 
-      if (imports.length > 0) {
+      // Console.log('transform', filename, {imports, exports})
+      if (imports.length + exports.length) {
         const external = []
 
         for (const location of imports) {
@@ -36,12 +38,14 @@ module.exports = {
             id = id.slice(0, -1)
           }
 
-          if ((filename && id.startsWith('./')) || id.startsWith('../')) {
+          if (filename && (id.startsWith('./') || id.startsWith('../') || id === '.' || id === '..')) {
             external.push(path.resolve(path.dirname(filename), id))
           } else {
             external.push(id)
           }
         }
+
+        // Console.log(filename, external)
 
         let directory
 
@@ -51,10 +55,6 @@ module.exports = {
             filename = path.join(directory, 'x.js')
             fs.writeFileSync(filename, source)
           }
-
-          // If (filename.endsWith('/jest-transform-esbuild.test.js')) {
-          //   console.log(filename, {external})
-          // }
 
           const { outputFiles, warnings } = buildSync({
             entryPoints: [filename],
@@ -73,12 +73,8 @@ module.exports = {
             external,
           })
 
-          printWarnings(warnings)
+          printWarnings(filename, warnings)
 
-          // If (filename.endsWith('/a.js')) {
-          //   console.log('build', filename)
-          //   console.log(Buffer.from(outputFiles[0].contents).toString())
-          // }
           return Buffer.from(outputFiles[0].contents).toString()
         } finally {
           if (directory) {
@@ -96,7 +92,7 @@ module.exports = {
       sourcemap: 'external',
     })
 
-    printWarnings(warnings)
+    printWarnings(filename, warnings)
 
     // Console.log('transform', filename)
     return { code: js, map: jsSourceMap }
@@ -115,15 +111,24 @@ module.exports = {
   },
 }
 
-function printWarnings(warnings) {
-  for (const warning of warnings) {
-    let message = `[esbuild]`
+function printWarnings(filename, warnings) {
+  if (filename) {
+    filename = path.relative(process.cwd(), filename) + ':'
+  }
 
-    if (warning.location) {
-      message += ` (${warning.location.line}:${warning.location.column})`
+  for (const warning of warnings) {
+    if (warning.text === 'Unsupported source map comment') {
+      continue
     }
 
-    message += ` ${warning.text}`
+    let message = `[esbuild]`
+
+    message += ` (${filename}`
+    if (warning.location) {
+      message += `${warning.location.line}:${warning.location.column}`
+    }
+
+    message += `) ${warning.text}`
 
     console.warn(message)
   }
