@@ -4,12 +4,12 @@ const updateNotifier = require('update-notifier')
 const pkg = require('./package.json')
 updateNotifier({ pkg }).notify()
 
-if (!require('at-least-node')('12.4.0')) {
+if (!require('at-least-node')('14.8.0')) {
   console.error(
     'You are running Node ' +
       process.versions.node +
       '.\n' +
-      'Create Carv requires Node 12.4 or higher. \n' +
+      'Create Carv requires Node 14.8 or higher. \n' +
       'Please update your version of Node.',
   )
 
