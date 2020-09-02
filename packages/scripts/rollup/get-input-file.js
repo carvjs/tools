@@ -16,7 +16,6 @@ function resolveFile(base) {
   }
 }
 
-// eslint-disable-next-line func-names
 module.exports = function getInputFile() {
   const manifest = require('../lib/package-manifest')
 

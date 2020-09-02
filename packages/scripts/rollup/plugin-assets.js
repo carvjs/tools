@@ -89,7 +89,6 @@ const STYLE_LOADERS = {
   },
 }
 
-// eslint-disable-next-line func-names
 module.exports = function assets({
   assetFileNames = path.join('assets', '[name]-[hash][extname]'),
   target = 'es2015',

@@ -5,9 +5,7 @@ const path = require('path')
 const execa = require('execa')
 const npmRunPath = require('npm-run-path')
 
-module.exports = async (commandLineArguments) => {
-  console.log('commandLineArguments', commandLineArguments)
-
+module.exports = async () => {
   const paths = require('../lib/package-paths')
   const manifest = require('../lib/package-manifest')
   const use = require('../lib/package-use')
@@ -168,6 +166,7 @@ module.exports = async (commandLineArguments) => {
 
   const esbuild = require('../lib/esbuild')
   const define = require('rollup-plugin-define')
+  const logStart = require('./plugin-log-start')
 
   function createRollupConfig(options) {
     if (!(options && options.format)) return
@@ -193,6 +192,8 @@ module.exports = async (commandLineArguments) => {
       external: options.format === 'umd' ? undefined : external,
 
       plugins: [
+        logStart(options, paths.dist, use.svelte),
+
         ...common.plugins,
 
         define({
@@ -279,10 +280,8 @@ module.exports = async (commandLineArguments) => {
   }
 
   const configs = [
-    // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
     ...Object.values(outputs.node || {}).map(createRollupConfig),
 
-    // eslint-disable-next-line unicorn/no-fn-reference-in-iterator
     ...Object.values(outputs.browser || {}).map(createRollupConfig),
 
     // Generate typescript declarations

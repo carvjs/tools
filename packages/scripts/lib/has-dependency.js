@@ -1,6 +1,5 @@
 /* eslint-env node */
 
-// eslint-disable-next-line func-names
 module.exports = function hasDependency(name, manifest = require('./package-manifest')) {
   return (
     has(manifest.dependencies, name) ||

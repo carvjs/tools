@@ -5,7 +5,6 @@ const path = require('path')
 const globby = require('globby')
 const paths = require('../lib/package-paths')
 
-// eslint-disable-next-line func-names
 module.exports = async function copyFiles(target = paths.dist) {
   const manifest = require('../lib/package-manifest')
 

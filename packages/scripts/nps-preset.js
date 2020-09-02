@@ -64,15 +64,13 @@ const rollup = `rollup --config ${rollupConfig}`
 
 exports.scripts = {
   // Main entrypoints
-  default: 'nps test',
+  default: use.svelte ? 'nps build.watch' : 'nps test',
 
   test: {
-    default: ['nps', 'prepare', 'eslint', 'test.package', 'jest.coverage'].join(' '),
+    default: ['nps', 'prepare', 'test.check', 'jest.coverage'].join(' '),
     coverage: 'nps jest.coverage',
     watch: 'nps jest.watch',
-    package: ['nps', use.typescript && 'tsc', use.svelte && 'svelte-check']
-      .filter(Boolean)
-      .join(' '),
+    check: ['nps', 'eslint', use.typescript && 'tsc', use.svelte && 'svelte-check'].filter(Boolean).join(' '),
   },
 
   prepare: ['nps', 'cleanup'].join(' '),

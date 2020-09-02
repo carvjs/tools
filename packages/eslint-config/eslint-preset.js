@@ -33,6 +33,7 @@ module.exports = {
   },
   rules: {
     'require-atomic-updates': 'off',
+    'func-names': 'off',
 
     // Disabled until optional chaining is supported
     'no-unused-expressions': 'off',
@@ -98,23 +99,11 @@ module.exports = {
         caughtErrorsIgnorePattern: '^_',
       },
     ],
+    'unicorn/no-fn-reference-in-iterator': 'off',
 
     'promise/param-names': 'error',
   },
   overrides: [
-    // Disabled until preprocess is supported: https://github.com/sveltejs/eslint-plugin-svelte3/pull/62
-    // {
-    //   files: ['**/*.svelte'],
-    //   processor: 'svelte3/svelte3',
-    //   rules: {
-    //     'import/no-mutable-exports': 'off',
-    //     'import/no-duplicates': 'off',
-    //     'import/no-unresolved': 'off',
-    //     'import/imports-first': 'off',
-    //     'import/first': 'off',
-    //     'css-rcurlyexpected': 'off',
-    //   },
-    // },
     {
       files: ['{CHANGELOG,CODE_OF_CONDUCT,CONTRIBUTING,README,TODO}.md'],
       rules: {

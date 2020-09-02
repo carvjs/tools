@@ -3,7 +3,6 @@
 const fs = require('fs/promises')
 const path = require('path')
 
-// eslint-disable-next-line func-names
 module.exports = function esmWrapper(file) {
   // https://nodejs.org/api/esm.html#esm_approach_1_use_an_es_module_wrapper
   return {
