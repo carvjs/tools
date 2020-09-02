@@ -2177,7 +2177,7 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@rollup/plugin-alias@^3.0.1", "@rollup/plugin-alias@^3.1.1":
+"@rollup/plugin-alias@^3.0.1":
   version "3.1.1"
   resolved "https://npm.kenoxa.com/@rollup%2fplugin-alias/-/plugin-alias-3.1.1.tgz#bb96cf37fefeb0a953a6566c284855c7d1cd290c"
   integrity sha512-hNcQY4bpBUIvxekd26DBPgF7BT4mKVNDF5tBG4Zi+3IgwLxGYRY0itHs9D0oLVwXM5pvJDWJlBQro+au8WaUWw==
@@ -2209,6 +2209,16 @@
     is-reference "^1.2.1"
     magic-string "^0.25.7"
     resolve "^1.17.0"
+
+"@rollup/plugin-dynamic-import-vars@^1.1.0":
+  version "1.1.0"
+  resolved "https://npm.kenoxa.com/@rollup%2fplugin-dynamic-import-vars/-/plugin-dynamic-import-vars-1.1.0.tgz#233a9ee9583bd770cddbb0d1b26208de1f1ed81f"
+  integrity sha512-IIskWjkzMUl0Zx1dn7Kr36HAx7g/rVJuNdWQqJUxShw0l7EGpsVileMw+A1dKXka0oJtgyV2YVZ3ewoIeW37Og==
+  dependencies:
+    "@rollup/pluginutils" "^3.1.0"
+    estree-walker "^2.0.1"
+    globby "^11.0.1"
+    magic-string "^0.25.7"
 
 "@rollup/plugin-html@^0.2.0":
   version "0.2.0"

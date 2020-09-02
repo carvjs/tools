@@ -26,9 +26,9 @@ module.exports = (options) => {
     use.svelte &&
     (svelteConfig.hot ? require('rollup-plugin-svelte-hot') : require('rollup-plugin-svelte'))
   const json = require('@rollup/plugin-json')
-  const yaml = require('@rollup/plugin-yaml')
   const { default: nodeResolve } = require('@rollup/plugin-node-resolve')
   const commonjs = require('@rollup/plugin-commonjs')
+  const dynamicImportVars = require('@rollup/plugin-dynamic-import-vars')
   const assets = require('./plugin-assets')
   const resolve = require('./plugin-resolve')
 
@@ -53,8 +53,9 @@ module.exports = (options) => {
     preserveEntrySignatures: 'allow-extension',
 
     treeshake: {
-      // TODO what about css import like import "spectre.css/dist/spectre.css"
-      moduleSideEffects: "no-external"
+      // TODO what about css import like `import "spectre.css/dist/spectre.css"` that have side-effects
+      // Mark all externals as side-effect free
+      moduleSideEffects: (id, external) => !external
     },
 
     plugins: [
@@ -62,6 +63,8 @@ module.exports = (options) => {
         bundledDependencies: options.bundledDependencies,
         alias: config.alias,
       }),
+
+      dynamicImportVars({ warnOnError: true }),
 
       nodeResolve({
         dedupe,
@@ -71,8 +74,7 @@ module.exports = (options) => {
 
       svelte?.(svelteConfig),
 
-      json({ preferConst: true }),
-      yaml({ preferConst: true }),
+      json({ preferConst: true, namedExports: false }),
 
       commonjs({ requireReturnsDefault: 'auto', extensions }),
 

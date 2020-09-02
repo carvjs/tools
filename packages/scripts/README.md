@@ -36,7 +36,6 @@
   - SASS (`.scss`)
   - SASS Modules (`.module.scss`)
   - JSON (`.json`)
-  - YAML (`.yaml`)
   - Assets (`.svg`, `.jpg`, `.png`, `.woff`, etc.)
 - Stylesheet combining
 - Asset relocations
@@ -93,6 +92,51 @@ import svg from './image.svg' // svg === '/src/image.svg'
 
 All other assets not explicitly mentioned above can be imported and will return a URL reference to the final built asset. This can be useful for referencing non-JS assets by URL, like creating an image element with a `src` attribute pointing to that image.
 
+### Dynamic Import Variables
+
+Dynamic import variables are supported using [@rollup/plugin-dynamic-import-vars](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars).
+
+When a dynamic import contains a concatenated string, the variables of the string are replaced with a glob pattern. This glob pattern is evaluated during the build, and any files found are added to the rollup bundle. At runtime, the correct import is returned for the full concatenated string.
+
+Code that looks like this:
+
+```js
+function importLocale(locale) {
+  return import(`./locales/${locale}.js`);
+}
+```
+
+Is turned into:
+
+```js
+function __variableDynamicImportRuntime__(path) {
+  switch (path) {
+    case './locales/en-GB.js':
+      return import('./locales/en-GB.js');
+    case './locales/en-US.js':
+      return import('./locales/en-US.js');
+    case './locales/nl-NL.js':
+      return import('./locales/nl-NL.js');
+    default:
+      throw new Error('Unknown variable dynamic import: ' + path);
+  }
+}
+
+function importLocale(locale) {
+  return __variableDynamicImportRuntime__(`./locales/${locale}.js`);
+}
+```
+
+To know what to inject in the rollup bundle, we have to be able to do some static analysis on the code and make some assumptions about the possible imports. For example, if you use just a variable you could in theory import anything from your entire file system.
+
+To help static analysis, and to avoid possible foot guns, we are limited to a [couple of rules](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations):
+
+- [Imports must start with `./` or `../`](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#imports-must-start-with--or-)
+- [Imports must end with a file extension](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#imports-must-end-with-a-file-extension)
+- [Imports to your own directory must specify a filename pattern](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#imports-to-your-own-directory-must-specify-a-filename-pattern)
+- [Globs only go one level deep](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#globs-only-go-one-level-deep)
+
+
 ### CSS Nested Rule
 
 [Nested rules](https://github.com/postcss/postcss-nested) are unwrapped like Sass does it.
@@ -133,13 +177,13 @@ The following include paths are search for imports:
 
 #### Postprocessing
 
-- javascript and typescript via esbuild
+- javascript and typescript
 - css via postcss with [nested](https://github.com/postcss/postcss-nested)
 - scss via sass
 
 ### package.json
 
-### Configuration fields
+#### Configuration fields
 
 - `browser`: determines if this package maybe use in the browser
   - `false`: use eslint browser environment, build no browser variants
@@ -208,9 +252,9 @@ To change the environment for a file use docblock pragma `@env` with either `nod
   - `src/**/__tests__/*.{js,jsx,ts,tsx`
   - `src/**/*.{spec,test}.{js,jsx,ts,tsx}`
 
-### Detect platform
+### Platform/Environment Detection
 
-The following expressions can be used to detect during the build time for which platform the current bundle is build:
+The following expressions can be used to detect during the build time for which platform and environment the current bundle is build:
 
 For Node.JS bundles:
 
@@ -283,6 +327,8 @@ The behavior can be configured by a custom config file.
   - Configure your dev server. See the section below for all options.
 - **`buildOptions.*`**
   - Configure your build. See the section below for all options.
+- **`jestOptions.*`**
+  - Configure jest. See the section below for all options.
 
 #### Dev Options
 

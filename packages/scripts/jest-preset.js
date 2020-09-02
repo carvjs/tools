@@ -13,7 +13,11 @@ const {alias, jestOptions: {ignorePatterns, transformIncludeModules, ...config}}
 const transformIncludeModulesRegexp = transformIncludeModules.map(escapeStringRegexp).join('|')
 
 const moduleNameMapper = config.moduleNameMapper || {}
-for (const [from, to] of Object.entries(alias || {})) {
+for (let [from, to] of Object.entries(alias || {})) {
+  if (to.startsWith('./') || to.startsWith('../')) {
+    to = path.resolve(paths.root, to)
+  }
+
   moduleNameMapper[`^${escapeStringRegexp(from)}$`] = to
   moduleNameMapper[`^${escapeStringRegexp(from)}/(.+)`] = `${to}/$1`
 }

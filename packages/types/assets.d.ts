@@ -1,5 +1,6 @@
 // Asset module declarations
 // keep in sync with jest-preset
+
 declare module '*.module.css' {
   const classes: Record<string, string>
   export default classes

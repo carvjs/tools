@@ -1,6 +1,15 @@
 /* eslint-env node */
 
 const path = require('path')
+const paths = require('../lib/package-paths')
+
+const resolveTarget = (to) => {
+  if (to.startsWith('./') || to.startsWith('../')) {
+    return path.resolve(paths.root, to)
+  }
+
+  return to
+}
 
 module.exports = function resolve({bundledDependencies = false, alias = {}}) {
   const resolveAlias = (id) => {
@@ -10,11 +19,11 @@ module.exports = function resolve({bundledDependencies = false, alias = {}}) {
 
     for (const [from, to] of Object.entries(alias)) {
       if (id === from) {
-        return to
+        return resolveTarget(to)
       }
 
       if (id.startsWith(`${from}/`)) {
-        return to + id.slice(from.length)
+        return resolveTarget(to) + id.slice(from.length)
       }
     }
 
