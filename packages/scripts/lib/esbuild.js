@@ -24,7 +24,10 @@ exports.stopService = () => {
 require('signal-exit')(exports.stopService)
 
 exports.renderChunk = async (code, fileName, options, context) => {
-  if (options.format === 'esm' && options.target < 'es2020') {
+  const hideImportMeta =
+    options.format === 'esm' && options.target < 'es2020' && /\bimport\.meta\b/.test(code)
+
+  if (hideImportMeta) {
     const output = await require('rollup-plugin-define')({
       replacements: {
         'import.meta': '$$__HIDE_IMPORT_META_FROM_ESBUILD_$$',
@@ -62,7 +65,7 @@ exports.renderChunk = async (code, fileName, options, context) => {
 
   if (!result.js) return null
 
-  if (options.format === 'esm' && options.target < 'es2020') {
+  if (hideImportMeta) {
     const output = await require('rollup-plugin-define')({
       replacements: {
         $$__HIDE_IMPORT_META_FROM_ESBUILD_$$: 'import.meta',

@@ -27,10 +27,6 @@
 
 ## Features
 
-- Stylesheet combining
-- Asset relocations
-  - within javascript (`import './path/to/asset/style.css'` and `import pathToAsset from 'path/to/asset'`)
-  - within stylesheets (`@import "path/to/style.css"`, `@import "~nodeModule/style.css"`, `url("path/to/asset")` and `url("~nodeModule/path/to/asset")`)
 - Built-in support for the following file types, no configuration required:
   - JavaScript (`.js`, `.mjs`, `.cjs`)
   - TypeScript (`.ts, .tsx`)
@@ -42,6 +38,10 @@
   - JSON (`.json`)
   - YAML (`.yaml`)
   - Assets (`.svg`, `.jpg`, `.png`, `.woff`, etc.)
+- Stylesheet combining
+- Asset relocations
+  - within javascript (`import './path/to/asset/style.css'` and `import pathToAsset from 'path/to/asset'`)
+  - within stylesheets (`@import "path/to/style.css"`, `@import "~nodeModule/style.css"`, `url("path/to/asset")` and `url("~nodeModule/path/to/asset")`)
 
 ### Import JSON
 
@@ -93,43 +93,9 @@ import svg from './image.svg' // svg === '/src/image.svg'
 
 All other assets not explicitly mentioned above can be imported and will return a URL reference to the final built asset. This can be useful for referencing non-JS assets by URL, like creating an image element with a `src` attribute pointing to that image.
 
-### Detect platform
+### CSS Nested Rule
 
-The following expressions can be used to detect during the build time for which platform the current bundle is build:
-
-For Node.JS bundles:
-
-```js
-process.browser === false
-import.meta.browser === false
-
-import.meta.platform === process.platform
-
-import.meta.env.MODE === process.env.NODE_ENV
-process.env.MODE === process.env.NODE_ENV
-
-import.meta.env === process.env
-```
-
-For browser bundles:
-
-```js
-process.browser === true
-import.meta.browser === true
-
-process.platform === "browser"
-import.meta.platform === "browser"
-
-import.meta.env.MODE === (import.meta.env?.MODE || import.meta.env?.NODE_ENV))
-process.env.MODE === (import.meta.env?.MODE || import.meta.env?.NODE_ENV))
-
-// process.env and import.meta.env are set to an empty object
-import.meta.env === {}
-process.env === {}
-
-process.versions.node === undefined
-typeof process === "undefined"
-```
+[Nested rules](https://github.com/postcss/postcss-nested) are unwrapped like Sass does it.
 
 ### CSS Imports (@import)
 
@@ -241,3 +207,41 @@ To change the environment for a file use docblock pragma `@env` with either `nod
 - test match
   - `src/**/__tests__/*.{js,jsx,ts,tsx`
   - `src/**/*.{spec,test}.{js,jsx,ts,tsx}`
+
+### Detect platform
+
+The following expressions can be used to detect during the build time for which platform the current bundle is build:
+
+For Node.JS bundles:
+
+```js
+process.browser === false
+import.meta.browser === false
+
+import.meta.platform === process.platform
+
+import.meta.env.MODE === process.env.NODE_ENV
+process.env.MODE === process.env.NODE_ENV
+
+import.meta.env === process.env
+```
+
+For browser bundles:
+
+```js
+process.browser === true
+import.meta.browser === true
+
+process.platform === "browser"
+import.meta.platform === "browser"
+
+import.meta.env.MODE === (import.meta.env?.MODE || import.meta.env?.NODE_ENV))
+process.env.MODE === (import.meta.env?.MODE || import.meta.env?.NODE_ENV))
+
+// process.env and import.meta.env are set to an empty object
+import.meta.env === {}
+process.env === {}
+
+process.versions.node === undefined
+typeof process === "undefined"
+```
