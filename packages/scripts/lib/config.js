@@ -76,6 +76,27 @@ const devOptions = {
   ...config.devOptions,
 }
 
+const jestOptions = {
+  testMatch: [],
+  coveragePathIgnorePatterns: [],
+  modulePathIgnorePatterns: [],
+  setupFilesAfterEnv: [],
+  transform: {},
+  transformIgnorePatterns: [],
+
+  ...config.jestOptions,
+
+  ignorePatterns: [
+    '/node_modules/',
+    '<rootDir>/dist/',
+    '<rootDir>/build/',
+    '<rootDir>/.build/',
+    ...(config.jestOptions?.ignorePatterns || []),
+  ],
+
+  transformIncludeModules: ['lodash-es', ...(config.jestOptions?.transformIncludeModules || [])],
+}
+
 module.exports = {
   ...config,
 
@@ -85,6 +106,8 @@ module.exports = {
 
   /** Configure your dev server. */
   devOptions,
+
+  jestOptions,
 
   /** Mount local directories to custom URLs in your built application. */
   mount: {

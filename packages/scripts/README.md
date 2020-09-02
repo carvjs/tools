@@ -254,6 +254,7 @@ typeof process === "undefined"
   "buildOptions": { /* ... */ },
   "proxy": { /* ... */ },
   "mount": { /* ... */ },
+  "alias": { /* ... */ },
 }
 ```
 
@@ -276,6 +277,8 @@ The behavior can be configured by a custom config file.
   - Mount local directories to custom URLs in your built application.
 - **`proxy.*`**
   - Configure the dev server to proxy requests. See the section below for all options.
+- **`alias.*`**
+  Configure import aliases for directories and packages. See the section below for all options.
 - **`devOptions.*`**
   - Configure your dev server. See the section below for all options.
 - **`buildOptions.*`**
@@ -358,3 +361,28 @@ The `mount` configuration lets you map local files to their location in the fina
 ```
 
 This configuration has no effect on the final build.
+
+#### Alias Options
+
+The alias config option lets you define an import alias in your application. When aliasing a package, this allows you to import that package by another name in your application. This applies to imports inside of your dependencies as well, essentially replacing all references to the aliased package. The order of the entries is important, in that the first defined rules are applied first.
+
+```json
+// carv.config.json
+{
+  "alias": {
+    // Type 1: Package Import Alias
+    "lodash": "lodash-es",
+    "react": "preact/compat",
+    // Type 2: Local Directory Import Alias (relative to cwd)
+    "components": "./src/components"
+    "@app": "./src"
+  }
+}
+```
+
+Aliasing a local directory (any path that starts with `./`) creates a shortcut to import that file or directory. While we don't necessarily recommend this pattern, some projects do enjoy using these instead of relative paths:
+
+```diff
+-import '../../../../../Button.js';
++import '@app/Button.js';
+```

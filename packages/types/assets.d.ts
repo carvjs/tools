@@ -1,33 +1,30 @@
-// asset module declarations
+// Asset module declarations
 // keep in sync with jest-preset
 declare module '*.module.css' {
-  const classes: { [key: string]: string }
+  const classes: Record<string, string>
   export default classes
 }
 
 declare module '*.module.scss' {
-  const classes: { [key: string]: string }
+  const classes: Record<string, string>
   export default classes
 }
 
 declare module '*.module.less' {
-  const classes: { [key: string]: string }
+  const classes: Record<string, string>
   export default classes
 }
 
 declare module '*.css' {
-  const url: string
-  export default url
+  // No exports
 }
 
 declare module '*.scss' {
-  const url: string
-  export default url
+  // No exports
 }
 
 declare module '*.less' {
-  const url: string
-  export default url
+  // No exports
 }
 
 declare module '*.jpg' {

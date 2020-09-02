@@ -155,7 +155,7 @@ module.exports = async () => {
     return true
   }
 
-  const fileNameConfig = (outputFile) => {
+  const fileNameConfig = (outputFile, format) => {
     const outputDirectory = path.join(paths.dist, path.dirname(outputFile))
     const base = path.relative(paths.dist, outputDirectory)
 
@@ -196,6 +196,8 @@ module.exports = async () => {
 
       plugins: [
         logStart(options, paths.dist, use.svelte),
+
+        (options.format === 'umd' || options.target === 'esnext') && require('rollup-plugin-filesize')({showMinifiedSize: false}),
 
         ...common.plugins,
 
