@@ -1,4 +1,5 @@
 /* eslint-env node */
+require('v8-compile-cache')
 
 /* This file has the '.cjs' extension to prevent Rollup from trying to transpile the file. */
 

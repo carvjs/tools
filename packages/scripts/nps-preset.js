@@ -1,5 +1,7 @@
 /* eslint-env node */
 
+require('v8-compile-cache')
+
 const updateNotifier = require('update-notifier')
 const pkg = require('./package.json')
 updateNotifier({ pkg }).notify()

@@ -1,4 +1,5 @@
 /* eslint-env node */
+require('v8-compile-cache')
 
 const path = require('path')
 const fs = require('fs')
