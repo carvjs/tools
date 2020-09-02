@@ -138,24 +138,7 @@ module.exports = async () => {
     .concat(manifest.bundledDependencies || [])
     .concat(manifest.bundleDependencies || [])
 
-  const external = (id, parentId) => {
-    // Entry is never external
-    if (!parentId) return false
-
-    if (id.startsWith('./') || id.startsWith('../') || path.isAbsolute(id) || id.includes('\0')) {
-      return false
-    }
-
-    for (const bundledDependency of bundledDependencies) {
-      if (id === bundledDependency || id.startsWith(`${bundledDependency}/`)) {
-        return false
-      }
-    }
-
-    return true
-  }
-
-  const fileNameConfig = (outputFile, format) => {
+  const fileNameConfig = (outputFile) => {
     const outputDirectory = path.join(paths.dist, path.dirname(outputFile))
     const base = path.relative(paths.dist, outputDirectory)
 
@@ -173,7 +156,10 @@ module.exports = async () => {
   function createRollupConfig(options) {
     if (!(options && options.format)) return
 
-    const common = require('./config-common')(options)
+    const common = require('./config-common')({
+      ...options,
+      bundledDependencies: options.format === 'umd' || bundledDependencies
+    })
 
     return {
       ...common,
@@ -191,8 +177,6 @@ module.exports = async () => {
         name: config.buildOptions.umdName,
         inlineDynamicImports: options.format === 'umd',
       },
-
-      external: options.format === 'umd' ? undefined : external,
 
       plugins: [
         logStart(options, paths.dist, use.svelte),

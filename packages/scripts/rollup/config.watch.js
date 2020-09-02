@@ -24,6 +24,7 @@ module.exports = async () => {
 
   const common = require('./config-common')({
     ...options,
+
     svelte: {
       ...options.svelte,
 

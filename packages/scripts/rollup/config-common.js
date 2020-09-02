@@ -30,6 +30,7 @@ module.exports = (options) => {
   const { default: nodeResolve } = require('@rollup/plugin-node-resolve')
   const commonjs = require('@rollup/plugin-commonjs')
   const assets = require('./plugin-assets')
+  const resolve = require('./plugin-resolve')
 
   const assetFileNames = path.join('assets', '[name]-[hash][extname]')
 
@@ -51,8 +52,16 @@ module.exports = (options) => {
 
     preserveEntrySignatures: 'allow-extension',
 
+    treeshake: {
+      // TODO what about css import like import "spectre.css/dist/spectre.css"
+      moduleSideEffects: "no-external"
+    },
+
     plugins: [
-      config.alias && require('@rollup/plugin-alias')({ entries: config.alias }),
+      resolve({
+        bundledDependencies: options.bundledDependencies,
+        alias: config.alias,
+      }),
 
       nodeResolve({
         dedupe,
