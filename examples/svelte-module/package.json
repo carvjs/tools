@@ -42,6 +42,9 @@
     "access": "public"
   },
   "carv": {
-    "mode": "app"
+    "mode": "app",
+    "proxy": {
+      "/-/": "http://localhost:3000/-/"
+    }
   }
 }

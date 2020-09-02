@@ -245,3 +245,116 @@ process.env === {}
 process.versions.node === undefined
 typeof process === "undefined"
 ```
+
+## Configuration
+
+```json
+{
+  "devOptions": { /* ... */ },
+  "buildOptions": { /* ... */ },
+  "proxy": { /* ... */ },
+  "mount": { /* ... */ },
+}
+```
+
+The behavior can be configured by a custom config file.
+
+### Config Files
+
+[cosmiconfig](https://www.npmjs.com/package/cosmiconfig) is used to load the configuration from different files in multiple formats. Sorted by [priority order](https://www.npmjs.com/package/cosmiconfig#searchplaces):
+
+1. `package.json`: A namespaced config object (`"carv": {...}`)
+1. `carv.config.cjs`: (`module.exports = {...}`) for projects using `"type": "module"`.
+1. `carv.config.js`: (`module.exports = {...}`)
+1. `carv.config.json`: (`{...}`)
+
+### Top-Level Options
+
+- **`extends`** | `string`
+  - Inherit from a separate "base" config. Can be a relative file path, an npm package, or a file within an npm package. Your configuration will be merged on top of the extended base config.
+- **`mount.*`**
+  - Mount local directories to custom URLs in your built application.
+- **`proxy.*`**
+  - Configure the dev server to proxy requests. See the section below for all options.
+- **`devOptions.*`**
+  - Configure your dev server. See the section below for all options.
+- **`buildOptions.*`**
+  - Configure your build. See the section below for all options.
+
+#### Dev Options
+
+- **`devOptions.host`** | `string` | Default: `"localhost"`
+  - To which host/ip should the dev server bind to.
+- **`devOptions.port`** | `number` | Default: `5000`
+  - The port number to run the dev server on.
+- **`devOptions.randomPortFallback`** | `boolean` | Default: `false`
+  - Prevent from falling back on a random port if the specified one is already occupied
+- **`devOptions.baseUrl`** | `string` | Default: `"/"`
+  - Base url to use.
+- **`devOptions.open`** | `string | false` | Default: `"default"`
+  - Opens the dev server in a new browser tab. If Chrome is available on macOS, an attempt will be made to reuse an existing browser tab. Any installed browser may also be specified. E.g., "chrome", "firefox", "brave". Set `"none"` to disable.
+- **`devOptions.openPage`** | `string | undefined` | Default: `devOptions.baseUrl`
+  - Page to navigate to when opening the browser. Will not do anything if `open=false` or `open="none"`. Remember to start with a slash or provide a full url.
+- **`devOptions.openHostname`** | `string` | Default: inferred from `devOptions.host` with fallback to `"localhost"`
+  - The hostname where the browser tab will be open.
+- **`devOptions.inMemory`** | `boolean` | Default: `true`
+  - Write bundle files in RAM instead of FS and serve them through the dev server. This is obviously more performant but there may be cross domain issues. Also, for very big apps, this might consume too much memory.
+- **`devOptions.write`** | `boolean` | Default: `true`
+  - If you still want to write do disk when using `devOptions.inMemory`.
+- **`devOptions.clearConsole`** | `boolean` | Default: `false`
+  - Clear console after successful HMR updates (Parcel style)
+
+### Build Options
+
+- **`buildOptions.mode`** | `"library" | "app"` | Default: `"library"`
+  - Determines what kind of bundle is created. There are two variants:
+    - `library`: creates a publishable package (use `package.json#browser` to enable node and/or browser builds)
+    - `app`: an all dependency included bundle
+      - `umd` (es2015) for the browser unless `package.json#browser === false`
+      - `esm` (es2015) for the browser unless `package.json#browser === false`
+      - `cjs` (es2019) for node unless `package.json#browser === true`
+- **`buildOptions.umdName`** | `string` | Default: `package.json#umdName` or `package.json#amdName` or inferred from `package.json#name`
+  - Necessary for iife/umd bundles that exports values in which case it is the global variable name representing your bundle. Other scripts on the same page can use this variable name to access the exports of your bundle.
+
+#### Proxy Options
+
+If desired, `"proxy"` is where you configure the proxy behavior of your dev server. Define different paths that should be proxied, and where they should be proxied to.
+
+```js
+// carv.config.js
+module.exports = {
+  "proxy": {
+    // Short form:
+    "/api/01": "https://pokeapi.co/api/v1/",
+    // Long form:
+    "/api/02": ['https://pokeapi.co/api/v2/', { proxyReqPathResolver(req) { /* ... */ } }],
+    // Dynamic host form:
+    "/api/03": function selectProxyHost() { /* ... */ },
+  }
+}
+```
+
+The short form of a full URL string is enough for general use.
+
+The long form allows to use [express-http-proxy](https://github.com/villadora/express-http-proxy) for extended configuration options. You must be using a `carv.config.js` JavaScript configuration file to set this.
+
+This configuration has no effect on the final build.
+
+#### Mount Options
+
+The `mount` configuration lets you map local files to their location in the final build. If no mount configuration is given, then the entire current working directory (minus excluded files) will be built and mounted to the Root URL (Default: `/`, respects `devOptions.baseUrl`).
+
+```js
+// carv.config.json
+{
+  "mount": {
+    // Files in the local "data/" directory is available via `/data*`
+    "data": "/data",
+    // Files in the local "public/" directory are available via `/*`
+    "public": "/"
+    // … add other folders here
+  }
+}
+```
+
+This configuration has no effect on the final build.

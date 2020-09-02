@@ -92,6 +92,7 @@ module.exports = async () => {
   return {
     ...common,
 
+    perf: true,
     watch: {
       clearScreen: false,
       exclude: 'node_modules/**',
@@ -203,6 +204,8 @@ module.exports = async () => {
           // NOTE this is only used to compute URLs from FS paths... see mount
           // option bellow if you want to serve static content
           public: paths.build, // Default: ''
+
+          proxy: config.proxy,
 
           // Serve additional static content: the key is a FS path, the value is
           // the base URL. Static content will always be served _after_ files from

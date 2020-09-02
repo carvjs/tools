@@ -225,6 +225,7 @@ module.exports = function assets({
         if (!minify) {
           const referenceId = this.emitFile({
             type: 'asset',
+            // Change extension to ensure it is served as a stylesheet
             name: path.basename(id, extname) + '.css',
             source: code,
           })

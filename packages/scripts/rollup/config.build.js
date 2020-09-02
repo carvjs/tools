@@ -186,7 +186,7 @@ module.exports = async () => {
       output: {
         ...common.output,
         ...fileNameConfig(options.file),
-        name: config.umdName,
+        name: config.buildOptions.umdName,
       },
 
       external: options.format === 'umd' ? undefined : external,

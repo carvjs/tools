@@ -3,7 +3,7 @@
 // eslint-disable-next-line func-names
 module.exports = function getOutputs({
   useTypescript = require('../lib/package-use').typescript,
-  mode = require('../lib/config').mode,
+  mode = require('../lib/config').buildOptions.mode,
 } = {}) {
   const manifest = require('../lib/package-manifest')
   const unscopedPackageName = require('./unscoped-package-name')

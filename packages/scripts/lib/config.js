@@ -5,7 +5,41 @@ const { cosmiconfigSync } = require('cosmiconfig')
 const paths = require('./package-paths')
 const manifest = require('./package-manifest')
 
-const { config = {}, filepath } = cosmiconfigSync('carv').search(paths.root) || {}
+const { config = {}, filepath } = cosmiconfigSync('carv', {
+  searchPlaces: [
+    'package.json',
+    'carv.config.cjs',
+    'carv.config.js',
+    'carv.config.json',
+  ]
+}).search(paths.root) || {}
+
+// TODO config.extends
+// Inherit from a separate "base" config. Can be a relative file path, an npm package, or a file within an npm package. Your configuration will be merged on top of the extended base config.
+
+const buildOptions = {
+  /**
+   * Two variants:
+   *
+   * - 'library': creates a publishable package (use `package.json#browser` to enable node and/or browser builds)
+   * - 'app': an all dependency included bundle
+   *    - `umd` (es2015) for the browser unless `package.json#browser === false`
+   *    - `esm` (es2015) for the browser unless `package.json#browser === false`
+   *    - `cjs` (es2019) for node unless `package.json#browser === true`
+   */
+  mode: 'library',
+
+  /**
+   * Necessary for iife/umd bundles that exports values in which case it is the global variable
+   * name representing your bundle. Other scripts on the same page can use this variable name
+   * to access the exports of your bundle.
+   *
+   * The default is generated from the project name.
+   */
+  umdName: manifest.umdName ||  manifest.amdName || safeVariableName(manifest.name),
+
+  ...config.buildOptions
+}
 
 // eslint-disable-next-line unicorn/prevent-abbreviations
 const devOptions = {
@@ -43,20 +77,11 @@ const devOptions = {
 }
 
 module.exports = {
-  /**
-   * Two variants:
-   *
-   * - 'library': creates a publishable package (use `package.json#browser` to enable node and/or browser builds)
-   * - 'app': an all dependency included bundle
-   *    - `iife` (es2015) for the browser unless `package.json#browser === false`
-   *    - `esm` (es2015) for the browser unless `package.json#browser === false`
-   *    - `cjs` (es2019) for node unless `package.json#browser === true`
-   */
-  mode: 'library',
-  umdName: manifest.amdName || safeVariableName(manifest.name),
-
   ...config,
+
   filepath,
+
+  buildOptions,
 
   /** Configure your dev server. */
   devOptions,
