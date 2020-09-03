@@ -201,12 +201,12 @@ The following include paths are search for imports:
   "exports": {
     "//": "Used when requesting 'package-name'",
     ".": {
-      "//": "platform=node>=12.4"
+      "//": "platform=node>=12.4",
       "node": {
         "require": "// target=es2019; svelte=dev:true",
         "default": "// wrapper for the cjs (require) variant",
       },
-      "//": "platform=browser"
+      "//": "platform=browser",
       "browser": {
         "esnext": "// target=esnext; svelte=dev:false; usedBy=@carv/cdn",
         "development": "// target=es2020; svelte=dev:true",
@@ -292,7 +292,7 @@ typeof process === "undefined"
 
 ## Configuration
 
-```json
+```js
 {
   "devOptions": { /* ... */ },
   "buildOptions": { /* ... */ },
@@ -353,7 +353,7 @@ The behavior can be configured by a custom config file.
 - **`devOptions.clearConsole`** | `boolean` | Default: `false`
   - Clear console after successful HMR updates (Parcel style)
 
-### Build Options
+#### Build Options
 
 - **`buildOptions.mode`** | `"library" | "app"` | Default: `"library"`
   - Determines what kind of bundle is created. There are two variants:
@@ -412,16 +412,17 @@ This configuration has no effect on the final build.
 
 The alias config option lets you define an import alias in your application. When aliasing a package, this allows you to import that package by another name in your application. This applies to imports inside of your dependencies as well, essentially replacing all references to the aliased package. The order of the entries is important, in that the first defined rules are applied first.
 
-```json
-// carv.config.json
-{
+```js
+// carv.config.js
+module.exports = {
   "alias": {
     // Type 1: Package Import Alias
     "lodash": "lodash-es",
     "react": "preact/compat",
-    // Type 2: Local Directory Import Alias (relative to cwd)
+    // Type 2: Local Directory Import Alias (relative to project root)
     "components": "./src/components"
-    "@app": "./src"
+    // Create a root path alias (`import '@/a/b.js'` => `import '<root>/src/a/b.js'`)
+    "@": "./src"
   }
 }
 ```
@@ -430,5 +431,24 @@ Aliasing a local directory (any path that starts with `./`) creates a shortcut t
 
 ```diff
 -import '../../../../../Button.js';
-+import '@app/Button.js';
++import '@/Button.js';
 ```
+
+If your are using typescript local directory mappings should be added to the `tsconfig.json`:
+
+```json
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "./node_modules/@carv/scripts/tsconfig-preset.json",
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@": ["src"],
+      "@/*": ["src/*"].
+    }
+  }
+}
+```
+
+> Note: We are working on a solution to define these only once.

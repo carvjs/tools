@@ -28,7 +28,7 @@ module.exports = (options) => {
   const json = require('@rollup/plugin-json')
   const { default: nodeResolve } = require('@rollup/plugin-node-resolve')
   const commonjs = require('@rollup/plugin-commonjs')
-  const dynamicImportVars = require('@rollup/plugin-dynamic-import-vars')
+  const { default: dynamicImportVars } = require('@rollup/plugin-dynamic-import-vars')
   const assets = require('./plugin-assets')
   const resolve = require('./plugin-resolve')
 
@@ -64,7 +64,6 @@ module.exports = (options) => {
         alias: config.alias,
       }),
 
-      dynamicImportVars({ warnOnError: true }),
 
       nodeResolve({
         dedupe,
@@ -79,6 +78,9 @@ module.exports = (options) => {
       commonjs({ requireReturnsDefault: 'auto', extensions }),
 
       assets({ assetFileNames, target: options.target, minify: options.minify !== false }),
+
+      // Must be after all other transforms (like svelte and css)
+      dynamicImportVars({ warnOnError: true }),
     ].filter(Boolean),
   }
 }

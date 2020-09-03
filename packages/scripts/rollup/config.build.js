@@ -286,8 +286,6 @@ module.exports = async () => {
           exports: 'auto',
         },
 
-        external,
-
         plugins: [
           {
             name: 'svelte.d.ts',
