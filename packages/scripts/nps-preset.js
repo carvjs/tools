@@ -64,7 +64,9 @@ const rollup = `rollup --config ${rollupConfig}`
 
 exports.scripts = {
   // Main entrypoints
-  default: use.svelte ? 'nps build.watch' : 'nps test',
+  default: `nps ${process.env.npm_lifecycle_event || 'start'}`,
+
+  start: use.svelte ? 'nps build.watch' : 'nps test',
 
   test: {
     default: ['nps', 'prepare', 'test.check', 'jest.coverage'].join(' '),
