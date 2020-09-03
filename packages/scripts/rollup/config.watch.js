@@ -156,9 +156,14 @@ module.exports = async () => {
       html({
         publicPath: baseUrl,
         title: manifest.name,
-        meta: [{ charset: 'utf-8' }, { name: 'viewport', content: 'width=device-width,initial-scale=1' }],
+        meta: [
+          { charset: 'utf-8' },
+          { name: 'viewport', content: 'width=device-width,initial-scale=1' },
+        ],
         template: ({ attributes, meta, publicPath, title }) => {
-          const metas = meta.map((input) => `<meta${html.makeHtmlAttributes(input)}>`).join('                \n')
+          const metas = meta
+            .map((input) => `<meta${html.makeHtmlAttributes(input)}>`)
+            .join('                \n')
 
           return require('common-tags').stripIndent`
             <!DOCTYPE html>

@@ -16,7 +16,7 @@ exports.transform = async (code, options) => {
 
 exports.stopService = async () => {
   if (servicePromise) {
-    (await servicePromise).stop()
+    ;(await servicePromise).stop()
     servicePromise = undefined
   }
 }

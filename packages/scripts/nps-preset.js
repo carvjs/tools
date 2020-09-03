@@ -72,7 +72,9 @@ exports.scripts = {
     default: ['nps', 'prepare', 'test.check', 'jest.coverage'].join(' '),
     coverage: 'nps jest.coverage',
     watch: 'nps jest.watch',
-    check: ['nps', 'eslint', use.typescript && 'tsc', use.svelte && 'svelte-check'].filter(Boolean).join(' '),
+    check: ['nps', 'eslint', use.typescript && 'tsc', use.svelte && 'svelte-check']
+      .filter(Boolean)
+      .join(' '),
   },
 
   prepare: ['nps', 'cleanup'].join(' '),

@@ -19,7 +19,7 @@ module.exports = {
 
     const maybeEsm = /\bimport|export\b/.test(source)
 
-    // console.log('transform', filename, {maybeEsm})
+    // Console.log('transform', filename, {maybeEsm})
     if (maybeEsm) {
       const [imports, exports] = global.__ES_MODULE_LEXER__PARSE(source)
 
@@ -38,7 +38,10 @@ module.exports = {
             id = id.slice(0, -1)
           }
 
-          if (filename && (id.startsWith('./') || id.startsWith('../') || id === '.' || id === '..')) {
+          if (
+            filename &&
+            (id.startsWith('./') || id.startsWith('../') || id === '.' || id === '..')
+          ) {
             external.push(path.resolve(path.dirname(filename), id))
           } else {
             external.push(id)

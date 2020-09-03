@@ -158,7 +158,7 @@ module.exports = async () => {
 
     const common = require('./config-common')({
       ...options,
-      bundledDependencies: options.format === 'umd' || bundledDependencies
+      bundledDependencies: options.format === 'umd' || bundledDependencies,
     })
 
     return {
@@ -181,7 +181,8 @@ module.exports = async () => {
       plugins: [
         logStart(options, paths.dist, use.svelte),
 
-        (options.format === 'umd' || options.target === 'esnext') && require('rollup-plugin-filesize')({showMinifiedSize: false}),
+        (options.format === 'umd' || options.target === 'esnext') &&
+          require('rollup-plugin-filesize')({ showMinifiedSize: false }),
 
         ...common.plugins,
 

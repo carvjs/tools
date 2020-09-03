@@ -53,9 +53,17 @@ module.exports = (options) => {
     preserveEntrySignatures: 'allow-extension',
 
     treeshake: {
-      // TODO what about css import like `import "spectre.css/dist/spectre.css"` that have side-effects
-      // Mark all externals as side-effect free
-      moduleSideEffects: (id, external) => !external
+      moduleSideEffects(id, _external) {
+        // Id is module or absolute path
+
+        // TODO not for spectre.css
+        if (id.endsWith('.css')) {
+          return true
+        }
+
+        // TODO check package.json#sideEffects
+        return false
+      },
     },
 
     plugins: [
@@ -63,7 +71,6 @@ module.exports = (options) => {
         bundledDependencies: options.bundledDependencies,
         alias: config.alias,
       }),
-
 
       nodeResolve({
         dedupe,

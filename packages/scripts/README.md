@@ -5,6 +5,7 @@
 
 - [Usage](#usage)
 - [Features](#features)
+- [Configuration](#configuration)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -102,7 +103,7 @@ Code that looks like this:
 
 ```js
 function importLocale(locale) {
-  return import(`./locales/${locale}.js`);
+  return import(`./locales/${locale}.js`)
 }
 ```
 
@@ -112,18 +113,18 @@ Is turned into:
 function __variableDynamicImportRuntime__(path) {
   switch (path) {
     case './locales/en-GB.js':
-      return import('./locales/en-GB.js');
+      return import('./locales/en-GB.js')
     case './locales/en-US.js':
-      return import('./locales/en-US.js');
+      return import('./locales/en-US.js')
     case './locales/nl-NL.js':
-      return import('./locales/nl-NL.js');
+      return import('./locales/nl-NL.js')
     default:
-      throw new Error('Unknown variable dynamic import: ' + path);
+      throw new Error('Unknown variable dynamic import: ' + path)
   }
 }
 
 function importLocale(locale) {
-  return __variableDynamicImportRuntime__(`./locales/${locale}.js`);
+  return __variableDynamicImportRuntime__(`./locales/${locale}.js`)
 }
 ```
 
@@ -135,7 +136,6 @@ To help static analysis, and to avoid possible foot guns, we are limited to a [c
 - [Imports must end with a file extension](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#imports-must-end-with-a-file-extension)
 - [Imports to your own directory must specify a filename pattern](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#imports-to-your-own-directory-must-specify-a-filename-pattern)
 - [Globs only go one level deep](https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#globs-only-go-one-level-deep)
-
 
 ### CSS Nested Rule
 
@@ -204,20 +204,20 @@ The following include paths are search for imports:
       "//": "platform=node>=12.4",
       "node": {
         "require": "// target=es2019; svelte=dev:true",
-        "default": "// wrapper for the cjs (require) variant",
+        "default": "// wrapper for the cjs (require) variant"
       },
       "//": "platform=browser",
       "browser": {
         "esnext": "// target=esnext; svelte=dev:false; usedBy=@carv/cdn",
         "development": "// target=es2020; svelte=dev:true",
         "import": "// target=es2015; svelte=dev:false; usedBy=webpack,rollup,parcel",
-        "script": "// umd; target=es2015; svelte=dev:false; usedBy=script",
+        "script": "// umd; target=es2015; svelte=dev:false; usedBy=script"
       },
-      "types": "// typescript definitions",
+      "types": "// typescript definitions"
     },
     "//": "Used when requesting 'package-name/package.json' or 'package-name/assets/styles.css'",
     "//": "allow access to all files (including package.json, assets/, chunks/, ...)",
-    "./": "./",
+    "./": "./"
   },
   "//": "These fields are used when exports is not supported by the runtime/bundler",
   "//": "see https://github.com/stereobooster/package.json",
@@ -372,14 +372,23 @@ If desired, `"proxy"` is where you configure the proxy behavior of your dev serv
 ```js
 // carv.config.js
 module.exports = {
-  "proxy": {
+  proxy: {
     // Short form:
-    "/api/01": "https://pokeapi.co/api/v1/",
+    '/api/01': 'https://pokeapi.co/api/v1/',
     // Long form:
-    "/api/02": ['https://pokeapi.co/api/v2/', { proxyReqPathResolver(req) { /* ... */ } }],
+    '/api/02': [
+      'https://pokeapi.co/api/v2/',
+      {
+        proxyReqPathResolver(req) {
+          /* ... */
+        },
+      },
+    ],
     // Dynamic host form:
-    "/api/03": function selectProxyHost() { /* ... */ },
-  }
+    '/api/03': function selectProxyHost() {
+      /* ... */
+    },
+  },
 }
 ```
 

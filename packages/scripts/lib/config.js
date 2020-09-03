@@ -5,14 +5,10 @@ const { cosmiconfigSync } = require('cosmiconfig')
 const paths = require('./package-paths')
 const manifest = require('./package-manifest')
 
-const { config = {}, filepath } = cosmiconfigSync('carv', {
-  searchPlaces: [
-    'package.json',
-    'carv.config.cjs',
-    'carv.config.js',
-    'carv.config.json',
-  ]
-}).search(paths.root) || {}
+const { config = {}, filepath } =
+  cosmiconfigSync('carv', {
+    searchPlaces: ['package.json', 'carv.config.cjs', 'carv.config.js', 'carv.config.json'],
+  }).search(paths.root) || {}
 
 // TODO config.extends
 // Inherit from a separate "base" config. Can be a relative file path, an npm package, or a file within an npm package. Your configuration will be merged on top of the extended base config.
@@ -36,9 +32,9 @@ const buildOptions = {
    *
    * The default is generated from the project name.
    */
-  umdName: manifest.umdName ||  manifest.amdName || safeVariableName(manifest.name),
+  umdName: manifest.umdName || manifest.amdName || safeVariableName(manifest.name),
 
-  ...config.buildOptions
+  ...config.buildOptions,
 }
 
 // eslint-disable-next-line unicorn/prevent-abbreviations

@@ -8,7 +8,10 @@ const isCI = require('is-ci')
 const escapeStringRegexp = require('escape-string-regexp')
 
 const paths = require('./lib/package-paths')
-const {alias, jestOptions: {ignorePatterns, transformIncludeModules, ...config}} = require('./lib/config')
+const {
+  alias,
+  jestOptions: { ignorePatterns, transformIncludeModules, ...config },
+} = require('./lib/config')
 
 const transformIncludeModulesRegexp = transformIncludeModules.map(escapeStringRegexp).join('|')
 
@@ -37,7 +40,13 @@ module.exports = {
   coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: [...ignorePatterns, ...(config.coveragePathIgnorePatterns || []), '/__fixtures__/', '/__mocks__/', '/__preview__/'],
+  coveragePathIgnorePatterns: [
+    ...ignorePatterns,
+    ...(config.coveragePathIgnorePatterns || []),
+    '/__fixtures__/',
+    '/__mocks__/',
+    '/__preview__/',
+  ],
 
   modulePathIgnorePatterns: [...ignorePatterns, ...(config.modulePathIgnorePatterns || [])],
 

@@ -7,7 +7,8 @@ Object.defineProperty(global, '__ES_MODULE_LEXER__PARSE', {
 
 module.exports = function Enviroment(config, context) {
   const BaseEnviroment =
-    context.docblockPragmas.env === 'jsdom' || require('../lib/package-manifest').browser !== 'false'
+    context.docblockPragmas.env === 'jsdom' ||
+    require('../lib/package-manifest').browser !== 'false'
       ? require('jest-environment-jsdom-sixteen')
       : require('jest-environment-node')
 
