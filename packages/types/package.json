@@ -1,13 +1,13 @@
 {
   "name": "@carv/types",
   "version": "1.1.1",
-  "homepage": "https://github.com/carvjs/snowpack#readme",
+  "homepage": "https://github.com/carvjs/tools#readme",
   "bugs": {
-    "url": "https://github.com/carvjs/snowpack/issues"
+    "url": "https://github.com/carvjs/tools/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/carvjs/snowpack.git",
+    "url": "git+https://github.com/carvjs/tools.git",
     "directory": "packages/types"
   },
   "license": "MIT",

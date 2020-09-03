@@ -1,13 +1,13 @@
 {
   "name": "@carv/eslint-config",
   "version": "1.2.6",
-  "homepage": "https://github.com/carvjs/snowpack#readme",
+  "homepage": "https://github.com/carvjs/tools#readme",
   "bugs": {
-    "url": "https://github.com/carvjs/snowpack/issues"
+    "url": "https://github.com/carvjs/tools/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/carvjs/snowpack.git",
+    "url": "git+https://github.com/carvjs/tools.git",
     "directory": "packages/eslint-config"
   },
   "license": "MIT",
