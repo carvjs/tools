@@ -8,23 +8,37 @@ const paths = require('../lib/package-paths')
 const EXTNAMES = ['', '.svelte', '.tsx', '.ts', '.mjs', '.jsx', '.js', '.cjs', '.json']
 
 function resolveFile(base) {
+  if (!base) return
+
   for (const extname of EXTNAMES) {
     const file = path.resolve(paths.root, base + extname)
-    if (fs.existsSync(file)) {
+
+    try {
+      const stat = fs.statSync(file)
+
+      if (stat.isDirectory()) {
+        return resolveFile(path.join(file, 'index'))
+      }
+
       return file
+    } catch (error) {
+      if (!(error.code === 'ENOENT' || error.code === 'ENOTDIR')) {
+        throw error
+      }
     }
   }
 }
 
-module.exports = function getInputFile() {
+module.exports = function getInputFile(additional) {
   const manifest = require('../lib/package-manifest')
 
   return (
+    (additional && resolveFile(additional)) ||
     resolveFile(manifest.source) ||
     resolveFile(manifest.svelte) ||
     resolveFile(manifest.main) ||
     resolveFile(path.join(paths.source, require('./unscoped-package-name'))) ||
-    resolveFile(path.join(paths.source, 'index')) ||
+    resolveFile(paths.source) ||
     fail()
   )
 }

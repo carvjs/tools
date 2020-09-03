@@ -29,6 +29,7 @@ module.exports = (options) => {
   const { default: nodeResolve } = require('@rollup/plugin-node-resolve')
   const commonjs = require('@rollup/plugin-commonjs')
   const { default: dynamicImportVars } = require('@rollup/plugin-dynamic-import-vars')
+  const esbuild = require('./plugin-esbuild')
   const assets = require('./plugin-assets')
   const resolve = require('./plugin-resolve')
 
@@ -72,22 +73,24 @@ module.exports = (options) => {
         alias: config.alias,
       }),
 
+      svelte?.(svelteConfig),
+
       nodeResolve({
         dedupe,
         extensions,
         mainFields: [...(options.mainFields || []), ...mainFields],
       }),
 
-      svelte?.(svelteConfig),
-
       json({ preferConst: true, namedExports: false }),
+
+      esbuild(options),
 
       commonjs({ requireReturnsDefault: 'auto', extensions }),
 
       assets({ assetFileNames, target: options.target, minify: options.minify !== false }),
 
       // Must be after all other transforms (like svelte and css)
-      dynamicImportVars({ warnOnError: true }),
+      dynamicImportVars({ warnOnError: true, exclude: 'node_modules' }),
     ].filter(Boolean),
   }
 }

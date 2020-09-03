@@ -10,11 +10,9 @@ module.exports = async () => {
 
   await require('./copy-files')(paths.build)
 
-  const inputFile = require('./get-input-file')()
+  const inputFile = require('./get-input-file')(path.join(paths.source, '__preview__'))
 
-  const useTypescript = use.typescript && (inputFile.endsWith('.ts') || inputFile.endsWith('.tsx'))
-
-  const outputs = require('./get-outputs')({ useTypescript, mode: 'library' })
+  const outputs = require('./get-outputs')({ useTypescript: false, mode: 'library' })
 
   const options = {
     ...(outputs.browser?.development || outputs.node?.test || outputs.node?.require),
@@ -84,12 +82,8 @@ module.exports = async () => {
   const html = require('@rollup/plugin-html')
   const hmr = require('rollup-plugin-hot')
 
-  const esbuild = require('../lib/esbuild')
-
   const outputName = 'dev-bundle'
   const { baseUrl } = config.devOptions
-
-  const codeCache = new Map()
 
   return {
     ...common,
@@ -180,23 +174,6 @@ module.exports = async () => {
           `
         },
       }),
-
-      {
-        name: 'esbuild',
-        async renderChunk(code, chunk) {
-          const cache = codeCache.get(chunk.fileName)
-
-          if (cache?.code === code) {
-            return cache.result
-          }
-
-          const result = await esbuild.renderChunk(code, chunk.fileName, options, this)
-
-          codeCache.set(chunk.fileName, { code, result })
-
-          return result
-        },
-      },
 
       watchSvelteCSS(
         use.svelte,

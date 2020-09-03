@@ -6,7 +6,7 @@ const { startService } = require('esbuild')
 
 let servicePromise
 
-exports.transform = async (code, options) => {
+async function transform(code, options) {
   if (!servicePromise) {
     servicePromise = startService()
   }
@@ -23,7 +23,7 @@ exports.stopService = async () => {
 
 require('signal-exit')(exports.stopService)
 
-exports.renderChunk = async (code, fileName, options, context) => {
+exports.transform = async (code, fileName, options, context) => {
   const hideImportMeta =
     options.format === 'esm' && options.target < 'es2020' && /\bimport\.meta\b/.test(code)
 
@@ -39,9 +39,9 @@ exports.renderChunk = async (code, fileName, options, context) => {
     }
   }
 
-  const result = await exports.transform(code, {
+  const result = await transform(code, {
     sourcefile: fileName,
-    loader: 'js',
+    loader: options.loader,
     target: options.target,
     platform: options.platform,
     minify: options.minify !== false,

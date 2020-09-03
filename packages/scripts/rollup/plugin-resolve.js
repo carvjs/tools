@@ -30,11 +30,8 @@ module.exports = function resolve({ bundledDependencies = false, alias = {} }) {
     return id
   }
 
-  const isExternal = (id, parentId) => {
-    // Entry is never external
-    if (!parentId) return false
-
-    if (id.startsWith('./') || id.startsWith('../') || path.isAbsolute(id) || id.includes('\0')) {
+  const isExternal = (id) => {
+    if (id.startsWith('./') || id.startsWith('../') || path.isAbsolute(id)) {
       return false
     }
 
@@ -59,7 +56,7 @@ module.exports = function resolve({ bundledDependencies = false, alias = {} }) {
 
       const id = resolveAlias(importee)
 
-      if (isExternal(id, importer)) {
+      if (importer && !this.meta.watchMode && isExternal(id)) {
         return { id, external: true }
       }
 

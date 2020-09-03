@@ -222,7 +222,7 @@ module.exports = function assets({
             namedExports: false,
           })
 
-        if (!minify) {
+        if (this.meta.watchMode) {
           const referenceId = this.emitFile({
             type: 'asset',
             // Change extension to ensure it is served as a stylesheet

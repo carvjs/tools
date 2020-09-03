@@ -66,10 +66,10 @@ exports.scripts = {
   // Main entrypoints
   default: `nps ${process.env.npm_lifecycle_event || 'start'}`,
 
-  start: use.svelte ? 'nps build.watch' : 'nps test',
+  start: use.svelte ? 'nps prepare build.watch' : 'nps test',
 
   test: {
-    default: ['nps', 'prepare', 'test.check', 'jest.coverage'].join(' '),
+    default: ['nps', 'prepare', use.typescriptGraphql && 'graphql.validate', 'test.check', 'jest.coverage'].filter(Boolean).join(' '),
     coverage: 'nps jest.coverage',
     watch: 'nps jest.watch',
     check: ['nps', 'eslint', use.typescript && 'tsc', use.svelte && 'svelte-check']
@@ -77,7 +77,7 @@ exports.scripts = {
       .join(' '),
   },
 
-  prepare: ['nps', 'cleanup'].join(' '),
+  prepare: ['nps', 'cleanup', use.typescriptGraphql && 'graphql.typegen'].filter(Boolean).join(' '),
 
   build: {
     default: ['nps', 'prepare', 'build.package'].join(' '),
@@ -98,7 +98,7 @@ exports.scripts = {
 
   format: {
     default: ['nps', 'format.package', 'prettier.write', 'eslint.fix'].join(' '),
-    package: ['nps', 'doctoc.readme'].join(' '),
+    package: ['nps', 'doctoc.readme', use.typescriptGraphql && 'graphql.typegen'].filter(Boolean).join(' '),
   },
 
   envinfo: 'envinfo --system --browsers --IDEs --binary --npmPackages',
@@ -142,5 +142,13 @@ if (use.typescript) {
   exports.scripts.tsc = {
     default: tsc,
     watch: `${tsc} --watch`,
+  }
+}
+
+if (use.typescriptGraphql) {
+  exports.scripts.graphql = {
+    typegen: 'ts-graphql-plugin typegen',
+    validate: 'ts-graphql-plugin validate',
+    report: 'ts-graphql-plugin report',
   }
 }

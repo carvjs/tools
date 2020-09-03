@@ -149,7 +149,6 @@ module.exports = async () => {
     }
   }
 
-  const esbuild = require('../lib/esbuild')
   const define = require('rollup-plugin-define')
   const logStart = require('./plugin-log-start')
 
@@ -246,30 +245,13 @@ module.exports = async () => {
           },
         }),
 
-        {
-          name: 'esbuild',
-
-          buildEnd(error) {
-            // Stop the service early if there's error
-            if (error) {
-              esbuild.stopService()
-            }
-          },
-
-          renderChunk(code, chunk) {
-            return esbuild.renderChunk(code, chunk.fileName, options, this)
-          },
-
-          renderError: esbuild.stopService,
-        },
-
         // Create esm wrapper: https://nodejs.org/api/esm.html#esm_approach_1_use_an_es_module_wrapper
         options.esmWrapper && require('./plugin-esm-wrapper')(options.esmWrapper),
       ].filter(Boolean),
     }
   }
 
-  const configs = [
+  return [
     ...Object.values(outputs.node || {}).map(createRollupConfig),
 
     ...Object.values(outputs.browser || {}).map(createRollupConfig),
@@ -309,18 +291,4 @@ module.exports = async () => {
         ],
       },
   ].filter(Boolean)
-
-  // TODO remove build folder
-  configs[configs.length - 1].plugins.push({
-    name: 'cleanup',
-    buildEnd(error) {
-      if (error) {
-        return esbuild.stopService()
-      }
-    },
-    renderError: esbuild.stopService,
-    generateBundle: esbuild.stopService,
-  })
-
-  return configs
 }
