@@ -90,7 +90,7 @@ const jestOptions = {
     ...(config.jestOptions?.ignorePatterns || []),
   ],
 
-  transformIncludeModules: ['lodash-es', ...(config.jestOptions?.transformIncludeModules || [])],
+  transformModules: ['lodash-es', ...(config.jestOptions?.transformModules || [])],
 }
 
 module.exports = {

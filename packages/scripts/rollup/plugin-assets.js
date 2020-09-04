@@ -118,7 +118,7 @@ module.exports = function assets({
   }
 
   return {
-    name: 'assets',
+    name: 'carv:assets',
 
     buildStart() {
       styleReferenceId = null

@@ -10,10 +10,10 @@ const escapeStringRegexp = require('escape-string-regexp')
 const paths = require('./lib/package-paths')
 const {
   alias,
-  jestOptions: { ignorePatterns, transformIncludeModules, ...config },
+  jestOptions: { ignorePatterns, transformModules, ...config },
 } = require('./lib/config')
 
-const transformIncludeModulesRegexp = transformIncludeModules.map(escapeStringRegexp).join('|')
+const transformModulesRegexp = transformModules.map(escapeStringRegexp).join('|')
 
 const moduleNameMapper = config.moduleNameMapper || {}
 for (let [from, to] of Object.entries(alias || {})) {
@@ -67,7 +67,7 @@ module.exports = {
   // - files within **/src/
   transformIgnorePatterns: [
     ...(config.transformIgnorePatterns || []),
-    `/node_modules/(?!.+.(?:svelte|mjs|jsx|tsx?)$|.+/src/|${transformIncludeModulesRegexp}/)`,
+    `/node_modules/(?!.+.(?:svelte|mjs|jsx|tsx?)$|.+/src/|${transformModulesRegexp}/)`,
   ],
 
   transform: {

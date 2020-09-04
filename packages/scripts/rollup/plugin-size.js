@@ -15,7 +15,7 @@ const BROTLI_OPTIONS = {
 
 module.exports = function size() {
   return {
-    name: 'size',
+    name: 'carv:size',
     async writeBundle(options, bundle) {
       if (this.meta.watchMode) return
 

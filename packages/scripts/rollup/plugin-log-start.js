@@ -4,7 +4,7 @@ const path = require('path')
 
 module.exports = function logStart(options, outputDirectory, useSvelte) {
   return {
-    name: 'log-start',
+    name: 'carv:log-start',
     options() {
       console.log(format(options, outputDirectory, useSvelte))
 

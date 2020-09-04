@@ -88,8 +88,6 @@ module.exports = async () => {
   return {
     ...common,
 
-    perf: false,
-
     watch: {
       clearScreen: false,
       exclude: 'node_modules/**',

@@ -15,7 +15,7 @@ module.exports = function esbuild(options) {
   const codeCache = new Map()
 
   return {
-    name: 'esbuild',
+    name: 'carv:esbuild',
 
     async transform(code, id) {
       if (id.includes('\0')) return null

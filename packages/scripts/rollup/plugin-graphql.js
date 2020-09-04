@@ -6,7 +6,7 @@ module.exports = function graphql({ tsconfigPath }) {
   const cache = new Map()
 
   return {
-    name: 'graphql',
+    name: 'carv:graphql',
 
     generateBundle(outputOptions, bundle) {
       if (!(this.meta.watchMode && outputOptions.preserveModules)) return

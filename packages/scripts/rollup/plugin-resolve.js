@@ -49,7 +49,7 @@ module.exports = function resolve({ bundledDependencies = false, alias = {} }) {
   }
 
   return {
-    name: 'resolve',
+    name: 'carv:resolve',
 
     resolveId(importee, importer) {
       if (importee.includes('\0')) return null
