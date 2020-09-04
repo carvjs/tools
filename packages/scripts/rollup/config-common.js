@@ -94,7 +94,7 @@ module.exports = (options) => {
       // Must be after all other transforms (like svelte and css)
       dynamicImportVars({ warnOnError: true, exclude: 'node_modules' }),
 
-      use.typescriptGraphql && graphql({tsconfigPath: paths.typescriptConfig}),
+      use.typescriptGraphql && graphql({ tsconfigPath: paths.typescriptConfig }),
 
       (options.format === 'umd' || options.target === 'esnext') && size(),
     ].filter(Boolean),

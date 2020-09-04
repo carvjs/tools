@@ -23,8 +23,8 @@
   "devDependencies": {
     "@carv/eslint-config": "^1.2.5",
     "@carv/prettier-config": "^1.0.2",
-    "@carv/types": "^1.1.1",
     "@carv/scripts": "^1.0.0",
+    "@carv/types": "^1.1.1",
     "@testing-library/dom": "^7.22.6",
     "@testing-library/svelte": "^3.0.0",
     "@testing-library/user-event": "^12.0.11",

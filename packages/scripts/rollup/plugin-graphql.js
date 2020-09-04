@@ -11,9 +11,13 @@ module.exports = function graphql({ tsconfigPath }) {
     generateBundle(outputOptions, bundle) {
       if (!(this.meta.watchMode && outputOptions.preserveModules)) return
       const changed = Object.values(bundle)
-        .filter(chunk => chunk.type === 'chunk')
-        .filter(({facadeModuleId, code}) => {
-          const extname = facadeModuleId && path.isAbsolute(facadeModuleId) && !facadeModuleId.includes('node_modules') && path.extname(facadeModuleId)
+        .filter((chunk) => chunk.type === 'chunk')
+        .filter(({ facadeModuleId, code }) => {
+          const extname =
+            facadeModuleId &&
+            path.isAbsolute(facadeModuleId) &&
+            !facadeModuleId.includes('node_modules') &&
+            path.extname(facadeModuleId)
 
           const isTypescript = extname && (extname === '.ts' || extname === '.tsx')
 
@@ -32,7 +36,7 @@ module.exports = function graphql({ tsconfigPath }) {
       if (changed.length > 0) {
         const { typegenCommand } = require('ts-graphql-plugin/lib/cli/commands/typegen')
 
-        return typegenCommand({options: {project: tsconfigPath}})
+        return typegenCommand({ options: { project: tsconfigPath } })
       }
     },
   }

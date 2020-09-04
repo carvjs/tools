@@ -21,21 +21,25 @@ module.exports = function esbuild(options) {
       if (id.includes('\0')) return null
       if (id.includes('node_modules')) return null
 
-
       const extname = path.extname(id)
       const loader = loaders[extname]
 
       if (!loader) return null
 
       if (this.meta.watchMode) {
-          const cache = codeCache.get(id)
+        const cache = codeCache.get(id)
 
         if (cache?.code === code) {
           return cache.result
         }
       }
 
-      const result = await transform(code, id, {...options, loader, target: 'esnext', minify: false}, this)
+      const result = await transform(
+        code,
+        id,
+        { ...options, loader, target: 'esnext', minify: false },
+        this,
+      )
 
       if (result && this.meta.watchMode) {
         codeCache.set(id, { code, result })
@@ -60,7 +64,7 @@ module.exports = function esbuild(options) {
         }
       }
 
-      const result = await transform(code, chunk.fileName, {...options, loader: 'js'}, this)
+      const result = await transform(code, chunk.fileName, { ...options, loader: 'js' }, this)
 
       if (result && this.meta.watchMode) {
         codeCache.set(chunk.fileName, { code, result })
