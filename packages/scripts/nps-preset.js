@@ -66,7 +66,7 @@ exports.scripts = {
   // Main entrypoints
   default: `nps ${process.env.npm_lifecycle_event || 'start'}`,
 
-  start: use.svelte ? 'nps prepare build.watch' : 'nps test',
+  start: use.svelte ? 'nps build.watch' : 'nps test',
 
   test: {
     default: ['nps', 'prepare', use.typescriptGraphql && 'graphql.validate', 'test.check', 'jest.coverage'].filter(Boolean).join(' '),

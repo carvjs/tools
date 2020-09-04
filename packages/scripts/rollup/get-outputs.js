@@ -36,15 +36,6 @@ module.exports = function getOutputs({
         file: `./browser/dev/${unscopedPackageName}.js`,
       },
 
-      esnext: maybe(mode === 'library', {
-        platform: 'browser',
-        target: 'esnext',
-        format: 'esm',
-        mainFields: ['esnext', 'es2015'],
-        svelte: { dev: false, generate: 'dom' },
-        file: `./browser/esnext/${unscopedPackageName}.js`,
-      }),
-
       import: {
         platform: 'browser',
         target: 'es2015',
@@ -53,6 +44,15 @@ module.exports = function getOutputs({
         svelte: { dev: false, generate: 'dom' },
         file: `./browser/import/${unscopedPackageName}.js`,
       },
+
+      esnext: maybe(mode === 'library', {
+        platform: 'browser',
+        target: 'esnext',
+        format: 'esm',
+        mainFields: ['esnext', 'es2015'],
+        svelte: { dev: false, generate: 'dom' },
+        file: `./browser/esnext/${unscopedPackageName}.js`,
+      }),
 
       script: maybe(mode === 'app', {
         platform: 'browser',

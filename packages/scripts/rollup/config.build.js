@@ -180,9 +180,6 @@ module.exports = async () => {
       plugins: [
         logStart(options, paths.dist, use.svelte),
 
-        (options.format === 'umd' || options.target === 'esnext') &&
-          require('rollup-plugin-filesize')({ showMinifiedSize: false }),
-
         ...common.plugins,
 
         define({
@@ -252,10 +249,6 @@ module.exports = async () => {
   }
 
   return [
-    ...Object.values(outputs.node || {}).map(createRollupConfig),
-
-    ...Object.values(outputs.browser || {}).map(createRollupConfig),
-
     // Generate typescript declarations
     dtsFile &&
       outputs.types && {
@@ -290,5 +283,9 @@ module.exports = async () => {
           (0, require('rollup-plugin-dts').default)(),
         ],
       },
+
+    ...Object.values(outputs.node || {}).map(createRollupConfig),
+
+    ...Object.values(outputs.browser || {}).map(createRollupConfig),
   ].filter(Boolean)
 }

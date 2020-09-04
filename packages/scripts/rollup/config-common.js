@@ -29,9 +29,11 @@ module.exports = (options) => {
   const { default: nodeResolve } = require('@rollup/plugin-node-resolve')
   const commonjs = require('@rollup/plugin-commonjs')
   const { default: dynamicImportVars } = require('@rollup/plugin-dynamic-import-vars')
+  const resolve = require('./plugin-resolve')
   const esbuild = require('./plugin-esbuild')
   const assets = require('./plugin-assets')
-  const resolve = require('./plugin-resolve')
+  const graphql = require('./plugin-graphql')
+  const size = require('./plugin-size')
 
   const assetFileNames = path.join('assets', '[name]-[hash][extname]')
 
@@ -91,6 +93,10 @@ module.exports = (options) => {
 
       // Must be after all other transforms (like svelte and css)
       dynamicImportVars({ warnOnError: true, exclude: 'node_modules' }),
+
+      use.typescriptGraphql && graphql({tsconfigPath: paths.typescriptConfig}),
+
+      (options.format === 'umd' || options.target === 'esnext') && size(),
     ].filter(Boolean),
   }
 }

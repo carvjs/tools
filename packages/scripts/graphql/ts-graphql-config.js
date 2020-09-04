@@ -3,12 +3,29 @@
 const fs = require('fs/promises')
 const path = require('path')
 
+const cache = new Map()
+
 module.exports = async (projectRootPath) => {
-  const config = require('./find-config')(projectRootPath)
+  let result = cache.get(projectRootPath)
+
+  if (!result) {
+    result = await load(projectRootPath)
+    cache.set(projectRootPath, result)
+  }
+
+  if (result.schema) {
+    return { url: await serveSchema(result.schema) }
+  }
+
+  return result
+}
+
+async function load(projectRootPath) {
+  const config = require('../lib/config').graphql
 
   if (!config) {
     console.error('!!! No graphql configuration found.')
-    return
+    return {}
   }
 
   // Prefer local schema over remote url
@@ -34,11 +51,12 @@ module.exports = async (projectRootPath) => {
       console.warn(`Failed to reach graphql endpoint at ${url}: ${error.message}`)
       try {
         schema = await fs.readFile(cacheFile)
+        console.warn(` => Using schema from cache`)
       } catch {}
     }
 
     if (schema) {
-      return { url: await serveSchema(schema) }
+      return { schema }
     }
 
     // The remote is not available and we have no cache
@@ -49,7 +67,7 @@ module.exports = async (projectRootPath) => {
   try {
     const schema = await fs.readFile(path.resolve(projectRootPath, url), { encoding: 'utf-8' })
 
-    return { url: await serveSchema(schema) }
+    return { schema }
   } catch {
     return { url }
   }
