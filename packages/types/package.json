@@ -15,5 +15,8 @@
   "types": "index.d.ts",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@types/react": "^16.9.49"
   }
 }

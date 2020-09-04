@@ -1,7 +1,11 @@
+<script lang="ts" context="module">
+  export function load(): void {}
+</script>
+
 <script lang="ts">
   import Paper, { Title, Subtitle, Content } from '@smui/paper'
-  import styles from '@/styles.module.css'
-  import favicon from '@/favicon.ico'
+  import styles from './styles.module.css'
+  import favicon from './favicon.ico'
 
   export let name: string = 'world'
 </script>

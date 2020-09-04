@@ -1,7 +1,7 @@
-import 'svelte'
-
+import './svelte'
 import './assets'
 import './modules'
+import './svelte-jsx'
 
 declare global {
   interface ImportMetaEnv {

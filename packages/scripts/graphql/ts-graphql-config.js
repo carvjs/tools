@@ -80,6 +80,7 @@ async function serveSchema(schema) {
   })
   server.unref()
 
+  // TODO use p-event
   await new Promise((resolve) => server.listen(0, resolve))
 
   const { port } = server.address()

@@ -115,7 +115,11 @@ exports.scripts = {
 
   cleanup:
     'rimraf ' +
-    [paths.build, paths.dist, path.join(paths.source, '**', '__generated__')]
+    [
+      paths.build,
+      paths.dist,
+      path.join(paths.source, '**', '__generated__'),
+    ]
       .map((p) => path.relative(process.cwd(), p))
       .join(' '),
 

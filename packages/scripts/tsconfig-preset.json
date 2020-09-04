@@ -17,8 +17,10 @@
      */
     "importsNotUsedAsValues": "error",
     "allowJs": true,
-    // Generate sourcemaps
-    "sourceMap": true,
+    // Generate inline sourcemaps
+    "sourceMap": false,
+    "inlineSourceMap": true,
+    "inlineSources": true,
     // Search under node_modules for non-relative imports.
     "moduleResolution": "node",
     // Enable strictest settings like strictNullChecks & noImplicitAny.
@@ -30,6 +32,8 @@
     "esModuleInterop": true,
     // allow to import json files
     "resolveJsonModule": true,
+    // keep jsx as is
+    "jsx": "preserve",
     // babel does not support them yet
     "preserveConstEnums": true,
     "skipLibCheck": true,
