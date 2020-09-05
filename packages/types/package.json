@@ -16,7 +16,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@types/react": "^16.9.49"
+  "peerDependencies": {
+    "svelte": "^3.24.0"
+  },
+  "peerDependenciesMeta": {
+    "svelte": {
+      "optional": true
+    }
   }
 }

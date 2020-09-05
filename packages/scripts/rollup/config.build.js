@@ -30,8 +30,7 @@ module.exports = async () => {
     console.log('Generating typescript declarations...')
     await fs.mkdirp(typesDirectory)
 
-    let svelteFiles
-    let shimFileName
+    const cleanupFiles = []
     try {
       // Idea:
       // - create *.svelte.d.ts files
@@ -41,26 +40,32 @@ module.exports = async () => {
       // - TODO remove build directory
       if (use.svelte) {
         // Collect all svelte files
-        svelteFiles = await globby('**/*.svelte', {
+        const svelteFiles = await globby('**/*.svelte', {
           cwd: paths.root,
           gitignore: true,
           absolute: true,
         })
 
-        // Copy the shim definitoons
+        // Copy the shim definitions
+        const jsxShimFileName = path.resolve(paths.root, path.dirname(inputFile), '__svelte-jsx-shims.d.ts')
+        cleanupFiles.push(jsxShimFileName)
+        await fs.copyFile(require.resolve('../types/svelte-jsx.d.ts'), jsxShimFileName)
+        await fs.copyFile(jsxShimFileName, path.join(typesDirectory, path.basename(jsxShimFileName)))
+
+        const shimFileName = path.resolve(paths.root, path.dirname(inputFile), '__svelte-shims.d.ts')
+        cleanupFiles.push(shimFileName)
         const shim = await fs.readFile(
           require.resolve('svelte2tsx/svelte-shims.d.ts'),
           'utf-8',
         )
-
-        shimFileName = path.resolve(paths.root, path.dirname(inputFile), '__svelte-shims.d.ts')
 
         // Set of exported shim declarations
         const exports = new Set()
 
         // Remove declare module '*.svelte' {}
         // and export all definitions
-        await fs.writeFile(shimFileName, shim.slice(shim.indexOf('}') + 1).replace(/^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm, (match, type, name) => {
+        await fs.writeFile(shimFileName,
+          shim.slice(shim.indexOf('}') + 1).replace(/^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm, (match, type, name) => {
           exports.add(name)
           return `export ${match}`
         }))
@@ -87,6 +92,9 @@ module.exports = async () => {
               shimImport = './' + shimImport
             }
 
+            const svelteFileJsx = svelteFile + '.tsx'
+            cleanupFiles.push(svelteFileJsx)
+
             await fs.writeFile(
               svelteFile + '.tsx',
               result.code + `\nimport {${imports}} from ${JSON.stringify(shimImport)}\n\n//# sourceMappingURL=${result.map.toUrl()}`,
@@ -101,6 +109,8 @@ module.exports = async () => {
           '--emitDeclarationOnly',
           '--noEmit',
           'false',
+          '--jsx',
+          'preserve',
           '--project',
           paths.typescriptConfig,
           '--outDir',
@@ -121,19 +131,15 @@ module.exports = async () => {
         cwd: path.resolve(typesDirectory, path.relative(paths.root, path.dirname(inputFile))),
       })
     } finally {
-      if (shimFileName) {
-        await fs.unlink(shimFileName)
-      }
-
-      if (svelteFiles) {
-        await Promise.all(
-          svelteFiles.map(async (svelteFile) => {
-            try {
-              await fs.unlink(svelteFile + '.tsx')
-            } catch {}
-          }),
-        )
-      }
+      await Promise.all(
+        cleanupFiles.map(async (fileName) => {
+          try {
+            await fs.unlink(fileName)
+          } catch (error) {
+            console.warn(`Failed to cleanup: ${fileName}`, error)
+          }
+        }),
+      )
     }
   }
 
