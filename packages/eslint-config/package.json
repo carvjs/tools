@@ -12,6 +12,7 @@
   },
   "license": "MIT",
   "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "sideEffects": false,
   "main": "eslint-preset.js",
   "dependencies": {
     "@rushstack/eslint-patch": "^1.0.2",

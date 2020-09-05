@@ -41,8 +41,5 @@
     <IfError at="email" />
   </p>
 
-  <p>
-    <button type="submit">Submit</button>
-    <button type="reset">Reset</button>
-  </p>
+  <p><button type="submit">Submit</button> <button type="reset">Reset</button></p>
 </form>

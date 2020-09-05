@@ -12,6 +12,7 @@
   },
   "license": "MIT",
   "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "sideEffects": false,
   "main": "prettier-preset.js",
   "dependencies": {
     "prettier-plugin-packagejson": "^2.2.5",

@@ -47,28 +47,38 @@ module.exports = async () => {
         })
 
         // Copy the shim definitions
-        const jsxShimFileName = path.resolve(paths.root, path.dirname(inputFile), '__svelte-jsx-shims.d.ts')
-        cleanupFiles.push(jsxShimFileName)
-        await fs.copyFile(require.resolve('../types/svelte-jsx.d.ts'), jsxShimFileName)
-        await fs.copyFile(jsxShimFileName, path.join(typesDirectory, path.basename(jsxShimFileName)))
-
-        const shimFileName = path.resolve(paths.root, path.dirname(inputFile), '__svelte-shims.d.ts')
-        cleanupFiles.push(shimFileName)
-        const shim = await fs.readFile(
-          require.resolve('svelte2tsx/svelte-shims.d.ts'),
-          'utf-8',
+        const jsxShimFileName = path.resolve(
+          paths.root,
+          path.dirname(inputFile),
+          '__svelte-jsx-shims.d.ts',
         )
+        await fs.copyFile(require.resolve('../types/svelte-jsx.d.ts'), jsxShimFileName)
+        cleanupFiles.push(jsxShimFileName)
+
+        const shimFileName = path.resolve(
+          paths.root,
+          path.dirname(inputFile),
+          '__svelte-shims.d.ts',
+        )
+        const shim = await fs.readFile(require.resolve('svelte2tsx/svelte-shims.d.ts'), 'utf-8')
 
         // Set of exported shim declarations
         const exports = new Set()
 
         // Remove declare module '*.svelte' {}
         // and export all definitions
-        await fs.writeFile(shimFileName,
-          shim.slice(shim.indexOf('}') + 1).replace(/^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm, (match, type, name) => {
-          exports.add(name)
-          return `export ${match}`
-        }))
+        await fs.writeFile(
+          shimFileName,
+          shim
+            .slice(shim.indexOf('}') + 1)
+            .replace(/^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm, (match, type, name) => {
+              exports.add(name)
+              return `export ${match}`
+            }),
+        )
+        cleanupFiles.push(shimFileName)
+
+        // Import all exports, rollup dts will treeshake them for us
         const imports = [...exports].join(', ')
 
         // Must be available in build/types as well
@@ -97,7 +107,10 @@ module.exports = async () => {
 
             await fs.writeFile(
               svelteFile + '.tsx',
-              result.code + `\nimport {${imports}} from ${JSON.stringify(shimImport)}\n\n//# sourceMappingURL=${result.map.toUrl()}`,
+              result.code +
+                `\nimport {${imports}} from ${JSON.stringify(
+                  shimImport,
+                )}\n\n//# sourceMappingURL=${result.map.toUrl()}`,
             )
           }),
         )
@@ -362,9 +375,7 @@ module.exports = async () => {
           exports: 'auto',
         },
 
-        plugins: [
-          (0, require('rollup-plugin-dts').default)(),
-        ],
+        plugins: [(0, require('rollup-plugin-dts').default)()],
       },
 
     ...Object.values(outputs.node || {}).map(createRollupConfig),

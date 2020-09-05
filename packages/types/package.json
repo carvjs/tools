@@ -12,16 +12,9 @@
   },
   "license": "MIT",
   "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "sideEffects": false,
   "types": "index.d.ts",
   "publishConfig": {
     "access": "public"
-  },
-  "peerDependencies": {
-    "svelte": "^3.24.0"
-  },
-  "peerDependenciesMeta": {
-    "svelte": {
-      "optional": true
-    }
   }
 }

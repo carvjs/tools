@@ -1,5 +1,3 @@
-import 'svelte'
-
 import './svelte'
 import './assets'
 import './modules'
