@@ -7,6 +7,10 @@ const sveltePreprocess = require('svelte-preprocess')
 
 module.exports = {
   preprocess: sveltePreprocess({
+    defaults: {
+      script: require('./lib/package-use').typescript ? 'typescript' : 'javascript',
+    },
+
     sourceMap: true,
 
     /** Use as is; rollup transforms the generated chunk */
@@ -25,6 +29,7 @@ module.exports = {
     /** `<style global>...</style>` */
 
     globalStyle: true,
+
     postcss: {
       plugins: [require('postcss-nested')],
     },

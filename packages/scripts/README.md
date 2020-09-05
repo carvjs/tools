@@ -15,6 +15,7 @@
 
 ```json
 {
+  "main": "src/index.ts",
   "prettier": "@carv/prettier-config",
   "eslintConfig": {
     "extends": "@carv/eslint-config",
@@ -22,6 +23,28 @@
   },
   "jest": {
     "preset": "@carv/scripts"
+  },
+  "carv": {
+    "alias": {
+      "@": "./src"
+    }
+  }
+}
+```
+
+`tsconfig.json`:
+
+```json
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "./node_modules/@carv/scripts/tsconfig-preset.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@": ["src"],
+      "@/*": ["src/*"]
+    }
   }
 }
 ```

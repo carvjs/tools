@@ -1,8 +1,7 @@
 // TODO import load should work in VS code
 import Hello, { load } from './hello.svelte'
 
-export { load }
-export default Hello
+export { load, Hello }
 
 if (import.meta.hot) {
   document.body.innerHTML = ''
