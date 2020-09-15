@@ -17,13 +17,12 @@ module.exports = {
       return source
     }
 
-    const maybeEsm = /\bimport|export\b/.test(source)
+    // Work around export from bug in esbuild transform
+    const hasExportFrom = /\bexport\s*{[^}]+}\s*from\b/.test(source)
 
-    // Console.log('transform', filename, {maybeEsm})
-    if (maybeEsm) {
+    if (hasExportFrom) {
       const [imports, exports] = global.__ES_MODULE_LEXER__PARSE(source)
 
-      // Console.log('transform', filename, {imports, exports})
       if (imports.length + exports.length) {
         const external = []
 
@@ -47,8 +46,6 @@ module.exports = {
             external.push(id)
           }
         }
-
-        // Console.log(filename, external)
 
         let directory
 
@@ -90,16 +87,15 @@ module.exports = {
     const { js, jsSourceMap, warnings } = transformSync(source, {
       sourcefile: filename,
       format: 'cjs',
-      platform: 'node',
       target,
       sourcemap: 'external',
     })
 
     printWarnings(filename, warnings)
 
-    // Console.log('transform', filename)
     return { code: js, map: jsSourceMap }
   },
+
   getCacheKey(fileData, filename, configString, cacheKeyOptions) {
     const { rootDir } = cacheKeyOptions
     return createHash('md5')

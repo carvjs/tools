@@ -5,94 +5,14 @@ const path = require('path')
 const { createHash } = require('crypto')
 const convert = require('convert-source-map')
 const { encode, decode } = require('sourcemap-codec')
-
-const STYLE_LOADERS = {
-  '.css': async ({ code, id, target, minify, modules, resolveFile }) => {
-    let classNames
-    const output = await require('postcss')(
-      [
-        require('./postcss-assets')({ resolveFile }),
-
-        require('postcss-nested')(),
-
-        modules &&
-          require('postcss-modules')({
-            generateScopedName: '[local]__[sha256:hash:base62:8]',
-            localsConvention: 'camelCase',
-            getJSON: (cssFileName, json) => {
-              classNames = json
-            },
-          }),
-
-        target !== 'esnext' &&
-          require('postcss-preset-env')({
-            browsers: require('@carv/polyfills').getBrowserlistForTarget(target),
-            // https://preset-env.cssdb.org/features#stage-2
-            stage: 2,
-            // https://github.com/csstools/postcss-preset-env/blob/master/src/lib/plugins-by-id.js#L36
-            features: {
-              'any-link-pseudo-class': false,
-              'case-insensitive-attributes': false,
-              'dir-pseudo-class': false,
-              'gray-function': false,
-            },
-            autoprefixer: {
-              // https://github.com/postcss/autoprefixer#options
-              grid: true,
-            },
-          }),
-
-        minify &&
-          require('cssnano')({
-            preset: require('cssnano-preset-default')({
-              calc: false,
-              convertValues: false,
-              orderedValues: false,
-              discardOverridden: false,
-              discardDuplicates: false,
-              cssDeclarationSorter: false,
-            }),
-          }),
-      ].filter(Boolean),
-    ).process(code, {
-      from: id,
-      to: id,
-      map: {
-        inline: true,
-      },
-    })
-
-    return {
-      code: output.css,
-      warnings: output.warnings(),
-      classNames,
-    }
-  },
-  '.scss': async (options) => {
-    const result = require('sass').renderSync({
-      file: options.id,
-      data: options.code,
-      outFile: options.id,
-      includePaths: [
-        path.join(require('../lib/package-paths').source, 'theme'),
-        ...require('../lib/include-paths'),
-      ],
-      sourceMap: true,
-      sourceMapContents: true,
-      sourceMapEmbed: true,
-    })
-
-    return {
-      ...(await STYLE_LOADERS['.css']({ ...options, code: result.css.toString() })),
-      dependencies: result.stats.includedFiles,
-    }
-  },
-}
+const STYLE_LOADERS = require('../lib/style-loaders')
 
 module.exports = function assets({
   assetFileNames = path.join('assets', '[name]-[hash][extname]'),
   target = 'es2015',
   minify = true,
+  platform = 'browser',
+  dev = false, // eslint-disable-line unicorn/prevent-abbreviations
 } = {}) {
   // The final name of the combined css file
   let styleFileName = null
@@ -179,6 +99,7 @@ module.exports = function assets({
           id,
           target,
           minify,
+          dev,
           modules: id.endsWith('.module' + extname),
           resolveFile: async (dependency, isAtImport) => {
             const resolved = await this.resolve(dependency, id, { skipSelf: true })
@@ -214,13 +135,10 @@ module.exports = function assets({
 
         const exportedClassNames =
           result.classNames &&
-          require('@rollup/pluginutils').dataToEsm(result.classNames, {
-            compact: false,
-            indent: '  ',
-            preferConst: true,
-            objectShorthand: true,
-            namedExports: false,
-          })
+          [
+            `const classes = ${JSON.stringify(result.classNames, null, 2)};`,
+            platform === 'node' ? `export default process.env.NODE_ENV === 'test' ? /* @__PURE__ */ Object.keys(classes).reduce((s,k)=>(s[k]=k,s),{}) : classes;` : `export default classes;`
+          ].join('\n')
 
         if (this.meta.watchMode) {
           const referenceId = this.emitFile({

@@ -23,7 +23,6 @@ module.exports = async () => {
   let dtsFile
 
   if (useTypescript) {
-    const globby = require('globby')
     const execa = require('execa')
     const npmRunPath = require('npm-run-path')
 
@@ -31,121 +30,20 @@ module.exports = async () => {
     await fs.mkdirp(typesDirectory)
 
     const cleanupFiles = []
+
     try {
-      // Idea:
-      // - create *.svelte.d.ts files
-      // - generate typescript declarations in a build directory using tsc
-      // - remove created *.svelte.d.ts files
-      // - use rollup-plugin-dts to create final bundle
-      // - TODO remove build directory
       if (use.svelte) {
-        // Collect all svelte files
-        const svelteFiles = await globby('**/*.svelte', {
-          cwd: paths.root,
-          gitignore: true,
-          absolute: true,
-        })
+        const svelte2tsx = require('../typescript/svelte2tsx')
 
-        // Copy the shim definitions
-        // const jsxShimFileName = path.resolve(
-        //   paths.root,
-        //   path.dirname(inputFile),
-        //   '__svelte-jsx-shims.d.ts',
-        // )
-        // await fs.copyFile(require.resolve('../types/svelte-jsx.d.ts'), jsxShimFileName)
-        // cleanupFiles.push(jsxShimFileName)
+        for await (const {fileName, isShim} of svelte2tsx(path.dirname(inputFile))) {
+          cleanupFiles.push(fileName)
 
-        /** Copy svelte-jsx as namespace JSX */
-        const jsxFileName = path.resolve(
-          paths.root,
-          path.dirname(inputFile),
-          '__svelte-jsx.d.ts',
-        )
-        const jsx = await fs.readFile(require.resolve('svelte2tsx/svelte-jsx.d.ts'), 'utf-8')
-
-        await fs.writeFile(
-          jsxFileName,
-          jsx.replace('declare namespace svelte.JSX', 'declare namespace JSX')
-        )
-        cleanupFiles.push(jsxFileName)
-
-        // Must be available in build/types as well
-        await fs.copyFile(jsxFileName, path.join(typesDirectory, path.basename(jsxFileName)))
-
-
-        /** Copy svelte-shim */
-        const shimFileName = path.resolve(
-          paths.root,
-          path.dirname(inputFile),
-          '__svelte-shims.d.ts',
-        )
-        const shim = await fs.readFile(require.resolve('svelte2tsx/svelte-shims.d.ts'), 'utf-8')
-
-        // Set of exported shim declarations
-        const exports = new Set()
-
-        // Remove declare module '*.svelte' {}
-        // and export all definitions
-        const additionalHelpers = [
-          `declare function __sveltets_default<T>(): T;`,
-        ].join('\n')
-        await fs.writeFile(
-          shimFileName,
-          (shim.slice(shim.indexOf('}') + 1) + '\n' + additionalHelpers)
-            .replace(/^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm, (match, type, name) => {
-              exports.add(name)
-              return `export ${match}`
-            }),
-
-        )
-        cleanupFiles.push(shimFileName)
-
-        // Import all exports, rollup dts will treeshake them for us
-        const imports = [...exports].join(', ')
-
-        // Must be available in build/types as well
-        await fs.copyFile(shimFileName, path.join(typesDirectory, path.basename(shimFileName)))
-
-        // Create tsx shim for each svelte
-        const svelte2tsx = require('svelte2tsx')
-        await Promise.all(
-          svelteFiles.map(async (svelteFile) => {
-            const source = await fs.readFile(svelteFile, 'utf-8')
-
-            const result = svelte2tsx(source, {
-              filename: svelteFile,
-              strictMode: false,
-              isTsFile: true,
-            })
-
-            // Add shim import without .d.ts extension
-            let shimImport = path.relative(path.dirname(svelteFile), shimFileName.slice(0, -5))
-            if (!(shimImport.startsWith('./') || shimImport.startsWith('../'))) {
-              shimImport = './' + shimImport
-            }
-
-            const svelteFileJsx = svelteFile + '.tsx'
-            cleanupFiles.push(svelteFileJsx)
-
-            const code = result.code
-              // Replace store access using $store with type
-              // ignore: $$restProps, $$props, $:, _$$p, .$on, ${
-              .replace(/(?<![$.])\$([\w]+?)\b/gmu, '__sveltets_store_get($1)')
-              // Ensure not initalized exports are typed
-              .replace(/\b(let\s+[\w]+\s*:[^=;]+?)(;|$)/gmu, '$1 = __sveltets_default()$2')
-              // Move render body outside to have access to internal types like ComponentEvents
-              .replace('function render() {', '')
-              .replace(/(<\/>\);[\r?\n])(\s*return\s*{\s*props:\s*{)/m, '$1function render() {\n$2')
-
-            await fs.writeFile(
-              svelteFile + '.tsx',
-
-                `${code}\nimport {${imports}} from ${JSON.stringify(
-                  shimImport,
-                )}`,
-            )
-          }),
-        )
+          // eslint-disable-next-line max-depth
+          if (isShim) {
+            // Must be available in build/types as well
+            await fs.copyFile(fileName, path.join(typesDirectory, path.basename(fileName)))
+          }
+        }
       }
 
       await execa(
@@ -175,6 +73,7 @@ module.exports = async () => {
       dtsFile = await require('find-up')(path.basename(inputFile.replace(/\.(ts|tsx)$/, '.d.ts')), {
         cwd: path.resolve(typesDirectory, path.relative(paths.root, path.dirname(inputFile))),
       })
+
     } finally {
       await Promise.all(
         cleanupFiles.map(async (fileName) => {
@@ -407,7 +306,10 @@ module.exports = async () => {
           exports: 'auto',
         },
 
-        plugins: [(0, require('rollup-plugin-dts').default)()],
+        plugins: [
+          require('./plugin-assets-dts')({inputFile, typesDirectory}),
+          (0, require('rollup-plugin-dts').default)()
+        ],
       },
 
     ...Object.values(outputs.node || {}).map(createRollupConfig),

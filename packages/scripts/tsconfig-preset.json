@@ -1,5 +1,18 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
+  "exclude": [
+    "**/*.test-d.ts",
+    "**/.tmp/**",
+    "**/.build/**",
+    "**/build/**",
+    "**/dist/**",
+    "**/docs/**",
+    "**/node_modules/**",
+    "**/__generated__/**",
+    "**/generated/**",
+    "**/coverage/**",
+    "**/__fixtures__/**"
+  ],
   "compilerOptions": {
     // Target latest version of ECMAScript.
     "target": "esnext",

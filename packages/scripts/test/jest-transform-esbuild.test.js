@@ -8,9 +8,9 @@ test('esbuild', async () => {
   const filename = path.join(__dirname, 'fixtures', 'a.js')
   const result = transformer.process(await fs.readFile(filename, 'utf-8'), filename)
 
-  expect(result).not.toContain('esbuildCommandAndArgs')
-  expect(result).toContain('require("x")')
-  expect(result).toContain('require("../../test/fixtures/b")')
+  expect(result.code).not.toContain('esbuildCommandAndArgs')
+  expect(result.code).toContain('require("x")')
+  expect(result.code).toContain('require("./b")')
 })
 
 test('import json', async () => {

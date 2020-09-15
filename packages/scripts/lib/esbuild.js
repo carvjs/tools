@@ -6,7 +6,7 @@ const { startService } = require('esbuild')
 
 let servicePromise
 
-async function transform(code, options) {
+async function transform(code, { platform /* not supported by transform */, ...options }) {
   if (!servicePromise) {
     servicePromise = startService()
   }

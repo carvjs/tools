@@ -1,9 +1,11 @@
 .article {
+  composes: article from global;
   font-size: 16px;
 }
 
 /* mixins.css */
 .title {
+  composes: title from global;
   color: black;
   font-size: 40px;
 }

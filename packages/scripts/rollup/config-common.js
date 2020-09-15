@@ -85,11 +85,11 @@ module.exports = (options) => {
 
       json({ preferConst: true, namedExports: false }),
 
-      esbuild(options),
+      esbuild({ target: options.target, minify: options.minify !== false }),
 
       commonjs({ requireReturnsDefault: 'auto', extensions }),
 
-      assets({ assetFileNames, target: options.target, minify: options.minify !== false }),
+      assets({ assetFileNames, target: options.target, minify: options.minify !== false, platform: options.platform, dev: options.svelte?.dev === true }),
 
       // Must be after all other transforms (like svelte and css)
       dynamicImportVars({ warnOnError: true, exclude: 'node_modules' }),
