@@ -1,15 +1,6 @@
 /* eslint-env node */
 
-const path = require('path')
-
 const { transform, stopService } = require('../lib/esbuild')
-
-const loaders = {
-  '.js': 'js',
-  '.jsx': 'jsx',
-  '.ts': 'ts',
-  '.tsx': 'tsx',
-}
 
 module.exports = function esbuild(options) {
   const codeCache = new Map()
@@ -21,10 +12,7 @@ module.exports = function esbuild(options) {
       if (id.includes('\0')) return null
       if (id.includes('node_modules')) return null
 
-      const extname = path.extname(id)
-      const loader = loaders[extname]
-
-      if (!loader) return null
+      if (!/.([mc]js|[jt]sx?)$/.test(id)) return null
 
       if (this.meta.watchMode) {
         const cache = codeCache.get(id)
@@ -37,7 +25,7 @@ module.exports = function esbuild(options) {
       const result = await transform(
         code,
         id,
-        { ...options, loader, target: 'esnext', minify: false },
+        { ...options, target: 'esnext', minify: false },
         this,
       )
 

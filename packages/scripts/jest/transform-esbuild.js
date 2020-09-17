@@ -10,7 +10,17 @@ const THIS_FILE = fs.readFileSync(__filename)
 
 const target = require('../lib/current-node-target')
 
-// TODO esbuild: MR that adds cjs output to transform (including import.meta.url)
+// 'js' | 'jsx' | 'ts' | 'tsx' | 'json' | 'text' | 'base64' | 'file' | 'dataurl' | 'binary';
+const LOADERS = {
+  '.ts': 'ts',
+  '.tsx': 'tsx',
+  '.js': 'js',
+  '.jsx': 'jsx',
+  '.mjs': 'js',
+  '.cjs': 'js',
+  '.json': 'json',
+}
+
 module.exports = {
   process(source, filename) {
     if (filename === __filename) {
@@ -18,9 +28,9 @@ module.exports = {
     }
 
     // Work around export from bug in esbuild transform
-    const hasExportFrom = /\bexport\s*{[^}]+}\s*from\b/.test(source)
+    const needsBuild = /\bexport\s*(?:{[^}]+}|\*)\s*from\b|\bimport\s+type\b/.test(source)
 
-    if (hasExportFrom) {
+    if (needsBuild) {
       const [imports, exports] = global.__ES_MODULE_LEXER__PARSE(source)
 
       if (imports.length + exports.length) {
@@ -88,7 +98,8 @@ module.exports = {
       sourcefile: filename,
       format: 'cjs',
       target,
-      sourcemap: 'external',
+      loader: (filename && LOADERS[path.extname(filename)]) || 'ts',
+      sourcemap: 'external'
     })
 
     printWarnings(filename, warnings)

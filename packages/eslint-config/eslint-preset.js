@@ -83,6 +83,7 @@ module.exports = {
           nodeEnv: true,
           ref: true,
           src: true,
+          docs: true,
         },
       },
     ],
@@ -333,6 +334,14 @@ module.exports = {
       files: ['**/*.config.js', '**/*.setup.js', '**/package-scripts.js'],
       env: {
         node: true,
+      },
+      rules: {
+        'unicorn/prevent-abbreviations': [
+          'error',
+          {
+            checkFilenames: false,
+          }
+        ]
       },
     },
   ],

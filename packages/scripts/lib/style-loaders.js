@@ -2,7 +2,7 @@
 
 const path = require('path')
 
-exports['.css'] = async ({ code, id, target, minify, modules, resolveFile }) => {
+exports['.css'] = async ({ code, id, target, minify, dev, modules, resolveFile }) => {
   let classNames
   const output = await require('postcss')(
     [
@@ -12,8 +12,7 @@ exports['.css'] = async ({ code, id, target, minify, modules, resolveFile }) => 
 
       modules &&
         require('postcss-modules')({
-          generateScopedName: '__[local]__[sha256:hash:base62:8]',
-          localsConvention: 'camelCase',
+          generateScopedName: minify && !dev ? '__[sha256:hash:base62:11]' : '__[local]__[sha256:hash:base62:8]',
           getJSON: (cssFileName, json) => {
             classNames = json
           },
