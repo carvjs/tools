@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/carvjs/tools/compare/@carv/scripts@1.2.0...@carv/scripts@1.2.1) (2020-09-17)
+
+### Bug Fixes
+
+- svelte-check ignore all node_modules and docs folders ([779d057](https://github.com/carvjs/tools/commit/779d057cbf90ff8ec1fa43a6642619d8319f53d4))
+
 # [1.2.0](https://github.com/carvjs/tools/compare/@carv/scripts@1.1.1...@carv/scripts@1.2.0) (2020-09-17)
 
 ### Bug Fixes
