@@ -99,7 +99,7 @@ module.exports = {
       format: 'cjs',
       target,
       loader: (filename && LOADERS[path.extname(filename)]) || 'ts',
-      sourcemap: 'external'
+      sourcemap: 'external',
     })
 
     printWarnings(filename, warnings)

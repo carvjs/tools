@@ -30,10 +30,10 @@ module.exports = async function* createSvelteTSx(cwd) {
     jsx
       .replace('declare namespace svelte.JSX', 'declare namespace JSX')
       .replace('/* children?: Children;', 'children?: Children;')
-      .replace('ref?: ((e: T) => void) | Ref<T>; */', '/* ref?: ((e: T) => void) | Ref<T>; */')
+      .replace('ref?: ((e: T) => void) | Ref<T>; */', '/* ref?: ((e: T) => void) | Ref<T>; */'),
   )
 
-  yield {fileName: jsxFileName, isShim: true}
+  yield { fileName: jsxFileName, isShim: true }
 
   /// Copy svelte-shim
   const shimFileName = path.resolve(cwd, '__svelte-shims.d.ts')
@@ -45,21 +45,20 @@ module.exports = async function* createSvelteTSx(cwd) {
 
   // Remove declare module '*.svelte' {}
   // and export all definitions
-  const additionalHelpers = [
-    `declare function __sveltets_default<T>(): T;`,
-  ].join('\n')
+  const additionalHelpers = [`declare function __sveltets_default<T>(): T;`].join('\n')
 
   await fs.writeFile(
     shimFileName,
-    (shim.slice(shim.indexOf('}') + 1) + '\n' + additionalHelpers)
-      .replace(/^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm, (match, type, name) => {
+    (shim.slice(shim.indexOf('}') + 1) + '\n' + additionalHelpers).replace(
+      /^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm,
+      (match, type, name) => {
         exports.add(name)
         return `export ${match}`
-      }),
-
+      },
+    ),
   )
 
-  yield {fileName: shimFileName, isShim: true}
+  yield { fileName: shimFileName, isShim: true }
 
   // Import all exports, rollup dts will treeshake them for us
   const imports = [...exports].join(', ')
@@ -99,6 +98,6 @@ module.exports = async function* createSvelteTSx(cwd) {
       [code, `import {${imports}} from ${JSON.stringify(shimImport)}`].join('\n'),
     )
 
-    yield {fileName: svelteFileJsx, isShim: false}
+    yield { fileName: svelteFileJsx, isShim: false }
   }
 }

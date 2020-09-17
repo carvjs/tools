@@ -137,7 +137,9 @@ module.exports = function assets({
           result.classNames &&
           [
             `const classes = ${JSON.stringify(result.classNames, null, 2)};`,
-            platform === 'node' ? `export default process.env.NODE_ENV === 'test' ? /* @__PURE__ */ Object.keys(classes).reduce((s,k)=>(s[k]=k,s),{}) : classes;` : `export default classes;`
+            platform === 'node'
+              ? `export default process.env.NODE_ENV === 'test' ? /* @__PURE__ */ Object.keys(classes).reduce((s,k)=>(s[k]=k,s),{}) : classes;`
+              : `export default classes;`,
           ].join('\n')
 
         if (this.meta.watchMode) {

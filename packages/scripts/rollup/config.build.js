@@ -35,7 +35,7 @@ module.exports = async () => {
       if (use.svelte) {
         const svelte2tsx = require('../typescript/svelte2tsx')
 
-        for await (const {fileName, isShim} of svelte2tsx(path.dirname(inputFile))) {
+        for await (const { fileName, isShim } of svelte2tsx(path.dirname(inputFile))) {
           cleanupFiles.push(fileName)
 
           // eslint-disable-next-line max-depth
@@ -73,7 +73,6 @@ module.exports = async () => {
       dtsFile = await require('find-up')(path.basename(inputFile.replace(/\.(ts|tsx)$/, '.d.ts')), {
         cwd: path.resolve(typesDirectory, path.relative(paths.root, path.dirname(inputFile))),
       })
-
     } finally {
       await Promise.all(
         cleanupFiles.map(async (fileName) => {
@@ -307,8 +306,8 @@ module.exports = async () => {
         },
 
         plugins: [
-          require('./plugin-assets-dts')({inputFile, typesDirectory}),
-          (0, require('rollup-plugin-dts').default)()
+          require('./plugin-assets-dts')({ inputFile, typesDirectory }),
+          (0, require('rollup-plugin-dts').default)(),
         ],
       },
 

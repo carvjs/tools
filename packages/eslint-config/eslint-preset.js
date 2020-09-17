@@ -340,8 +340,8 @@ module.exports = {
           'error',
           {
             checkFilenames: false,
-          }
-        ]
+          },
+        ],
       },
     },
   ],

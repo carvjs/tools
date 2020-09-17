@@ -89,7 +89,13 @@ module.exports = (options) => {
 
       commonjs({ requireReturnsDefault: 'auto', extensions }),
 
-      assets({ assetFileNames, target: options.target, minify: options.minify !== false, platform: options.platform, dev: options.svelte?.dev === true }),
+      assets({
+        assetFileNames,
+        target: options.target,
+        minify: options.minify !== false,
+        platform: options.platform,
+        dev: options.svelte?.dev === true,
+      }),
 
       // Must be after all other transforms (like svelte and css)
       dynamicImportVars({ warnOnError: true, exclude: 'node_modules' }),

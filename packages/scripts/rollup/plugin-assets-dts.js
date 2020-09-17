@@ -3,20 +3,23 @@
 const fs = require('fs/promises')
 const path = require('path')
 
-module.exports = function assetDts({inputFile, typesDirectory}) {
+module.exports = function assetDts({ inputFile, typesDirectory }) {
   return {
     name: 'carv:assets.d.ts',
 
     async resolveId(source, importer) {
       if (!importer) return null
 
-      const resolved = await this.resolve(source, importer, {skipSelf: true})
+      const resolved = await this.resolve(source, importer, { skipSelf: true })
 
       if (resolved) return resolved
 
       // Generate *.d.ts file for that asset
       const targetFile = path.resolve(path.dirname(importer), source)
-      const sourceFile = path.resolve(path.dirname(inputFile), path.relative(typesDirectory, targetFile))
+      const sourceFile = path.resolve(
+        path.dirname(inputFile),
+        path.relative(typesDirectory, targetFile),
+      )
 
       const extname = path.extname(source)
 
@@ -27,7 +30,7 @@ module.exports = function assetDts({inputFile, typesDirectory}) {
         const loader = require('../lib/style-loaders')[extname]
 
         if (loader) {
-          const {classNames} = await loader({
+          const { classNames } = await loader({
             code: await fs.readFile(sourceFile, 'utf-8'),
             sourceFile,
             target: 'esnext',
@@ -36,7 +39,13 @@ module.exports = function assetDts({inputFile, typesDirectory}) {
             modules: true,
           })
 
-          const definition = classNames ? '{\n' + Object.keys(classNames).map(className => `  ${JSON.stringify(className)}: string`).join(';\n') + '\n}': 'Record<string, string>'
+          const definition = classNames
+            ? '{\n' +
+              Object.keys(classNames)
+                .map((className) => `  ${JSON.stringify(className)}: string`)
+                .join(';\n') +
+              '\n}'
+            : 'Record<string, string>'
 
           code = `declare const classNames: ${definition};\nexport = classNames;`
         }
@@ -45,7 +54,7 @@ module.exports = function assetDts({inputFile, typesDirectory}) {
       // Write dts file
       await fs.writeFile(targetFile + '.d.ts', code)
 
-      return this.resolve(source, importer, {skipSelf: true})
+      return this.resolve(source, importer, { skipSelf: true })
     },
   }
 }
