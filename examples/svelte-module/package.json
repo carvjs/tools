@@ -1,14 +1,14 @@
 {
   "name": "@carv/example-svelte-module",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "private": true,
+  "main": "src/index.ts",
   "scripts": {
     "build": "nps build",
     "format": "nps format",
     "start": "nps build.watch",
     "test": "nps test"
   },
-  "main": "src/index.ts",
   "prettier": "@carv/prettier-config",
   "eslintConfig": {
     "extends": "@carv/eslint-config",

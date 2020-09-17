@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/carvjs/tools/compare/@carv/example-svelte-module@1.1.1...@carv/example-svelte-module@1.2.0) (2020-09-17)
+
+### Bug Fixes
+
+- better svelte to tsx transform ([0bf4168](https://github.com/carvjs/tools/commit/0bf416817f6f600ecfb95a8ec4f28932d24ccd4d))
+
+### Features
+
+- css modules and asset type definitions ([36f0b5a](https://github.com/carvjs/tools/commit/36f0b5a923663191a51e14015e751a2080a6c18c))
+- typescript declarations for svelte components ([4fcdd1d](https://github.com/carvjs/tools/commit/4fcdd1d43a607c8f4d092d312a030430555ca681))
+
 ## [1.1.1](https://github.com/carvjs/tools/compare/@carv/example-svelte-module@1.1.0...@carv/example-svelte-module@1.1.1) (2020-09-04)
 
 **Note:** Version bump only for package @carv/example-svelte-module
