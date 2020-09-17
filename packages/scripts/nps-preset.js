@@ -143,7 +143,7 @@ exports.scripts = {
 }
 
 if (use.svelte) {
-  exports.scripts['svelte-check'] = 'svelte-check'
+  exports.scripts['svelte-check'] = `svelte-check --ignore '**/node_modules,**/docs'`
 }
 
 if (use.typescript) {
