@@ -7,6 +7,11 @@ web_modules
 dist
 __generated__
 
+# Svelte Component type defs
+*.svelte.tsx
+__svelte-jsx.d.ts
+__svelte-shims.d.ts
+
 # Logs
 logs
 *.log
