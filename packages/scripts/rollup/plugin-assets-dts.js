@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-const fs = require('fs/promises')
+const fs = require('fs-extra')
 const path = require('path')
 
 module.exports = function assetDts({ inputFile, typesDirectory }) {
@@ -32,7 +32,7 @@ module.exports = function assetDts({ inputFile, typesDirectory }) {
         if (loader) {
           const { classNames } = await loader({
             code: await fs.readFile(sourceFile, 'utf-8'),
-            sourceFile,
+            id: sourceFile,
             target: 'esnext',
             minify: false,
             dev: false,
@@ -52,6 +52,7 @@ module.exports = function assetDts({ inputFile, typesDirectory }) {
       }
 
       // Write dts file
+      await fs.ensureDir(path.dirname(targetFile))
       await fs.writeFile(targetFile + '.d.ts', code)
 
       return this.resolve(source, importer, { skipSelf: true })

@@ -1,6 +1,7 @@
 /* eslint-env node */
 
 const path = require('path')
+const unscopedPackageName = require('../rollup/unscoped-package-name')
 
 exports['.css'] = async ({ code, id, target, minify, dev, modules, resolveFile }) => {
   let classNames
@@ -13,7 +14,9 @@ exports['.css'] = async ({ code, id, target, minify, dev, modules, resolveFile }
       modules &&
         require('postcss-modules')({
           generateScopedName:
-            minify && !dev ? '__[sha256:hash:base62:11]' : '__[local]__[sha256:hash:base62:8]',
+            minify && !dev
+              ? `${unscopedPackageName}-[sha256:hash:base62:5]`
+              : '[local]-[sha256:hash:base62:3]',
           getJSON: (cssFileName, json) => {
             classNames = json
           },
@@ -70,6 +73,7 @@ exports['.scss'] = async (options) => {
     data: options.code,
     outFile: options.id,
     includePaths: [
+      path.dirname(options.id),
       path.join(require('./package-paths').source, 'theme'),
       ...require('./include-paths'),
     ],
