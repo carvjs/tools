@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/carvjs/tools/compare/@carv/scripts@1.2.1...@carv/scripts@1.2.2) (2020-09-21)
+
+### Bug Fixes
+
+- css modules ([ee652f4](https://github.com/carvjs/tools/commit/ee652f499cb56cba34d62c53d41b8701c3c906a6))
+- css sourcemap ([81d33a8](https://github.com/carvjs/tools/commit/81d33a82bf6c0b077362d04d9c6858295bf68fd0))
+
 ## [1.2.1](https://github.com/carvjs/tools/compare/@carv/scripts@1.2.0...@carv/scripts@1.2.1) (2020-09-17)
 
 ### Bug Fixes
