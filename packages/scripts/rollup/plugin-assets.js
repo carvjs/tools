@@ -239,8 +239,8 @@ module.exports = function assets({
 
         if (chunk.map) {
           const index = sources.length
-          sources.push(chunk.map.sources[0])
-          sourcesContent.push(chunk.map.sourcesContent[0])
+          sources.push(...chunk.map.sources)
+          sourcesContent.push(...chunk.map.sourcesContent)
 
           const decoded = decode(chunk.map.mappings)
 

@@ -15,8 +15,8 @@ exports['.css'] = async ({ code, id, target, minify, dev, modules, resolveFile }
         require('postcss-modules')({
           generateScopedName:
             minify && !dev
-              ? `${unscopedPackageName}-[sha256:hash:base62:5]`
-              : '[local]-[sha256:hash:base62:3]',
+              ? `${unscopedPackageName}_[sha256:hash:base62:5]`
+              : '[local]__[sha256:hash:base62:3]',
           getJSON: (cssFileName, json) => {
             classNames = json
           },
