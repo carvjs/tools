@@ -4,10 +4,10 @@
   "private": true,
   "main": "src/index.ts",
   "scripts": {
-    "build": "nps build",
-    "format": "nps format",
+    "build": "nps",
+    "format": "nps",
     "start": "nps build.watch",
-    "test": "nps test"
+    "test": "nps"
   },
   "prettier": "@carv/prettier-config",
   "eslintConfig": {

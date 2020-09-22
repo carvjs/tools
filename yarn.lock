@@ -9999,9 +9999,10 @@ rollup-plugin-hot-nollup@^0.1.0:
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
 
-rollup-plugin-hot@sastan/rollup-plugin-hot#open-and-proxy:
+"rollup-plugin-hot@npm:@sastan/rollup-plugin-hot@^0.1.0":
   version "0.1.0"
-  resolved "https://codeload.github.com/sastan/rollup-plugin-hot/tar.gz/90dfa55517a3c1ea0a91c101d2ed51c4b8a87f15"
+  resolved "https://registry.npmjs.org/@sastan/rollup-plugin-hot/-/rollup-plugin-hot-0.1.0.tgz#30a310c90dc5c17a0969eb85e605a572e5db9112"
+  integrity sha512-scBC9JWYb8oEqJlVjOsL6ydHQGDqrBaKHYOLxKu/CHx/6jgpw6ZugxBBHA4OVWv+bJkRp+kdThoUbjpOkBrZ2A==
   dependencies:
     cors "^2.8.5"
     execa "^4.0.3"
