@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/carvjs/tools/compare/@carv/example-svelte-module@1.2.1...@carv/example-svelte-module@1.2.2) (2020-09-22)
+
+### Bug Fixes
+
+- json loading ([01fc52f](https://github.com/carvjs/tools/commit/01fc52faf1cac4f61e6d61302fc0d449f4ac4e42))
+
 ## [1.2.1](https://github.com/carvjs/tools/compare/@carv/example-svelte-module@1.2.0...@carv/example-svelte-module@1.2.1) (2020-09-22)
 
 ### Bug Fixes
