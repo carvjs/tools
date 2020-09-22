@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/carvjs/tools/compare/@carv/example-svelte-module@1.2.0...@carv/example-svelte-module@1.2.1) (2020-09-22)
+
+### Bug Fixes
+
+- use published rollup-plugin-hot ([0a834f5](https://github.com/carvjs/tools/commit/0a834f52277427ee9d55eccd7cf7bff5eda36b32))
+
 # [1.2.0](https://github.com/carvjs/tools/compare/@carv/example-svelte-module@1.1.1...@carv/example-svelte-module@1.2.0) (2020-09-17)
 
 ### Bug Fixes

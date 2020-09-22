@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.3](https://github.com/carvjs/tools/compare/@carv/scripts@1.2.2...@carv/scripts@1.2.3) (2020-09-22)
+
+### Bug Fixes
+
+- use published rollup-plugin-hot ([0a834f5](https://github.com/carvjs/tools/commit/0a834f52277427ee9d55eccd7cf7bff5eda36b32))
+
 ## [1.2.2](https://github.com/carvjs/tools/compare/@carv/scripts@1.2.1...@carv/scripts@1.2.2) (2020-09-21)
 
 ### Bug Fixes
