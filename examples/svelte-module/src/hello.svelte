@@ -6,6 +6,9 @@
   import Paper, { Title, Subtitle, Content } from '@smui/paper'
   import styles from './styles.module.css'
   import favicon from './favicon.ico'
+  import data from './data.json'
+
+  console.log(data)
 
   export let name: string = 'world'
 </script>

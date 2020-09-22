@@ -68,7 +68,7 @@ module.exports = function assets({
 
       const extname = path.extname(id)
 
-      if (/\.(([mc]js|[jt]sx?)|svelte)$/.test(extname)) {
+      if (/\.(([mc]js|[jt]sx?)|json|svelte)$/.test(extname)) {
         return null
       }
 
