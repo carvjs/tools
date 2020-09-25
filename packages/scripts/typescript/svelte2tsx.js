@@ -29,7 +29,8 @@ module.exports = async function* createSvelteTSx(cwd) {
     // Copy svelte-jsx as namespace JSX
     jsx
       .replace('declare namespace svelte.JSX', 'declare namespace JSX')
-      .replace('/* children?: Children;', 'children?: Children;')
+      .replace('export type Child = ', 'export type Child = (() => void) | boolean | ')
+      .replace('/* children?: Children;', ' children?: Children;')
       .replace('ref?: ((e: T) => void) | Ref<T>; */', '/* ref?: ((e: T) => void) | Ref<T>; */'),
   )
 
@@ -49,7 +50,19 @@ module.exports = async function* createSvelteTSx(cwd) {
 
   await fs.writeFile(
     shimFileName,
-    (shim.slice(shim.indexOf('}') + 1) + '\n' + additionalHelpers).replace(
+    (shim.slice(shim.indexOf('}') + 1) + '\n' + additionalHelpers)
+    .replace(/(declare class Svelte2TsxComponent<[\s\S]+?\s*{)(\s*)(\/\/ svelte2tsx-specific)/, [
+      '$1',
+      '$2context: JSX.Component["context"];',
+      '$2setState: JSX.Component["setState"];',
+      '$2render: JSX.Component["render"];',
+      '$2forceUpdate: JSX.Component["forceUpdate"];',
+      '$2props: JSX.Component["props"];',
+      '$2state: JSX.Component["state"];',
+      '$2refs: JSX.Component["refs"];',
+      '$2$3',
+    ].join('\n'))
+    .replace(
       /^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm,
       (match, type, name) => {
         exports.add(name)
@@ -91,7 +104,7 @@ module.exports = async function* createSvelteTSx(cwd) {
       .replace(/\b(let\s+[\w]+\s*:[^=;]+?)(;|$)/gmu, '$1 = __sveltets_default()$2')
       // Move render body outside to have access to internal types like ComponentEvents
       .replace('function render() {', '')
-      .replace(/(<\/>\);[\r?\n])(\s*return\s*{\s*props:\s*{)/m, '$1function render() {\n$2')
+      .replace(/(<\/>(?:\);)?[\r?\n])(\s*return\s*{\s*props:\s*{)/m, '$1function render() {\n$2')
 
     await fs.writeFile(
       svelteFileJsx,

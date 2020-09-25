@@ -1,8 +1,8 @@
-<script lang="ts" context="module">
+<script context="module">
   export function load(): void {}
 </script>
 
-<script lang="ts">
+<script>
   import Paper, { Title, Subtitle, Content } from '@smui/paper'
   import styles from './styles.module.css'
   import favicon from './favicon.ico'
@@ -10,6 +10,9 @@
 
   console.log(data)
 
+  const action = (node: Element, value?: string):void => {
+
+  }
   export let name: string = 'world'
 </script>
 
@@ -19,7 +22,7 @@
   <Content>Paper is used to build an elevated surface.</Content>
 </Paper>
 
-<h1 class={styles.title}>Hello {name}!</h1>
+<h1 use:action={'asf'} class={styles.title}>Hello {name}!</h1>
 
 <svelte:head>
   <link rel="icon" href={favicon} type="image/x-icon" />
