@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.5](https://github.com/carvjs/tools/compare/@carv/scripts@1.2.4...@carv/scripts@1.2.5) (2020-09-25)
+
+### Bug Fixes
+
+- svelte 2 tsx ([8cf8bee](https://github.com/carvjs/tools/commit/8cf8bee78b2bcae1c3a830ed9d05e3d3a6bf0a15))
+
 ## [1.2.4](https://github.com/carvjs/tools/compare/@carv/scripts@1.2.3...@carv/scripts@1.2.4) (2020-09-22)
 
 ### Bug Fixes
