@@ -10,9 +10,7 @@
 
   console.log(data)
 
-  const action = (node: Element, value?: string):void => {
-
-  }
+  const action = (node: Element, value?: string): void => {}
   export let name: string = 'world'
 </script>
 

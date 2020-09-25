@@ -67,7 +67,6 @@ module.exports = function assets({
       // TODO in mode=app handle all assets
       if (id.includes('/node_modules/')) return null
 
-
       const extname = path.extname(id)
       if (/\.(([mc]js|[jt]sx?)|json|svelte)$/.test(extname)) {
         return null

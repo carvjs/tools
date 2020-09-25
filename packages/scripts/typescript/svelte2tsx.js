@@ -51,24 +51,24 @@ module.exports = async function* createSvelteTSx(cwd) {
   await fs.writeFile(
     shimFileName,
     (shim.slice(shim.indexOf('}') + 1) + '\n' + additionalHelpers)
-    .replace(/(declare class Svelte2TsxComponent<[\s\S]+?\s*{)(\s*)(\/\/ svelte2tsx-specific)/, [
-      '$1',
-      '$2context: JSX.Component["context"];',
-      '$2setState: JSX.Component["setState"];',
-      '$2render: JSX.Component["render"];',
-      '$2forceUpdate: JSX.Component["forceUpdate"];',
-      '$2props: JSX.Component["props"];',
-      '$2state: JSX.Component["state"];',
-      '$2refs: JSX.Component["refs"];',
-      '$2$3',
-    ].join('\n'))
-    .replace(
-      /^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm,
-      (match, type, name) => {
+      .replace(
+        /(declare class Svelte2TsxComponent<[\s\S]+?\s*{)(\s*)(\/\/ svelte2tsx-specific)/,
+        [
+          '$1',
+          '$2context: JSX.Component["context"];',
+          '$2setState: JSX.Component["setState"];',
+          '$2render: JSX.Component["render"];',
+          '$2forceUpdate: JSX.Component["forceUpdate"];',
+          '$2props: JSX.Component["props"];',
+          '$2state: JSX.Component["state"];',
+          '$2refs: JSX.Component["refs"];',
+          '$2$3',
+        ].join('\n'),
+      )
+      .replace(/^(declare\s+(?:class|function)|type)\s+(\S+?)\b/gm, (match, type, name) => {
         exports.add(name)
         return `export ${match}`
-      },
-    ),
+      }),
   )
 
   yield { fileName: shimFileName, isShim: true }
