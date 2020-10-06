@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/carvjs/tools/compare/@carv/scripts@1.2.5...@carv/scripts@1.3.0) (2020-10-06)
+
+### Features
+
+- **jest:** support crypto in jsdom enviroment ([4f9ba20](https://github.com/carvjs/tools/commit/4f9ba2028011dcd6a55c4653339cc6fd076f6c3b))
+
 ## [1.2.5](https://github.com/carvjs/tools/compare/@carv/scripts@1.2.4...@carv/scripts@1.2.5) (2020-09-25)
 
 ### Bug Fixes
