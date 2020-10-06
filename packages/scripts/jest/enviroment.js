@@ -23,6 +23,8 @@ module.exports = function Enviroment(config, context) {
       if (this.dom) {
         const { Crypto } = require('@peculiar/webcrypto')
         this.global.crypto = new Crypto()
+
+        this.global.fetch = require('cross-fetch')
       }
 
       return super.setup()

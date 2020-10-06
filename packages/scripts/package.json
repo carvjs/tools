@@ -43,6 +43,7 @@
     "common-tags": "^1.8.0",
     "compressible": "^2.0.18",
     "cosmiconfig": "^7.0.0",
+    "cross-fetch": "^3.0.6",
     "cssnano": "^4.1.10",
     "cssnano-preset-default": "^4.0.7",
     "doctoc": "^1.4.0",
