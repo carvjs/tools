@@ -18,6 +18,7 @@
     "preset": "@carv/scripts"
   },
   "dependencies": {
+    "@svelkit/delay": "*",
     "@smui/paper": "^1.0.0",
     "spectre.css": "^0.5.9"
   },

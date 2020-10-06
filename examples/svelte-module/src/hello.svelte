@@ -7,6 +7,7 @@
   import styles from './styles.module.css'
   import favicon from './favicon.ico'
   import data from './data.json'
+  import Delay from '@svelkit/delay'
 
   console.log(data)
 
