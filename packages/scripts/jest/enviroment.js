@@ -20,6 +20,11 @@ module.exports = function Enviroment(config, context) {
         value: parse,
       })
 
+      if (this.dom) {
+        const { Crypto } = require('@peculiar/webcrypto')
+        this.global.crypto = new Crypto()
+      }
+
       return super.setup()
     }
   }
