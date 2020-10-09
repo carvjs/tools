@@ -10,6 +10,7 @@ module.exports = function graphql({ tsconfigPath }) {
 
     generateBundle(outputOptions, bundle) {
       if (!(this.meta.watchMode && outputOptions.preserveModules)) return
+
       const changed = Object.values(bundle)
         .filter((chunk) => chunk.type === 'chunk')
         .filter(({ facadeModuleId, code }) => {
