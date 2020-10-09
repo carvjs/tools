@@ -35,6 +35,9 @@ module.exports = {
     'require-atomic-updates': 'off',
     'func-names': 'off',
 
+    'no-eq-null': 'off',
+    eqeqeq: ['error', 'smart'],
+
     // Disabled until optional chaining is supported
     'no-unused-expressions': 'off',
     'no-void': ['error', { allowAsStatement: true }],
