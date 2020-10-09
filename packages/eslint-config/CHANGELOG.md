@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.2](https://github.com/carvjs/tools/compare/@carv/eslint-config@1.4.1...@carv/eslint-config@1.4.2) (2020-10-09)
+
+### Bug Fixes
+
+- smart allow `==` ([716590d](https://github.com/carvjs/tools/commit/716590dcdb9c0a520f0ba5458c6e2514aec5d79e))
+
 ## [1.4.1](https://github.com/carvjs/tools/compare/@carv/eslint-config@1.4.0...@carv/eslint-config@1.4.1) (2020-09-17)
 
 **Note:** Version bump only for package @carv/eslint-config
