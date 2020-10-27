@@ -42,12 +42,15 @@ const use = require('./lib/package-use')
 const extensions = ['.js', '.jsx', '.cjs', '.mjs']
 if (use.typescript) extensions.push('.ts', '.tsx')
 
-const gitignore = path.relative(
-  process.cwd(),
-  require('find-up').sync('.gitignore', { cwd: paths.root }),
-)
-const eslint = `eslint --ignore-path ${gitignore} --ext ${extensions.join(',')} .`
-const prettier = `prettier --ignore-path ${gitignore}`
+const gitignoreFile = require('find-up').sync('.gitignore', { cwd: paths.root })
+const ignorePath = gitignoreFile && `--ignore-path ${path.relative(process.cwd(), gitignoreFile)}`
+
+const eslint = [`eslint`, ignorePath, `--ext ${extensions.join(',')}`, `.`]
+  .filter(Boolean)
+  .join(' ')
+
+  const prettier = [`prettier`, ignorePath].filter(Boolean).join(' ')
+
 const jest = `jest --passWithNoTests`
 
 const rollupConfig = path.relative(
