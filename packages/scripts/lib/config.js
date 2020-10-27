@@ -69,6 +69,8 @@ const devOptions = {
    */
   hot: true,
 
+  open: 'default',
+
   ...config.devOptions,
 }
 
