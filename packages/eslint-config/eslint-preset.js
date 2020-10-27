@@ -1,4 +1,8 @@
-require('@rushstack/eslint-patch/modern-module-resolution')
+try {
+  require('@rushstack/eslint-patch/modern-module-resolution')
+} catch (error) {
+  console.warn(error.message)
+}
 
 const path = require('path')
 const pkgDirectory = require('pkg-dir').sync()
@@ -59,8 +63,8 @@ module.exports = {
       },
     ],
 
-    'class-methods-use-this': 'off', // three words: "componentDidMount" :)
-    'default-param-last': 'off', // infers with destructering defaults
+    'class-methods-use-this': 'off', // Three words: "componentDidMount" :)
+    'default-param-last': 'off', // Infers with destructering defaults
 
     'unicorn/no-null': 'off',
     'unicorn/filename-case': [
@@ -334,7 +338,7 @@ module.exports = {
       },
     },
     {
-      files: ['**/*.config.js', '**/*.setup.js', '**/package-scripts.js'],
+      files: ['**/*-preset.js', '**/*.config.js', '**/*.setup.js', '**/package-scripts.js'],
       env: {
         node: true,
       },
