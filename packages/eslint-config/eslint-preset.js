@@ -22,11 +22,11 @@ module.exports = {
     // 'svelte3'
   ],
   parserOptions: {
-    ecmaVersion: 11,
+    ecmaVersion: 2021,
     sourceType: 'module',
   },
   env: {
-    es2020: true,
+    es2021: true,
     node: pkg.browser === false,
     browser: pkg.browser === true,
     'shared-node-browser': pkg.browser === undefined,
