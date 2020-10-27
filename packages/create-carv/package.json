@@ -53,7 +53,7 @@
     "execa": "^4.0.2",
     "registry-url": "^5.1.0",
     "sao": "^1.7.1",
-    "update-notifier": "^4.1.0",
+    "update-notifier": "^5.0.0",
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
