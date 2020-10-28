@@ -49,7 +49,7 @@ const eslint = [`eslint`, ignorePath, `--ext ${extensions.join(',')}`, `.`]
   .filter(Boolean)
   .join(' ')
 
-  const prettier = [`prettier`, ignorePath].filter(Boolean).join(' ')
+const prettier = [`prettier`, ignorePath].filter(Boolean).join(' ')
 
 const jest = `jest --passWithNoTests`
 
