@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.2](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.1...@carv/scripts@1.4.2) (2020-10-28)
+
+### Bug Fixes
+
+- disable treeshake in watch mode ([a60b330](https://github.com/carvjs/tools/commit/a60b3303ba9fc5dcfae97026d73bbcd7a0f80a82))
+- do not fail on missing gitignore ([f873d8c](https://github.com/carvjs/tools/commit/f873d8c14f4e6a9bff660d9f0620a2fc199c200f))
+- use new rollup-plugin-hot ([a6a1220](https://github.com/carvjs/tools/commit/a6a122029db96af76aac7f1ea37634cc7d030cd6))
+
 ## [1.4.1](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.0...@carv/scripts@1.4.1) (2020-10-09)
 
 **Note:** Version bump only for package @carv/scripts
