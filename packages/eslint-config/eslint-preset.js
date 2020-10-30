@@ -1,7 +1,7 @@
 try {
   require('@rushstack/eslint-patch/modern-module-resolution')
-} catch (error) {
-  console.warn(error.message)
+} catch {
+  // Ignore for the moment
 }
 
 const path = require('path')
@@ -26,11 +26,11 @@ module.exports = {
     // 'svelte3'
   ],
   parserOptions: {
-    ecmaVersion: 2021,
+    ecmaVersion: 2020,
     sourceType: 'module',
   },
   env: {
-    es2021: true,
+    es2020: true,
     node: pkg.browser === false,
     browser: pkg.browser === true,
     'shared-node-browser': pkg.browser === undefined,
@@ -306,6 +306,9 @@ module.exports = {
         'plugin:testing-library/recommended',
       ],
       rules: {
+        'no-console': 'off',
+        'no-unused-expressions': 'off',
+        'class-methods-use-this': 'off',
         'jest/no-large-snapshots': ['warn', { maxSize: 300 }],
         'jest/prefer-strict-equal': 'warn',
       },
@@ -338,7 +341,14 @@ module.exports = {
       },
     },
     {
-      files: ['**/*-preset.js', '**/*.config.js', '**/*.setup.js', '**/package-scripts.js'],
+      files: [
+        '**/*-preset.js',
+        '**/*.config.js',
+        '**/*.setup.js',
+        '**/package-scripts.js',
+        'bin/*.js',
+        '**/cli.js',
+      ],
       env: {
         node: true,
       },
