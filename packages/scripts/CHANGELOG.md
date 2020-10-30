@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.4](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.3...@carv/scripts@1.4.4) (2020-10-30)
+
+### Bug Fixes
+
+- **rollup:** dynamic import vars not within node_modules ([f3cb1fe](https://github.com/carvjs/tools/commit/f3cb1fea2df635e915a5081cf0917c65a77550a9))
+
 ## [1.4.3](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.2...@carv/scripts@1.4.3) (2020-10-30)
 
 **Note:** Version bump only for package @carv/scripts
