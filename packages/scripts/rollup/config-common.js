@@ -98,7 +98,7 @@ module.exports = (options) => {
       }),
 
       // Must be after all other transforms (like svelte and css)
-      dynamicImportVars({ warnOnError: true, exclude: 'node_modules' }),
+      dynamicImportVars({ warnOnError: true, exclude: /\/node_modules\// }),
 
       use.typescriptGraphql && graphql({ tsconfigPath: paths.typescriptConfig }),
 
