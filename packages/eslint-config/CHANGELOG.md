@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.4](https://github.com/carvjs/tools/compare/@carv/eslint-config@1.4.3...@carv/eslint-config@1.4.4) (2020-10-30)
+
+### Bug Fixes
+
+- es2021 is unknown ([42f2e31](https://github.com/carvjs/tools/commit/42f2e31074215a8e5a74651972a4ff1ecabc3706))
+
 ## [1.4.3](https://github.com/carvjs/tools/compare/@carv/eslint-config@1.4.2...@carv/eslint-config@1.4.3) (2020-10-28)
 
 ### Bug Fixes

@@ -1,6 +1,6 @@
 {
   "name": "@carv/scripts",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "homepage": "https://github.com/carvjs/tools#readme",
   "bugs": {
     "url": "https://github.com/carvjs/tools/issues"
@@ -100,7 +100,7 @@
     "v8-compile-cache": "^2.1.1"
   },
   "devDependencies": {
-    "@carv/eslint-config": "^1.4.3",
+    "@carv/eslint-config": "^1.4.4",
     "@carv/prettier-config": "^1.0.4",
     "@testing-library/dom": "^7.22.6",
     "@testing-library/jest-dom": "^5.11.0",
