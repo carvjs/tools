@@ -82,7 +82,7 @@ module.exports = async () => {
   const html = require('@rollup/plugin-html')
   const hmr = require('rollup-plugin-hot')
 
-  const outputName = 'dev-bundle'
+  const outputName = '~dev-bundle'
   const { baseUrl } = config.devOptions
 
   return {
@@ -104,7 +104,9 @@ module.exports = async () => {
       dir: paths.build,
       entryFileNames: '[name].js',
       chunkFileNames: '[name]-[hash].js',
+      inlineDynamicImports: false,
       preserveModules: true,
+      preserveModulesRoot: paths.root,
       exports: 'named',
     },
 
