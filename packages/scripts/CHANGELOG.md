@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.5](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.4...@carv/scripts@1.4.5) (2020-11-05)
+
+### Bug Fixes
+
+- **rollup:** resolve loop ([e72c766](https://github.com/carvjs/tools/commit/e72c76616c91e8830cd5a4eb10b379d072aae1c9))
+
 ## [1.4.4](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.3...@carv/scripts@1.4.4) (2020-10-30)
 
 ### Bug Fixes
