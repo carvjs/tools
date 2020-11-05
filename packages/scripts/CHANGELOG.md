@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.6](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.5...@carv/scripts@1.4.6) (2020-11-05)
+
+### Bug Fixes
+
+- **watch:** ensure stable module names ([f711ea7](https://github.com/carvjs/tools/commit/f711ea73aba7bdff139480952f5184c7b1389957))
+
 ## [1.4.5](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.4...@carv/scripts@1.4.5) (2020-11-05)
 
 ### Bug Fixes
