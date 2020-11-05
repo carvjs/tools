@@ -60,7 +60,7 @@ module.exports = function resolve({ bundledDependencies = false, alias = {} }) {
         return { id, external: true }
       }
 
-      return this.resolve(id, importer, { skipSelf: true })
+      return id === importee ? null : this.resolve(id, importer, { skipSelf: true })
     },
   }
 }
