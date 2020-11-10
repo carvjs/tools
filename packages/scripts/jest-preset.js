@@ -7,6 +7,7 @@ const fs = require('fs')
 const isCI = require('is-ci')
 const escapeStringRegexp = require('escape-string-regexp')
 
+const manifest = require('./lib/package-manifest')
 const paths = require('./lib/package-paths')
 const {
   alias,
@@ -52,7 +53,7 @@ module.exports = {
 
   setupFilesAfterEnv: [
     require.resolve('jest-extended'),
-    require.resolve('@testing-library/jest-dom'),
+    manifest.browser !== false && tryResolve('@testing-library/jest-dom'),
     fs.existsSync(path.join(paths.root, 'jest.setup.js')) && path.join(paths.root, 'jest.setup.js'),
     ...(config.setupFilesAfterEnv || []),
   ].filter(Boolean),
@@ -90,4 +91,16 @@ module.exports = {
 
   bail: false,
   verbose: true,
+}
+
+function tryResolve(id) {
+  try {
+    return require.resolve(id)
+  } catch (error) {
+    if (error.code === 'MODULE_NOT_FOUND') {
+      return
+    }
+
+    throw error
+  }
 }
