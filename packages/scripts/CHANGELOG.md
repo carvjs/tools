@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.6...@carv/scripts@1.5.0) (2020-11-10)
+
+### Bug Fixes
+
+- only load @testing-library/jest-dom if it is installed ([a1f0c01](https://github.com/carvjs/tools/commit/a1f0c01313621855cbb64e4b7193c5e13155fd90))
+
+### Features
+
+- speed up incremental rebuild by bundling all node_modules as web_modules ([7c83279](https://github.com/carvjs/tools/commit/7c83279e95c9d47143d3f9ea46f1766f6f3bc6ff))
+
 ## [1.4.6](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.5...@carv/scripts@1.4.6) (2020-11-05)
 
 ### Bug Fixes

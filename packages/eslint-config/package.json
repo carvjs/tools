@@ -1,6 +1,6 @@
 {
   "name": "@carv/eslint-config",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "homepage": "https://github.com/carvjs/tools#readme",
   "bugs": {
     "url": "https://github.com/carvjs/tools/issues"
