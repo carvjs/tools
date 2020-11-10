@@ -20,7 +20,7 @@ module.exports = async () => {
     minify: false,
   }
 
-  const common = require('./config-common')({
+  const commonOptions = {
     ...options,
 
     svelte: {
@@ -28,6 +28,14 @@ module.exports = async () => {
 
       // `dev: true` is required with HMR
       dev: true,
+    },
+  }
+
+  const common = require('./config-common')({
+    ...commonOptions,
+
+    svelte: {
+      ...commonOptions.svelte,
 
       hot: {
         // Prevent preserving local component state
@@ -75,24 +83,72 @@ module.exports = async () => {
         // is automatically detected based on the NOLLUP env variable)
         nollup: false,
       },
-    },
+    }
   })
+
+  const webModulesConfig = require('./config-common')({
+    ...commonOptions,
+
+    // Ensure no marked as external and therefore non bundled
+    bundledDependencies: true,
+  })
+
 
   const define = require('rollup-plugin-define')
   const html = require('@rollup/plugin-html')
   const hmr = require('rollup-plugin-hot')
 
   const outputName = '~dev-bundle'
-  const { baseUrl } = config.devOptions
+  const { host, port, baseUrl } = config.devOptions
 
+  const sharedPlugins = [
+    define({
+      replacements: {
+        'import.meta.browser': JSON.stringify(options.platform === 'browser'),
+        'process.browser': JSON.stringify(options.platform === 'browser'),
+
+        ...(options.platform === 'node'
+          ? {
+              // De-alias MODE to NODE_ENV
+              'import.meta.env.MODE': 'process.env.NODE_ENV',
+              'process.env.MODE': 'process.env.NODE_ENV',
+
+              // Delegate to process.*
+              'import.meta.platform': 'process.platform',
+              'import.meta.env': 'process.env',
+
+              'process.versions.node': JSON.stringify(process.versions.node),
+              'typeof process': JSON.stringify(typeof process),
+            }
+          : {
+              'import.meta.env.NODE_ENV': '"development"',
+              'process.env.NODE_ENV': '"development"',
+
+              'import.meta.env.MODE': '"development"',
+              'process.env.MODE': '"development"',
+
+              'import.meta.platform': '"browser"',
+              'process.platform': '"browser"',
+
+              'process.env': '(import.meta.env || {})',
+
+              'process.versions.node': 'undefined',
+              'typeof process': '"undefined"',
+            }),
+      },
+    }),
+  ]
   return {
     ...common,
+
+    perf: true,
 
     treeshake: false,
 
     watch: {
       clearScreen: false,
       exclude: 'node_modules/**',
+      // TODO skipWrite: true,
     },
 
     input: {
@@ -111,43 +167,27 @@ module.exports = async () => {
     },
 
     plugins: [
+      require('./plugin-web-modules')({
+        ...webModulesConfig,
+
+        baseUrl: `http://${host}:${port}${baseUrl}@hot`,
+
+        treeshake: false,
+
+        output: {
+          ...webModulesConfig.output,
+          dir: paths.build,
+        },
+
+        plugins: [
+          ...webModulesConfig.plugins,
+          ...sharedPlugins,
+        ]
+      }),
+
       ...common.plugins,
 
-      define({
-        replacements: {
-          'import.meta.browser': JSON.stringify(options.platform === 'browser'),
-          'process.browser': JSON.stringify(options.platform === 'browser'),
-
-          ...(options.platform === 'node'
-            ? {
-                // De-alias MODE to NODE_ENV
-                'import.meta.env.MODE': 'process.env.NODE_ENV',
-                'process.env.MODE': 'process.env.NODE_ENV',
-
-                // Delegate to process.*
-                'import.meta.platform': 'process.platform',
-                'import.meta.env': 'process.env',
-
-                'process.versions.node': JSON.stringify(process.versions.node),
-                'typeof process': JSON.stringify(typeof process),
-              }
-            : {
-                'import.meta.env.NODE_ENV': '"development"',
-                'process.env.NODE_ENV': '"development"',
-
-                'import.meta.env.MODE': '"development"',
-                'process.env.MODE': '"development"',
-
-                'import.meta.platform': '"browser"',
-                'process.platform': '"browser"',
-
-                'process.env': '(import.meta.env || {})',
-
-                'process.versions.node': 'undefined',
-                'typeof process': '"undefined"',
-              }),
-        },
-      }),
+      ...sharedPlugins,
 
       html({
         publicPath: baseUrl,

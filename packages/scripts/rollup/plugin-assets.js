@@ -8,11 +8,12 @@ const { encode, decode } = require('sourcemap-codec')
 const STYLE_LOADERS = require('../lib/style-loaders')
 
 module.exports = function assets({
-  assetFileNames = path.join('assets', '[name]-[hash][extname]'),
+  assetFileNames = 'assets/[name]-[hash][extname]',
   target = 'es2015',
   minify = true,
   platform = 'browser',
   dev = false, // eslint-disable-line unicorn/prevent-abbreviations
+  useLoader = false,
 } = {}) {
   // The final name of the combined css file
   let styleFileName = null
@@ -57,8 +58,12 @@ module.exports = function assets({
 
     async load(id) {
       if (isStyleModuleId(styleReferenceId, id)) {
+        const loader = useLoader
+          ? generateLoader(styleReferenceId)
+          : `import(import.meta.ROLLUP_FILE_URL_${styleReferenceId})`
+
         return {
-          code: `import(import.meta.ROLLUP_FILE_URL_${styleReferenceId})`,
+          code: loader,
           map: '',
         }
       }
@@ -145,6 +150,7 @@ module.exports = function assets({
         if (this.meta.watchMode) {
           const referenceId = this.emitFile({
             type: 'asset',
+            fileName: toAssetFileName(id, code, assetFileNames, '.css'),
             // Change extension to ensure it is served as a stylesheet
             name: path.basename(id, extname) + '.css',
             source: code,
@@ -156,14 +162,8 @@ module.exports = function assets({
           }
 
           const loader = [
-            [...dependencies]
-              .map((dependency) => `import ${JSON.stringify(dependency)}`)
-              .join('\n'),
-            `import load from ${JSON.stringify(
-              path.dirname(require.resolve('@carv/cdn-css-loader/package.json')),
-            )}`,
-            `const element = await load(import.meta.ROLLUP_FILE_URL_${referenceId})`,
-            `import.meta.hot?.dispose(() => element.remove())`,
+            ...Array.from(dependencies, (dependency) => `import ${JSON.stringify(dependency)}`),
+            generateLoader(referenceId),
             exportedClassNames,
           ]
             .filter(Boolean)
@@ -311,13 +311,26 @@ module.exports = function assets({
       }
     },
 
-    resolveFileUrl({ fileName, referenceId, relativePath }) {
+    resolveFileUrl({ fileName, referenceId, relativePath, format }) {
       if (referenceId === styleReferenceId && fileName.endsWith('.css')) {
         // Use generated style file; this should have been generated in the same folder
         const importPath = path.posix.join(
           path.posix.dirname(relativePath),
           path.posix.basename(styleFileName),
         )
+
+        if (useLoader) {
+          const BASE_URL = {
+            es: 'import.meta.url',
+            system: 'module.meta.url',
+            cjs: '__filename',
+            umd: '(document.currentScript && document.currentScript.src) || document.baseURI',
+          }
+
+          const baseURL = BASE_URL[format] || BASE_URL.umd
+
+          return `new URL(${JSON.stringify(importPath)}, ${baseURL}).href`
+        }
 
         return JSON.stringify(importPath)
       }
@@ -351,9 +364,8 @@ async function emitAsset(plugin, id, assetFileNames) {
   return { relativePath, referenceId }
 }
 
-function toAssetFileName(id, source, assetFileNames) {
-  const extname = path.extname(id)
-  const basename = path.basename(id, extname)
+function toAssetFileName(id, source, assetFileNames, extname = path.extname(id)) {
+  const basename = path.basename(id, path.extname(id))
 
   return (
     assetFileNames
@@ -369,9 +381,21 @@ function toAssetFileName(id, source, assetFileNames) {
 }
 
 function toStyleModuleId(styleReferenceId) {
-  return '\0' + styleReferenceId
+  return '\0' + styleReferenceId + '-css-loader'
 }
 
 function isStyleModuleId(styleReferenceId, id) {
   return styleReferenceId && toStyleModuleId(styleReferenceId) === id
+}
+
+function generateLoader(referenceId) {
+  return [
+    `import load from ${JSON.stringify(
+      path.dirname(require.resolve('@carv/cdn-css-loader/package.json')),
+    )}`,
+    `const element = await load(import.meta.ROLLUP_FILE_URL_${referenceId})`,
+    `import.meta.hot?.dispose(() => element.remove())`,
+  ]
+    .filter(Boolean)
+    .join('\n')
 }

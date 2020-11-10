@@ -35,7 +35,7 @@ module.exports = (options) => {
   const graphql = require('./plugin-graphql')
   const size = require('./plugin-size')
 
-  const assetFileNames = path.join('assets', '[name]-[hash][extname]')
+  const assetFileNames = 'assets/[name]-[hash][extname]'
 
   return {
     output: {
@@ -48,6 +48,7 @@ module.exports = (options) => {
       compact: options.minify !== false,
       interop: 'auto',
       exports: 'auto',
+      systemNullSetters: true,
     },
 
     // Value of this at the top level
@@ -95,6 +96,7 @@ module.exports = (options) => {
         minify: options.minify !== false,
         platform: options.platform,
         dev: options.svelte?.dev === true,
+        useLoader: options.format === 'system',
       }),
 
       // Must be after all other transforms (like svelte and css)
