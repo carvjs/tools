@@ -83,7 +83,7 @@ module.exports = async () => {
         // is automatically detected based on the NOLLUP env variable)
         nollup: false,
       },
-    }
+    },
   })
 
   const webModulesConfig = require('./config-common')({
@@ -92,7 +92,6 @@ module.exports = async () => {
     // Ensure no marked as external and therefore non bundled
     bundledDependencies: true,
   })
-
 
   const define = require('rollup-plugin-define')
   const html = require('@rollup/plugin-html')
@@ -179,10 +178,7 @@ module.exports = async () => {
           dir: paths.build,
         },
 
-        plugins: [
-          ...webModulesConfig.plugins,
-          ...sharedPlugins,
-        ]
+        plugins: [...webModulesConfig.plugins, ...sharedPlugins],
       }),
 
       ...common.plugins,
