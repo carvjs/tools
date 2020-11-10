@@ -9,6 +9,25 @@ const pkgDirectory = require('pkg-dir').sync()
 
 const pkg = require(path.join(pkgDirectory, 'package.json'))
 
+const preventAbbreviations = {
+  checkShorthandImports: 'internal',
+  checkShorthandProperties: false,
+  checkProperties: false,
+  checkVariables: true,
+  checkFilenames: true,
+  extendDefaultWhitelist: true,
+  whitelist: {
+    pkg: true,
+    arg: true,
+    args: true,
+    env: true,
+    nodeEnv: true,
+    ref: true,
+    src: true,
+    docs: true,
+  },
+}
+
 module.exports = {
   extends: [
     'eslint:recommended',
@@ -73,27 +92,7 @@ module.exports = {
         case: 'kebabCase',
       },
     ],
-    'unicorn/prevent-abbreviations': [
-      'error',
-      {
-        checkShorthandImports: 'internal',
-        checkShorthandProperties: false,
-        checkProperties: false,
-        checkVariables: true,
-        checkFilenames: true,
-        extendDefaultWhitelist: true,
-        whitelist: {
-          pkg: true,
-          arg: true,
-          args: true,
-          env: true,
-          nodeEnv: true,
-          ref: true,
-          src: true,
-          docs: true,
-        },
-      },
-    ],
+    'unicorn/prevent-abbreviations': ['error', preventAbbreviations],
     // The character class sorting is a bit buggy at the moment.
     'unicorn/better-regex': [
       'error',
@@ -107,7 +106,11 @@ module.exports = {
         caughtErrorsIgnorePattern: '^_',
       },
     ],
+    // Allow array.map(namedMapper)
     'unicorn/no-fn-reference-in-iterator': 'off',
+
+    // Allow Array.from(iterable, mapper)
+    'unicorn/prefer-spread': 'off',
 
     'promise/param-names': 'error',
   },
@@ -356,6 +359,7 @@ module.exports = {
         'unicorn/prevent-abbreviations': [
           'error',
           {
+            ...preventAbbreviations,
             checkFilenames: false,
           },
         ],
