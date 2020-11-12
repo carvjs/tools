@@ -1,7 +1,5 @@
 /* eslint-env node */
 
-const path = require('path')
-
 const paths = require('../lib/package-paths')
 const use = require('../lib/package-use')
 const config = require('../lib/config')

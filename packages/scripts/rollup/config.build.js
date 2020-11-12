@@ -206,6 +206,8 @@ module.exports = async () => {
     return {
       ...common,
 
+      perf: config.buildOptions.perf,
+
       input: {
         [path.basename(options.file, path.extname(options.file))]: path.relative(
           process.cwd(),

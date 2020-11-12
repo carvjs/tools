@@ -140,7 +140,7 @@ module.exports = async () => {
   return {
     ...common,
 
-    perf: true,
+    perf: config.devOptions.perf,
 
     treeshake: false,
 
