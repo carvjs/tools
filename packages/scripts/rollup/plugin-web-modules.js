@@ -1,12 +1,14 @@
 /* eslint-env node */
 'use strict'
 
+// [@\w] - Match a word-character or @ (valid package name)
+// (?!.*(:\/\/)) - Ignore if previous match was a protocol (ex: http://)
+const BARE_SPECIFIER_REGEX = /^[@\w](?!.*(:\/\/))/
+
 function isBareImport(id) {
   if (id.includes('\0')) return false
 
-  if (id === '.' || id === '..' || id.startsWith('./') || id.startsWith('../')) return false
-
-  return true
+  return BARE_SPECIFIER_REGEX.test(id)
 }
 
 module.exports = function webModulesPlugin({
