@@ -29,9 +29,13 @@ module.exports = async function* createSvelteTSx(cwd) {
     // Copy svelte-jsx as namespace JSX
     jsx
       .replace('declare namespace svelte.JSX', 'declare namespace JSX')
-      .replace('export type Child = ', 'export type Child = (() => void) | boolean | ')
+      .replace('export type Child = ', '$&(() => void) | boolean | ')
       .replace('/* children?: Children;', ' children?: Children;')
-      .replace('ref?: ((e: T) => void) | Ref<T>; */', '/* ref?: ((e: T) => void) | Ref<T>; */'),
+      .replace('ref?: ((e: T) => void) | Ref<T>; */', '/* $&')
+      .replace(
+        'sveltebody: HTMLProps<HTMLElement>;',
+        '$& slot: HTMLProps<HTMLSlotElement> & Record<string, any>;',
+      ),
   )
 
   yield { fileName: jsxFileName, isShim: true }
