@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.1...@carv/scripts@1.5.2) (2020-11-12)
+
+### Bug Fixes
+
+- exclude files from publishing ([0edeb7b](https://github.com/carvjs/tools/commit/0edeb7b77458f44971666c74125babe51e2130cc))
+
 ## [1.5.1](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.0...@carv/scripts@1.5.1) (2020-11-12)
 
 ### Bug Fixes
