@@ -169,7 +169,7 @@ module.exports = async () => {
       require('./plugin-web-modules')({
         ...webModulesConfig,
 
-        baseUrl: `http://${host}:${port}${baseUrl}@hot`,
+        baseUrl: `http://${host === '0.0.0.0' ? 'localhost' : host}:${port}${baseUrl}@hot`,
 
         treeshake: false,
 
