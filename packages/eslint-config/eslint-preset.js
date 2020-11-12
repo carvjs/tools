@@ -85,6 +85,9 @@ module.exports = {
     'class-methods-use-this': 'off', // Three words: "componentDidMount" :)
     'default-param-last': 'off', // Infers with destructering defaults
 
+    'no-duplicate-imports': 'off',
+    'import/no-duplicates': ['error', { considerQueryString: true }],
+
     'unicorn/no-null': 'off',
     'unicorn/filename-case': [
       'error',
@@ -233,8 +236,9 @@ module.exports = {
           },
         ],
 
-        'no-duplicate-imports': 'error',
-        '@typescript-eslint/no-duplicate-imports': 'error',
+        'no-duplicate-imports': 'off',
+        'import/no-duplicates': 'off',
+        '@typescript-eslint/no-duplicate-imports': ['error'],
 
         'no-useless-constructor': 'off',
         '@typescript-eslint/no-useless-constructor': 'error',
