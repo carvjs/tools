@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.7](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.6...@carv/scripts@1.5.7) (2020-11-12)
+
+### Bug Fixes
+
+- external types of svelte components ([96be15c](https://github.com/carvjs/tools/commit/96be15c71e32df4a8f6c41343439075d73e3549f))
+
 ## [1.5.6](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.5...@carv/scripts@1.5.6) (2020-11-12)
 
 ### Bug Fixes
