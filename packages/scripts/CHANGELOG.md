@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.4](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.3...@carv/scripts@1.5.4) (2020-11-12)
+
+### Bug Fixes
+
+- prepublish task ([71f31de](https://github.com/carvjs/tools/commit/71f31de11306605d8df9a141bc8a8755f13a0163))
+
 ## [1.5.3](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.2...@carv/scripts@1.5.3) (2020-11-12)
 
 **Note:** Version bump only for package @carv/scripts
