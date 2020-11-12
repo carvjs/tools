@@ -96,6 +96,8 @@ exports.scripts = {
     watch: `${rollup} --watch`,
   },
 
+  prepublishOnly: 'nps build.package',
+
   release: {
     default: {
       script: 'nps test build.package release.publish',
