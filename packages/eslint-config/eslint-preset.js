@@ -137,6 +137,18 @@ module.exports = {
       rules: {
         'tsdoc/syntax': 'warn',
 
+        // TypeScript transpiles let/const to var, so no need for vars any more
+        'no-var': 'error',
+
+        // TypeScript provides better types with const
+        'prefer-const': 'error',
+
+        // TypeScript provides better types with rest args over arguments
+        'prefer-rest-params': 'error',
+
+        // TypeScript transpiles spread to apply, so no need for manual apply
+        'prefer-spread': 'error',
+
         // TypeScript's `noFallthroughCasesInSwitch` option is more robust (#6906)
         'default-case': 'off',
         // 'tsc' already handles this (https://github.com/typescript-eslint/typescript-eslint/issues/291)
@@ -221,8 +233,14 @@ module.exports = {
           },
         ],
 
+        'no-duplicate-imports': 'error',
+        '@typescript-eslint/no-duplicate-imports': 'error',
+
         'no-useless-constructor': 'off',
         '@typescript-eslint/no-useless-constructor': 'error',
+
+        'require-await': 'off',
+        '@typescript-eslint/require-await': 'error',
 
         '@typescript-eslint/typedef': [
           'error',
