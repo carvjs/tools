@@ -26,7 +26,7 @@ module.exports = function webModulesPlugin({
     name: 'web-modules',
 
     resolveId(source, importer) {
-      if (!importer) return null
+      if (!importer || source.includes('\0')) return
 
       if (source.includes(`/${prefix}/`)) return source
 
@@ -47,7 +47,7 @@ module.exports = function webModulesPlugin({
             source = source.slice(source.indexOf('/node_modules/') + '/node_modules/'.length)
           }
 
-          const fileName = `${prefix}/${source}.js`
+          const fileName = `${prefix}/${source}${source.endsWith('.js') ? '' : '.js'}`
 
           let webModule = webModules.get(fileName)
 
