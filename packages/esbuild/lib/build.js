@@ -2,6 +2,12 @@
 
 const pkg = require('../package.json')
 
+// https://github.com/egoist/tsup
+// https://github.com/a7ul/esbuild-node-tsc
+// https://github.com/rsms/estrella
+
+// https://github.com/rollup/plugins/pull/540/files
+// https://github.com/ljharb/list-exports/blob/main/packages/ls-exports/README.md
 const exports = {
   node: {
     production: {
