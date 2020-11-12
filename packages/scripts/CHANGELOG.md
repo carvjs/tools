@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.0...@carv/scripts@1.5.1) (2020-11-12)
+
+### Bug Fixes
+
+- bare import detection ([394fd64](https://github.com/carvjs/tools/commit/394fd6487bfbbbbad85cd75f3e6dd2ecb87f467f))
+- **rollup:** perf via (dev|build)Options ([f021ace](https://github.com/carvjs/tools/commit/f021ace38cc840a565f4aaba285a0f8477d2eb2d))
+
 # [1.5.0](https://github.com/carvjs/tools/compare/@carv/scripts@1.4.6...@carv/scripts@1.5.0) (2020-11-10)
 
 ### Bug Fixes

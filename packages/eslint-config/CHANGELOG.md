@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.7](https://github.com/carvjs/tools/compare/@carv/eslint-config@1.4.6...@carv/eslint-config@1.4.7) (2020-11-12)
+
+### Bug Fixes
+
+- typescript rules ([62d68d2](https://github.com/carvjs/tools/commit/62d68d2eb789ed0ea5194c136f6d5a0a5ca0f84a))
+
 ## [1.4.6](https://github.com/carvjs/tools/compare/@carv/eslint-config@1.4.5...@carv/eslint-config@1.4.6) (2020-11-10)
 
 ### Bug Fixes
