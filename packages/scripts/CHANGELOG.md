@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.6](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.5...@carv/scripts@1.5.6) (2020-11-12)
+
+### Bug Fixes
+
+- svelte slot typeings ([75ee900](https://github.com/carvjs/tools/commit/75ee9003d0117026888efe68167711ba8d1adaf5))
+
 ## [1.5.5](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.4...@carv/scripts@1.5.5) (2020-11-12)
 
 ### Bug Fixes
