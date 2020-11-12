@@ -35,6 +35,25 @@ module.exports = async function* createSvelteTSx(cwd) {
       .replace(
         'sveltebody: HTMLProps<HTMLElement>;',
         '$& slot: HTMLProps<HTMLSlotElement> & Record<string, any>;',
+      )
+      .replace(
+        'interface ElementClass {',
+        `$&
+        context?: any
+        render?: any
+        setState?: any
+        forceUpdate?: any
+        props?: any
+        state?: any
+        refs?: any
+        `,
+      )
+      .replace(
+        'interface IntrinsicAttributes {',
+        `$&
+        children?: Children;
+        [attribute: string]: any;
+        `,
       ),
   )
 
