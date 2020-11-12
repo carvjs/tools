@@ -5,7 +5,7 @@ const use = require('../lib/package-use')
 const config = require('../lib/config')
 
 module.exports = (options) => {
-  const dedupe = ['svelte', '@carv/runtime']
+  const dedupe = ['svelte', 'svelte/internal', '@carv/runtime']
 
   const extensions = ['.tsx', '.ts', '.jsx', '.mjs', '.js', '.cjs', '.json']
   if (use.svelte) extensions.unshift('.svelte')
