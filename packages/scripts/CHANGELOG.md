@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.8](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.7...@carv/scripts@1.5.8) (2020-11-23)
+
+### Bug Fixes
+
+- better project root detection ([26ff401](https://github.com/carvjs/tools/commit/26ff4010d3105e12a4b945287eb06e80da10bc06))
+
 ## [1.5.7](https://github.com/carvjs/tools/compare/@carv/scripts@1.5.6...@carv/scripts@1.5.7) (2020-11-12)
 
 ### Bug Fixes
