@@ -13,7 +13,7 @@ module.exports = (options) => {
   // Like snowpack: https://github.com/pikapkg/snowpack/blob/master/src/commands/install.ts#L216
   const mainFields = ['module', 'main:esnext', 'main']
 
-  const { compilerOptions, ...svelteConfig } = use.svelte ? require(paths.svelteConfig) : {}
+  const { compilerOptions, ...svelteConfig } = (use.svelte && tryRequire(paths.svelteConfig)) || {}
   Object.assign(svelteConfig, compilerOptions, options.svelte, {
     css: true,
     // Create external css files
@@ -104,5 +104,17 @@ module.exports = (options) => {
 
       (options.format === 'umd' || options.target === 'esnext') && size(),
     ].filter(Boolean),
+  }
+}
+
+function tryRequire(module) {
+  try {
+    return require(module)
+  } catch (error) {
+    if (error.code === 'MODULE_NOT_FOUND') {
+      return
+    }
+
+    throw error
   }
 }

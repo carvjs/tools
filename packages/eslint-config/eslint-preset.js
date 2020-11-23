@@ -5,9 +5,9 @@ try {
 }
 
 const path = require('path')
-const pkgDirectory = require('pkg-dir').sync()
+const projectRoot = require('project-root-directory')
 
-const pkg = require(path.join(pkgDirectory, 'package.json'))
+const pkg = require(path.join(projectRoot, 'package.json'))
 
 const preventAbbreviations = {
   checkShorthandImports: 'internal',
