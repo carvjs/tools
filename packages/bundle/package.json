@@ -1,6 +1,6 @@
 {
   "name": "@carv/bundle",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://github.com/carvjs/tools#readme",
   "bugs": {
     "url": "https://github.com/carvjs/tools/issues"
@@ -57,7 +57,7 @@
     "v8-compile-cache": "^2.1.1"
   },
   "devDependencies": {
-    "@carv/eslint-config": "^1.4.10",
+    "@carv/eslint-config": "^1.5.0",
     "@carv/prettier-config": "^1.0.4"
   },
   "peerDependencies": {

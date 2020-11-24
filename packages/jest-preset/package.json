@@ -1,6 +1,6 @@
 {
   "name": "@carv/jest-preset",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://github.com/carvjs/tools#readme",
   "bugs": {
     "url": "https://github.com/carvjs/tools/issues"
@@ -26,7 +26,7 @@
     "root": true
   },
   "dependencies": {
-    "@carv/bundle": "^1.0.0",
+    "@carv/bundle": "^1.1.0",
     "@peculiar/webcrypto": "^1.1.3",
     "@types/jest": "^26.0.13",
     "cross-fetch": "^3.0.6",
@@ -45,7 +45,7 @@
     "v8-compile-cache": "^2.1.1"
   },
   "devDependencies": {
-    "@carv/eslint-config": "^1.4.10",
+    "@carv/eslint-config": "^1.5.0",
     "@carv/prettier-config": "^1.0.4",
     "@testing-library/dom": "^7.22.6",
     "@testing-library/jest-dom": "^5.11.0",
