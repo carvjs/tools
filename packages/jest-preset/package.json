@@ -12,8 +12,8 @@
   },
   "license": "MIT",
   "author": "Sascha Tandel <s.tandel@kenoxa.de>",
-  "main": "./jest-preset.js",
   "sideEffects": false,
+  "main": "./jest-preset.js",
   "browser": false,
   "scripts": {
     "format": "nps",
@@ -40,8 +40,8 @@
     "jest-environment-node": "^26.1.0",
     "jest-extended": "^0.11.5",
     "jest-svelte-resolver": "^1.0.0",
-    "svelte-jester": "^1.1.5",
     "nps": "^5.9.12",
+    "svelte-jester": "^1.1.5",
     "v8-compile-cache": "^2.1.1"
   },
   "devDependencies": {

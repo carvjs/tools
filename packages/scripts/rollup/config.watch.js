@@ -10,7 +10,9 @@ module.exports = async () => {
 
   await require('@carv/bundle/lib/copy-files')(paths.build)
 
-  const inputFile = require('@carv/bundle/lib/get-input-file')(path.join(paths.source, '__preview__'))
+  const inputFile = require('@carv/bundle/lib/get-input-file')(
+    path.join(paths.source, '__preview__'),
+  )
 
   const outputs = require('./get-outputs')({ useTypescript: false, mode: 'library' })
 

@@ -252,6 +252,7 @@ The following include paths are search for imports:
   "types": "// typescript definitions"
 }
 ```
+
 ### Platform/Environment Detection
 
 The following expressions can be used to detect during the build time for which platform and environment the current bundle is build:

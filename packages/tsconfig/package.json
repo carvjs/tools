@@ -12,8 +12,8 @@
   },
   "license": "MIT",
   "author": "Sascha Tandel <s.tandel@kenoxa.de>",
-  "main": "./preset.json",
   "sideEffects": false,
+  "main": "./preset.json",
   "browser": false,
   "scripts": {
     "format": "nps",

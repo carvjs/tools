@@ -93,20 +93,14 @@ exports.scripts = {
 
   prepare: ['nps', 'cleanup', use.typescriptGraphql && 'graphql.typegen'].filter(Boolean).join(' '),
 
-  ci: [
-    'nps',
-    'prepare',
-    use.typescriptGraphql && 'graphql.validate',
-    'test.check',
-    'jest.ci',
-  ]
+  ci: ['nps', 'prepare', use.typescriptGraphql && 'graphql.validate', 'test.check', 'jest.ci']
     .filter(Boolean)
     .join(' '),
 
   build: {
     default: ['nps', 'prepare', 'build.package'].join(' '),
     package: (use.svelte && rollup) || 'carv-bundle',
-    watch: (use.svelte && rollup) ? `${rollup} --watch` : 'carv-bundle --watch',
+    watch: use.svelte && rollup ? `${rollup} --watch` : 'carv-bundle --watch',
   },
 
   prepublishOnly: 'nps build.package',
