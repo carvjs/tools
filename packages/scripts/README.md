@@ -252,29 +252,6 @@ The following include paths are search for imports:
   "types": "// typescript definitions"
 }
 ```
-
-### Jest
-
-The default `testEnvironment` is `jest-environment-jsdom-sixteen`. If the `package.json` field `browser` is `false` `jest-environment-node` is used.
-
-To change the environment for a file use docblock pragma `@env` with either `node` or `jsdom`:
-
-```js
-/**
- * @env jsdom
- */
-```
-
-- `@carv/scripts/jest-preset.js`
-- `jest.setup.js`
-- Transforms
-  - `*.svelte`
-  - `*.module.(css|scss|less)` -> identity object proyy
-  - `*.(css|scss|less|jpg|jpeg|png|gif|ico|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)` -> file basename
-- test match
-  - `src/**/__tests__/*.{js,jsx,ts,tsx`
-  - `src/**/*.{spec,test}.{js,jsx,ts,tsx}`
-
 ### Platform/Environment Detection
 
 The following expressions can be used to detect during the build time for which platform and environment the current bundle is build:

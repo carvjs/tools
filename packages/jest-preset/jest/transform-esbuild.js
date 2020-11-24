@@ -8,7 +8,7 @@ const { buildSync, transformSync } = require('esbuild')
 
 const THIS_FILE = fs.readFileSync(__filename)
 
-const target = require('../lib/current-node-target')
+const target = require('@carv/bundle/lib/current-node-target')
 
 // 'js' | 'jsx' | 'ts' | 'tsx' | 'json' | 'text' | 'base64' | 'file' | 'dataurl' | 'binary';
 const LOADERS = {
@@ -94,7 +94,7 @@ module.exports = {
       }
     }
 
-    const { js, jsSourceMap, warnings } = transformSync(source, {
+    const { code, map, warnings } = transformSync(source, {
       sourcefile: filename,
       format: 'cjs',
       target,
@@ -104,7 +104,7 @@ module.exports = {
 
     printWarnings(filename, warnings)
 
-    return { code: js, map: jsSourceMap }
+    return { code, map }
   },
 
   getCacheKey(fileData, filename, configString, cacheKeyOptions) {

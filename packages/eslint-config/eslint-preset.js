@@ -5,7 +5,7 @@ try {
 }
 
 const path = require('path')
-const projectRoot = require('project-root-directory')
+const projectRoot = require('pkg-dir').sync() || require('project-root-directory')
 
 const pkg = require(path.join(projectRoot, 'package.json'))
 

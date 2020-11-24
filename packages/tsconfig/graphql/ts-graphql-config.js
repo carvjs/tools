@@ -21,7 +21,7 @@ module.exports = async (projectRootPath) => {
 }
 
 async function load(projectRootPath) {
-  const config = require('../lib/config').graphql
+  const config = require('@carv/bundle/lib/config').graphql
 
   if (!config) {
     console.error('!!! No graphql configuration found.')

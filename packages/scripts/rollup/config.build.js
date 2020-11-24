@@ -4,14 +4,14 @@ const fs = require('fs-extra')
 const path = require('path')
 
 module.exports = async () => {
-  const paths = require('../lib/package-paths')
-  const manifest = require('../lib/package-manifest')
-  const use = require('../lib/package-use')
-  const config = require('../lib/config')
+  const paths = require('@carv/bundle/lib/package-paths')
+  const manifest = require('@carv/bundle/lib/package-manifest')
+  const use = require('@carv/bundle/lib/package-use')
+  const config = require('@carv/bundle/lib/config')
 
-  await require('./copy-files')()
+  await require('@carv/bundle/lib/copy-files')()
 
-  const inputFile = require('./get-input-file')()
+  const inputFile = require('@carv/bundle/lib/get-input-file')()
 
   const useTypescript = use.typescript && (inputFile.endsWith('.ts') || inputFile.endsWith('.tsx'))
 

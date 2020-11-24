@@ -16,9 +16,9 @@
   "browser": false,
   "types": "./types/index.d.ts",
   "scripts": {
-    "format": "nps format",
+    "format": "nps",
     "start": "nps",
-    "test": "nps test"
+    "test": "nps"
   },
   "prettier": "@carv/prettier-config",
   "eslintConfig": {
@@ -26,6 +26,8 @@
     "root": true
   },
   "dependencies": {
+    "@carv/bundle": "^1.0.0",
+    "@carv/jest-preset": "^1.0.0",
     "@carv/cdn-css-loader": "^1.1.0",
     "@carv/polyfills": "^1.1.3",
     "@carv/types": "^1.3.1",
@@ -36,48 +38,24 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@rollup/pluginutils": "^4.0.0",
-    "@types/jest": "^26.0.13",
     "@types/react": "^16.9.49",
-    "at-least-node": "^1.0.0",
-    "camelcase": "^6.0.0",
     "common-tags": "^1.8.0",
     "compressible": "^2.0.18",
-    "cosmiconfig": "^7.0.0",
-    "cross-fetch": "^3.0.6",
     "cssnano": "^4.1.10",
     "cssnano-preset-default": "^4.0.7",
-    "doctoc": "^1.4.0",
-    "envinfo": "^7.5.1",
-    "es-module-lexer": "^0.3.24",
-    "esbuild": "^0.7.1",
-    "escape-string-regexp": "^4.0.0",
-    "eslint": "^7.4.0",
     "execa": "^4.0.3",
     "find-up": "^5.0.0",
     "fs-extra": "^9.0.1",
     "globby": "^11.0.1",
-    "graphql": "^15.3.0",
-    "identity-obj-proxy": "^3.0.0",
-    "is-ci": "^2.0.0",
-    "jest": "^26.1.0",
-    "jest-environment-jsdom-sixteen": "^1.0.3",
-    "jest-environment-node": "^26.1.0",
-    "jest-extended": "^0.11.5",
-    "jest-svelte-resolver": "^1.0.0",
-    "manage-path": "^2.0.0",
     "mime-types": "^2.1.27",
     "npm-run-path": "^4.0.1",
     "nps": "^5.9.12",
-    "pkg-dir": "^5.0.0",
     "postcss": "^7.0.32",
     "postcss-modules": "^3.2.2",
     "postcss-nested": "^4.2.3",
     "postcss-preset-env": "^6.7.0",
     "postcss-value-parser": "^4.1.0",
-    "prettier": "^2.0.5",
     "pretty-bytes": "^5.4.1",
-    "project-root-directory": "^1.0.3",
-    "rimraf": "^3.0.2",
     "rollup": "^2.32.1",
     "rollup-plugin-define": "^1.0.1",
     "rollup-plugin-dts": "^1.4.12",
@@ -86,64 +64,26 @@
     "rollup-plugin-svelte-hot": "^0.11.0",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.26.9",
-    "signal-exit": "^3.0.3",
     "sourcemap-codec": "^1.4.8",
     "svelte": "^3.24.0",
-    "svelte-check": "^1.0.33",
-    "svelte-jester": "^1.0.6",
     "svelte-preprocess": "^4.1.1",
     "svelte2tsx": "^0.1.102",
-    "ts-graphql-plugin": "^2.0.0",
-    "typescript": "^4.0.2",
-    "typescript-eslint-language-service": "^4.1.1",
-    "update-notifier": "^5.0.0",
     "v8-compile-cache": "^2.1.1"
   },
   "devDependencies": {
     "@carv/eslint-config": "^1.4.10",
-    "@carv/prettier-config": "^1.0.4",
-    "@testing-library/dom": "^7.22.6",
-    "@testing-library/jest-dom": "^5.11.0",
-    "@testing-library/svelte": "^3.0.0"
+    "@carv/prettier-config": "^1.0.4"
   },
   "peerDependencies": {
-    "@testing-library/jest-dom": "*",
-    "eslint": "^7.3.1",
-    "graphql": "^15.3.0",
-    "jest": "^26.1.0",
     "nps": "^5.9.12",
-    "prettier": "^2.0.5",
     "rollup": "^2.26.6",
-    "svelte": "^3.24.0",
-    "svelte-check": "^1.0.33",
-    "typescript": "^4.0.2"
+    "svelte": "^3.24.0"
   },
   "peerDependenciesMeta": {
-    "@testing-library/jest-dom": {
-      "optional": true
-    },
-    "eslint": {
-      "optional": true
-    },
-    "graphql": {
-      "optional": true
-    },
-    "jest": {
-      "optional": true
-    },
-    "prettier": {
-      "optional": true
-    },
     "rollup": {
       "optional": true
     },
     "svelte": {
-      "optional": true
-    },
-    "svelte-check": {
-      "optional": true
-    },
-    "typescript": {
       "optional": true
     }
   },

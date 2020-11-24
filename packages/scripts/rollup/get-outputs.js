@@ -2,11 +2,11 @@
 
 // eslint-disable-next-line func-names
 module.exports = function getOutputs({
-  useTypescript = require('../lib/package-use').typescript,
-  mode = require('../lib/config').buildOptions.mode,
+  useTypescript = require('@carv/bundle/lib/package-use').typescript,
+  mode = require('@carv/bundle/lib/config').buildOptions.mode,
 } = {}) {
-  const manifest = require('../lib/package-manifest')
-  const unscopedPackageName = require('./unscoped-package-name')
+  const manifest = require('@carv/bundle/lib/package-manifest')
+  const unscopedPackageName = require('@carv/bundle/lib/unscoped-package-name')
 
   return {
     node: maybe(manifest.browser !== true, {

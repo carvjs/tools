@@ -3,7 +3,7 @@
 const fs = require('fs-extra')
 const path = require('path')
 
-const paths = require('../lib/package-paths')
+const paths = require('./package-paths')
 
 const EXTNAMES = ['', '.svelte', '.tsx', '.ts', '.mjs', '.jsx', '.js', '.cjs', '.json']
 
@@ -30,7 +30,7 @@ function resolveFile(base) {
 }
 
 module.exports = function getInputFile(additional) {
-  const manifest = require('../lib/package-manifest')
+  const manifest = require('./package-manifest')
 
   return (
     (additional && resolveFile(additional)) ||

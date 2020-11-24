@@ -3,14 +3,14 @@
 const path = require('path')
 
 module.exports = async () => {
-  const paths = require('../lib/package-paths')
-  const use = require('../lib/package-use')
-  const config = require('../lib/config')
-  const manifest = require('../lib/package-manifest')
+  const paths = require('@carv/bundle/lib/package-paths')
+  const use = require('@carv/bundle/lib/package-use')
+  const config = require('@carv/bundle/lib/config')
+  const manifest = require('@carv/bundle/lib/package-manifest')
 
-  await require('./copy-files')(paths.build)
+  await require('@carv/bundle/lib/copy-files')(paths.build)
 
-  const inputFile = require('./get-input-file')(path.join(paths.source, '__preview__'))
+  const inputFile = require('@carv/bundle/lib/get-input-file')(path.join(paths.source, '__preview__'))
 
   const outputs = require('./get-outputs')({ useTypescript: false, mode: 'library' })
 

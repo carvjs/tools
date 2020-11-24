@@ -1,1 +1,1 @@
-module.exports = require('./nps-preset')
+module.exports = require('@varv/bundle/nps-preset')

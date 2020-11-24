@@ -75,7 +75,7 @@ exports.transform = async (code, fileName, options, context) => {
   }
 
   // The file had no js (like a type only file)
-  if (!result.js) {
+  if (!result.code) {
     return { code: '', map: null }
   }
 
@@ -84,7 +84,7 @@ exports.transform = async (code, fileName, options, context) => {
       replacements: {
         $$__HIDE_IMPORT_META_FROM_ESBUILD_$$: 'import.meta',
       },
-    }).transform.call(context, result.js, fileName)
+    }).transform.call(context, result.code, fileName)
 
     if (output) {
       return output
@@ -92,7 +92,7 @@ exports.transform = async (code, fileName, options, context) => {
   }
 
   return {
-    code: result.js,
-    map: result.jsSourceMap || null,
+    code: result.code,
+    map: result.map || null,
   }
 }

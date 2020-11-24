@@ -1,6 +1,6 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
-  "extends": "./node_modules/@carv/scripts/tsconfig-preset.json",
+  "extends": "./node_modules/@carv/tsconfig/preset.json",
   "include": ["./packages/scripts/types", "./packages/types", "./examples/svelte-module/src"],
   "compilerOptions": {
     "baseUrl": "."

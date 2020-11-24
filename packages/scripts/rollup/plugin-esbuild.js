@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-const { transform, stopService } = require('../lib/esbuild')
+const { transform, stopService } = require('@carv/bundle/lib/esbuild')
 
 module.exports = function esbuild(options) {
   const codeCache = new Map()

@@ -1,0 +1,63 @@
+{
+  "name": "@carv/tsconfig",
+  "version": "1.0.0",
+  "homepage": "https://github.com/carvjs/tools#readme",
+  "bugs": {
+    "url": "https://github.com/carvjs/tools/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carvjs/tools.git",
+    "directory": "packages/tsconfig"
+  },
+  "license": "MIT",
+  "author": "Sascha Tandel <s.tandel@kenoxa.de>",
+  "main": "./preset.json",
+  "sideEffects": false,
+  "browser": false,
+  "scripts": {
+    "format": "nps",
+    "start": "nps",
+    "test": "nps"
+  },
+  "prettier": "@carv/prettier-config",
+  "eslintConfig": {
+    "extends": "@carv/eslint-config",
+    "root": true
+  },
+  "dependencies": {
+    "@carv/bundle": "^1.0.0",
+    "nps": "^5.9.12",
+    "ts-graphql-plugin": "^2.0.0",
+    "typescript": "^4.1.0",
+    "typescript-eslint-language-service": "^4.1.1"
+  },
+  "devDependencies": {
+    "@carv/eslint-config": "^1.4.10",
+    "@carv/prettier-config": "^1.0.4"
+  },
+  "peerDependencies": {
+    "eslint": "^7.3.1",
+    "nps": "^5.9.12",
+    "prettier": "^2.0.5",
+    "typescript": "^4.1.0"
+  },
+  "peerDependenciesMeta": {
+    "eslint": {
+      "optional": true
+    },
+    "prettier": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=14.8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "a703a79c23b2a15884ef57e393745f1ea57b0a23"
+}

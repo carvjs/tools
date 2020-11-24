@@ -2,7 +2,7 @@
 
 const path = require('path')
 
-const root = require('pkg-dir').sync()
+const root = require('pkg-dir').sync() || require('project-root-directory')
 
 exports.root = root
 exports.build = path.join(root, 'build')

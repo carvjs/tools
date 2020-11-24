@@ -1,8 +1,8 @@
 /* eslint-env node */
 
-const paths = require('../lib/package-paths')
-const use = require('../lib/package-use')
-const config = require('../lib/config')
+const paths = require('@carv/bundle/lib/package-paths')
+const use = require('@carv/bundle/lib/package-use')
+const config = require('@carv/bundle/lib/config')
 
 module.exports = (options) => {
   const dedupe = ['svelte', 'svelte/internal', '@carv/runtime']
@@ -77,6 +77,7 @@ module.exports = (options) => {
       svelte?.(svelteConfig),
 
       nodeResolve({
+        rootDir: paths.root,
         dedupe,
         extensions,
         mainFields: [...(options.mainFields || []), ...mainFields],

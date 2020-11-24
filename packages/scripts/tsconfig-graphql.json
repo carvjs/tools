@@ -1,17 +1,4 @@
 {
   "$schema": "http://json.schemastore.org/tsconfig",
-  "extends": "./tsconfig-preset.json",
-  "compilerOptions": {
-    "plugins": [
-      {
-        "name": "ts-graphql-plugin",
-        "tag": "gql",
-        "schema": {
-          "http": {
-            "fromScript": "./node_modules/@carv/scripts/graphql/ts-graphql-config.js"
-          }
-        }
-      }
-    ]
-  }
+  "extends": "./node_modules/@carv/tsconfig/graphql.json"
 }

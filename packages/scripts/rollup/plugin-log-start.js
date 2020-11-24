@@ -19,8 +19,8 @@ module.exports = function logStart(options, outputDirectory, useSvelte) {
 
 function format(
   options,
-  outputDirectory = require('../lib/package-paths').dist,
-  useSvelte = require('../lib/package-use').svelte,
+  outputDirectory = require('@carv/bundle/lib/package-paths').dist,
+  useSvelte = require('@carv/bundle/lib/package-use').svelte,
 ) {
   return [
     options.platform,

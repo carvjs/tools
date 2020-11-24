@@ -3,10 +3,10 @@
 const fs = require('fs-extra')
 const path = require('path')
 const globby = require('globby')
-const paths = require('../lib/package-paths')
+const paths = require('./package-paths')
 
 module.exports = async function copyFiles(target = paths.dist) {
-  const manifest = require('../lib/package-manifest')
+  const manifest = require('./package-manifest')
 
   // TODO copy additional exports
   console.log('Copying common package files...')

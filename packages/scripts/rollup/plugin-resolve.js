@@ -1,7 +1,7 @@
 /* eslint-env node */
 
 const path = require('path')
-const paths = require('../lib/package-paths')
+const paths = require('@carv/bundle/lib/package-paths')
 
 const resolveTarget = (to) => {
   if (to.startsWith('./') || to.startsWith('../')) {
