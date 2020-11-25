@@ -1,6 +1,6 @@
 {
   "name": "@carv/esbundle",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://github.com/carvjs/tools#readme",
   "bugs": {
     "url": "https://github.com/carvjs/tools/issues"
@@ -23,7 +23,7 @@
     "root": true
   },
   "dependencies": {
-    "@carv/bundle": "^1.1.4",
+    "@carv/bundle": "^1.2.0",
     "esbuild": "^0.8.14",
     "execa": "^4.0.3",
     "find-up": "^5.0.0",
