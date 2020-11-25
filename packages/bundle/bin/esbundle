@@ -234,7 +234,7 @@ async function main() {
             resolveExtensions: ['.tsx', '.ts', '.jsx', '.mjs', '.js', '.cjs', '.css', '.json'],
             bundle: true,
             sourcemap: 'external',
-            metafile: path.resolve(paths.build, `${outfile}.meta.json`),
+            // metafile: path.resolve(paths.build, `${outfile}.meta.json`),
             external: output.format === 'iife' ? [] : external,
             define: getDefineReplacements(output),
             inject: [
