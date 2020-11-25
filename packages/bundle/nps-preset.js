@@ -55,18 +55,15 @@ const prettier = [`prettier`, ignorePath].filter(Boolean).join(' ')
 
 const jest = `jest --passWithNoTests`
 
-const rollupConfig = path.relative(
-  process.cwd(),
-  fs.existsSync(path.join(paths.root, 'rollup.config.mjs'))
-    ? path.join(paths.root, 'rollup.config.mjs')
-    : fs.existsSync(path.join(paths.root, 'rollup.config.cjs'))
-    ? path.join(paths.root, 'rollup.config.cjs')
-    : fs.existsSync(path.join(paths.root, 'rollup.config.js'))
-    ? path.join(paths.root, 'rollup.config.js')
-    : tryResolve('@carv/scripts/rollup/config.cjs'),
-)
+const rollupConfig = fs.existsSync(path.join(paths.root, 'rollup.config.mjs'))
+  ? path.join(paths.root, 'rollup.config.mjs')
+  : fs.existsSync(path.join(paths.root, 'rollup.config.cjs'))
+  ? path.join(paths.root, 'rollup.config.cjs')
+  : fs.existsSync(path.join(paths.root, 'rollup.config.js'))
+  ? path.join(paths.root, 'rollup.config.js')
+  : tryResolve('@carv/scripts/rollup/config.cjs')
 
-const rollup = rollupConfig && `rollup --config ${rollupConfig}`
+const rollup = rollupConfig && `rollup --config ${path.relative(process.cwd(), rollupConfig)}`
 
 exports.scripts = {
   // Main entrypoints
@@ -99,8 +96,8 @@ exports.scripts = {
 
   build: {
     default: ['nps', 'prepare', 'build.package'].join(' '),
-    package: (use.svelte && rollup) || 'esbundle',
-    watch: use.svelte && rollup ? `${rollup} --watch` : 'esbundle --watch',
+    package: rollup || 'esbundle',
+    watch: rollup ? `${rollup} --watch` : 'esbundle --watch',
   },
 
   prepublishOnly: 'nps build.package',
