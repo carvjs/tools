@@ -124,7 +124,7 @@ async function main() {
       platform: 'browser',
       target: 'es2015',
       format: 'iife',
-      globalName: unscopedPackageName,
+      globalName: manifest.amdName || safeVariableName(unscopedPackageName),
       mainFields: ['esnext', 'es2015', 'module', 'browser', 'main'],
       minify: true,
     }),
@@ -321,4 +321,12 @@ function getDefineReplacements(output) {
   }
 
   throw new Error(`Unknown format ${output.format} for platform ${output.platform}`)
+}
+
+const INVALID_ES3_IDENT = /((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g
+
+function safeVariableName(name) {
+  const identifier = normalized.replace(INVALID_ES3_IDENT, '')
+
+  return identifier.toLowercase().replace(/[^a-zA-Z0-9]+(.)/g, (m, char) => char.toUpperCase())
 }
