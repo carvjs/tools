@@ -323,10 +323,10 @@ function getDefineReplacements(output) {
   throw new Error(`Unknown format ${output.format} for platform ${output.platform}`)
 }
 
-const INVALID_ES3_IDENT = /((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g
+const INVALID_ES3_IDENT = /((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z\d]+$)/g
 
 function safeVariableName(name) {
-  const identifier = normalized.replace(INVALID_ES3_IDENT, '')
+  const identifier = name.replace(INVALID_ES3_IDENT, '')
 
-  return identifier.toLowercase().replace(/[^a-zA-Z0-9]+(.)/g, (m, char) => char.toUpperCase())
+  return identifier.toLowercase().replace(/[^a-zA-Z\d]+(.)/g, (m, char) => char.toUpperCase())
 }
