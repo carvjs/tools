@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.3](https://github.com/carvjs/tools/compare/@carv/bundle@1.1.2...@carv/bundle@1.1.3) (2020-11-25)
+
+### Bug Fixes
+
+- **esbundle:** disable metafile ([619bcbd](https://github.com/carvjs/tools/commit/619bcbdce5a697e6dc70fec7dc321fa67575b765))
+
 ## [1.1.2](https://github.com/carvjs/tools/compare/@carv/bundle@1.1.1...@carv/bundle@1.1.2) (2020-11-25)
 
 ### Bug Fixes

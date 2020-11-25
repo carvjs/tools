@@ -1,6 +1,6 @@
 {
   "name": "@carv/scripts",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "homepage": "https://github.com/carvjs/tools#readme",
   "bugs": {
     "url": "https://github.com/carvjs/tools/issues"
@@ -26,9 +26,9 @@
     "root": true
   },
   "dependencies": {
-    "@carv/bundle": "^1.1.2",
+    "@carv/bundle": "^1.1.3",
     "@carv/cdn-css-loader": "^1.1.0",
-    "@carv/jest-preset": "^1.1.2",
+    "@carv/jest-preset": "^1.1.3",
     "@carv/polyfills": "^1.1.3",
     "@carv/types": "^1.3.1",
     "@peculiar/webcrypto": "^1.1.3",
