@@ -1,21 +1,22 @@
 #!/usr/bin/env node
 
 /* eslint-env node */
+require('v8-compile-cache')
 
 const fs = require('fs-extra')
 const path = require('path')
 
 async function main() {
-  const paths = require('../lib/package-paths')
-  const manifest = require('../lib/package-manifest')
-  const use = require('../lib/package-use')
-  const unscopedPackageName = require('../lib/unscoped-package-name')
+  const paths = require('@carv/bundle/lib/package-paths')
+  const manifest = require('@carv/bundle/lib/package-manifest')
+  const use = require('@carv/bundle/lib/package-use')
+  const unscopedPackageName = require('@carv/bundle/lib/unscoped-package-name')
 
-  const inputFile = require('../lib/get-input-file')()
+  const inputFile = require('@carv/bundle/lib/get-input-file')()
 
   console.log(`Building bundle for ${path.relative(process.cwd(), inputFile)} ...`)
 
-  await require('../lib/copy-files')()
+  await require('@carv/bundle/lib/copy-files')()
 
   const useTypescript = use.typescript && (inputFile.endsWith('.ts') || inputFile.endsWith('.tsx'))
 
@@ -27,7 +28,9 @@ async function main() {
     const execa = require('execa')
     const npmRunPath = require('npm-run-path')
 
-    console.time('Generated Typescript Declarations to ' + path.relative(process.cwd(), typesDirectory))
+    console.time(
+      'Generated Typescript Declarations to ' + path.relative(process.cwd(), typesDirectory),
+    )
 
     await fs.mkdirp(typesDirectory)
 
@@ -62,7 +65,9 @@ async function main() {
       },
     )
 
-    console.timeEnd('Generated Typescript Declarations to ' + path.relative(process.cwd(), typesDirectory))
+    console.timeEnd(
+      'Generated Typescript Declarations to ' + path.relative(process.cwd(), typesDirectory),
+    )
 
     dtsFile = path.join(paths.dist, `types/${unscopedPackageName}.d.ts`)
 
@@ -87,14 +92,7 @@ async function main() {
 
   const targets = {
     node: 'node14.5',
-    browser: [
-      'es2020',
-      'chrome80',
-      'firefox80',
-      'safari11',
-      'edge18',
-      'node14.5',
-    ],
+    browser: ['es2020', 'chrome80', 'firefox80', 'safari11', 'edge18', 'node14.5'],
   }
 
   const outputs = {
