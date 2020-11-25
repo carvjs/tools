@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/carvjs/tools/compare/@carv/bundle@1.1.1...@carv/bundle@1.1.2) (2020-11-25)
+
+### Bug Fixes
+
+- ignore missing rollup config ([8df5be8](https://github.com/carvjs/tools/commit/8df5be88572471411f1170cf68fa7579d8558c12))
+
 ## [1.1.1](https://github.com/carvjs/tools/compare/@carv/bundle@1.1.0...@carv/bundle@1.1.1) (2020-11-25)
 
 ### Bug Fixes
