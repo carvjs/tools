@@ -126,6 +126,7 @@ async function main() {
       platform: 'browser',
       target: 'es2015',
       format: 'iife',
+      globalName: unscopedPackageName,
       mainFields: ['esnext', 'es2015', 'module', 'browser', 'main'],
       minify: true,
     }),
