@@ -15,6 +15,9 @@
   "sideEffects": false,
   "browser": false,
   "types": "./types/index.d.ts",
+  "bin": {
+    "esbundle": "./bin/esbundle"
+  },
   "scripts": {
     "format": "nps",
     "start": "nps",

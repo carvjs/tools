@@ -86,8 +86,15 @@ async function main() {
   }
 
   const targets = {
-    node: 'node10.4',
-    browser: 'es2015',
+    node: 'node14.5',
+    browser: [
+      'es2020',
+      'chrome80',
+      'firefox80',
+      'safari11',
+      'edge18',
+      'node14.5',
+    ],
   }
 
   const outputs = {
@@ -106,18 +113,18 @@ async function main() {
       format: 'esm',
       mainFields: ['esnext', 'es2015', 'module', 'main'],
     },
-    browser: maybe(manifest.browser !== false, {
-      outfile: `./browser/${unscopedPackageName}.js`,
+    module: {
+      outfile: `./module/${unscopedPackageName}.js`,
       // Use 'node' as target to keep process.* like process.env.NODE_ENV around
       platform: 'node',
-      target: 'es2020',
+      target: targets.browser,
       format: 'esm',
       mainFields: ['esnext', 'es2015', 'module', 'main'],
-    }),
+    },
     script: maybe(manifest.browser !== false, {
       outfile: `./script/${unscopedPackageName}.js`,
       platform: 'browser',
-      target: targets.browser,
+      target: 'es2015',
       format: 'iife',
       mainFields: ['esnext', 'es2015', 'module', 'browser', 'main'],
       minify: true,
@@ -140,9 +147,11 @@ async function main() {
             .filter(Boolean),
         ),
 
-        types: dtsFile && './' + path.relative(paths.dist, dtsFile),
+        browser: maybe(manifest.browser !== false, outputs.module.outfile),
 
-        default: outputs.browser?.outfile || outputs.node?.outfile,
+        default: outputs.node?.outfile || outputs.module.outfile,
+
+        types: dtsFile && './' + path.relative(paths.dist, dtsFile),
       },
 
       // All access to all files (including package.json, assets, chunks, ...)
@@ -156,7 +165,7 @@ async function main() {
     esnext: outputs.esnext?.outfile,
 
     // Used by bundlers like rollup and cdn networks
-    module: outputs.default?.outfile,
+    module: outputs.module?.outfile,
 
     // Can be used from a normal script tag without module system.
     unpkg: outputs.script?.outfile,
@@ -276,7 +285,9 @@ function getDefineReplacements(output) {
       'import.meta.url': `import_meta_url`,
       'import.meta.resolve': `import_meta_resolve`,
     }
-  } else if (output.format === 'esm') {
+  }
+
+  if (output.format === 'esm') {
     // Browser & ESM
     return {
       // De-alias MODE to NODE_ENV
@@ -287,7 +298,9 @@ function getDefineReplacements(output) {
       'import.meta.platform': 'process_platform',
       'import.meta.env': 'process_env',
     }
-  } else if (output.format === 'iife') {
+  }
+
+  if (output.format === 'iife') {
     // Browser & IIFE
     return {
       // For the productions builds optimize the production code path
@@ -308,6 +321,5 @@ function getDefineReplacements(output) {
     }
   }
 
-  console.log(output)
   throw new Error(`Unknown format ${output.format} for platform ${output.platform}`)
 }
