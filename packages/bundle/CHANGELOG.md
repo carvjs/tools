@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/carvjs/tools/compare/@carv/bundle@1.1.0...@carv/bundle@1.1.1) (2020-11-25)
+
+### Bug Fixes
+
+- use esbundle as binary name ([a8d60f1](https://github.com/carvjs/tools/commit/a8d60f190d209f97c1008a20b0dc398dc8ff7098))
+- **esbuild:** use define and inject to replace values ([89b63e2](https://github.com/carvjs/tools/commit/89b63e2abd7e7aaf9470a63de73296b705aec881))
+
 # 1.1.0 (2020-11-24)
 
 ### Features
