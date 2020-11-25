@@ -37,7 +37,7 @@ alterPath.unshift(path.resolve(projectRoot, 'node_modules', '.bin'))
 const paths = require('./lib/package-paths')
 alterPath.unshift(path.resolve(paths.root, 'node_modules', '.bin'))
 
-alterPath.unshift(path.dirname(require.resolve('./bin/carv-bundle.js')))
+alterPath.unshift(path.dirname(require.resolve('./bin/esbundle')))
 
 const use = require('./lib/package-use')
 
@@ -99,8 +99,8 @@ exports.scripts = {
 
   build: {
     default: ['nps', 'prepare', 'build.package'].join(' '),
-    package: (use.svelte && rollup) || 'carv-bundle',
-    watch: use.svelte && rollup ? `${rollup} --watch` : 'carv-bundle --watch',
+    package: (use.svelte && rollup) || 'esbundle',
+    watch: use.svelte && rollup ? `${rollup} --watch` : 'esbundle --watch',
   },
 
   prepublishOnly: 'nps build.package',

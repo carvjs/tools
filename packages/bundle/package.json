@@ -15,9 +15,6 @@
   "sideEffects": false,
   "browser": false,
   "types": "./types/index.d.ts",
-  "bin": {
-    "carv-bundle": "./bin/carv-bundle.js"
-  },
   "scripts": {
     "format": "nps",
     "start": "nps",

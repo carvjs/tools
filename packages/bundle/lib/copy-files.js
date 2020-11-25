@@ -9,7 +9,7 @@ module.exports = async function copyFiles(target = paths.dist) {
   const manifest = require('./package-manifest')
 
   // TODO copy additional exports
-  console.log('Copying common package files...')
+  console.time('Copyied common package files to ' + path.relative(process.cwd(), target))
 
   await fs.mkdirp(target)
 
@@ -31,4 +31,6 @@ module.exports = async function copyFiles(target = paths.dist) {
   )
 
   await Promise.all(files.map((file) => fs.copy(file, path.join(target, file))))
+
+  console.timeEnd('Copyied common package files to ' + path.relative(process.cwd(), target))
 }
