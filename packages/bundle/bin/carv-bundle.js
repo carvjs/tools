@@ -67,7 +67,7 @@ async function main() {
 
     dtsFile = path.join(paths.dist, `types/${unscopedPackageName}.d.ts`)
 
-    console.time('build ' + path.relative(process.cwd(), dtsFile))
+    console.time('Build ' + path.relative(process.cwd(), dtsFile))
 
     const rollup = require('rollup')
     const bundle = await rollup.rollup({
@@ -83,42 +83,46 @@ async function main() {
       exports: 'auto',
     })
 
-    console.timeEnd('build ' + path.relative(process.cwd(), dtsFile))
+    console.timeEnd('Build ' + path.relative(process.cwd(), dtsFile))
+  }
+
+  const targets = {
+    node: 'node10.4',
+    browser: 'es2015',
   }
 
   const outputs = {
-    require: maybe(manifest.browser !== true, {
+    node: maybe(manifest.browser !== true, {
       outfile: `./node/${unscopedPackageName}.js`,
       platform: 'node',
-      target: 'node10.4',
+      target: targets.node,
       format: 'cjs',
       mainFields: ['esnext', 'es2015', 'module', 'main'],
     }),
     esnext: {
       outfile: `./esnext/${unscopedPackageName}.js`,
-      platform: manifest.browser === false ? 'node' : 'browser',
-      target: 'es2020',
+      // Use 'node' as target to keep process.* like process.env.NODE_ENV around
+      platform: 'node',
+      target: 'esnext',
       format: 'esm',
       mainFields: ['esnext', 'es2015', 'module', 'main'],
     },
+    browser: maybe(manifest.browser !== false, {
+      outfile: `./browser/${unscopedPackageName}.js`,
+      // Use 'node' as target to keep process.* like process.env.NODE_ENV around
+      platform: 'node',
+      target: 'es2020',
+      format: 'esm',
+      mainFields: ['esnext', 'es2015', 'module', 'main'],
+    }),
     script: maybe(manifest.browser !== false, {
       outfile: `./script/${unscopedPackageName}.js`,
       platform: 'browser',
-      target: 'es2015',
+      target: targets.browser,
       format: 'iife',
       mainFields: ['esnext', 'es2015', 'module', 'browser', 'main'],
       minify: true,
-      define: {
-        'process.env.NODE_ENV': '"production"',
-      },
     }),
-    default: {
-      outfile: `./module/${unscopedPackageName}.js`,
-      platform: manifest.browser === false ? 'node' : 'browser',
-      target: 'es2015',
-      format: 'esm',
-      mainFields: ['esnext', 'es2015', 'module', 'browser', 'main'],
-    },
   }
 
   const publishManifest = {
@@ -136,7 +140,10 @@ async function main() {
             })
             .filter(Boolean),
         ),
+
         types: dtsFile && './' + path.relative(paths.dist, dtsFile),
+
+        default: outputs.browser?.outfile || outputs.node?.outfile,
       },
 
       // All access to all files (including package.json, assets, chunks, ...)
@@ -144,12 +151,12 @@ async function main() {
     },
 
     // Used by nodejs
-    main: outputs.require?.outfile,
+    main: outputs.node?.outfile,
 
-    // Used by carv cdn: *.svelte production transpiled
+    // Used by carv cdn
     esnext: outputs.esnext?.outfile,
 
-    // Used by bundlers like rollup and cdn networks: *.svelte production transpiled
+    // Used by bundlers like rollup and cdn networks
     module: outputs.default?.outfile,
 
     // Can be used from a normal script tag without module system.
@@ -194,6 +201,7 @@ async function main() {
   )
 
   // Bundled dependencies are included into the output bundle
+  // eslint-disable-next-line unicorn/prefer-set-has
   const bundledDependencies = []
     .concat(manifest.bundledDependencies || [])
     .concat(manifest.bundleDependencies || [])
@@ -211,10 +219,13 @@ async function main() {
     await Promise.all(
       Object.entries(outputs)
         .filter(([_key, output]) => output)
-        .map(async ([key, output]) => {
+        .map(async ([_key, output]) => {
           const outfile = path.resolve(paths.dist, output.outfile)
 
-          console.time('build ' + path.relative(process.cwd(), outfile))
+          const logKey = `Build ${path.relative(process.cwd(), outfile)} (${output.format} - ${
+            output.target
+          })`
+          console.time(logKey)
 
           await service.build({
             ...output,
@@ -226,9 +237,13 @@ async function main() {
             sourcemap: 'external',
             metafile: path.resolve(paths.build, `${outfile}.meta.json`),
             external: output.format === 'iife' ? [] : external,
+            define: getDefineReplacements(output),
+            inject: [
+              require.resolve(output.format === 'iife' ? '../shims/script.js' : '../shims/node.js'),
+            ],
           })
 
-          console.timeEnd('build ' + path.relative(process.cwd(), outfile))
+          console.timeEnd(logKey)
         }),
     )
   } finally {
@@ -243,4 +258,57 @@ main().catch((error) => {
 
 function maybe(condition, truthy, falsy) {
   return condition ? truthy : falsy
+}
+
+function getDefineReplacements(output) {
+  if (output.platform === 'node' && output.format === 'cjs') {
+    // Node & CJS
+    // rewrite import.meta.* to NodeJS/CJS process.*
+    return {
+      // De-alias MODE to NODE_ENV
+      'import.meta.env.MODE': 'process_env_NODE_ENV',
+      'process.env.MODE': 'process_env_NODE_ENV',
+
+      // Delegate to process.*
+      'import.meta.platform': 'process_platform',
+      'import.meta.env': 'process_env',
+
+      // Rewrite these for node.js
+      'import.meta.url': `import_meta_url`,
+      'import.meta.resolve': `import_meta_resolve`,
+    }
+  } else if (output.format === 'esm') {
+    // Browser & ESM
+    return {
+      // De-alias MODE to NODE_ENV
+      'import.meta.env.MODE': 'process_env_NODE_ENV',
+      'process.env.MODE': 'process_env_NODE_ENV',
+
+      // Delegate to process.*
+      'import.meta.platform': 'process_platform',
+      'import.meta.env': 'process_env',
+    }
+  } else if (output.format === 'iife') {
+    // Browser & IIFE
+    return {
+      // For the productions builds optimize the production code path
+      'import.meta.env.NODE_ENV': '"production"',
+      'import.meta.env.MODE': '"production"',
+
+      'process.env.NODE_ENV': '"production"',
+      'process.env.MODE': '"production"',
+
+      'import.meta.platform': '"browser"',
+      'process.platform': '"browser"',
+
+      'import.meta.env': 'process_env',
+      'process.env': 'process_env',
+
+      // No hot mode
+      'import.meta.hot': 'undefined',
+    }
+  }
+
+  console.log(output)
+  throw new Error(`Unknown format ${output.format} for platform ${output.platform}`)
 }
