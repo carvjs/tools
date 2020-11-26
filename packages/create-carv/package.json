@@ -1,6 +1,6 @@
 {
   "name": "create-carv",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "scaffolding out a carv package.",
   "keywords": [
     "init",

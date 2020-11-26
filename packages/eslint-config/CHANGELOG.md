@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/carvjs/tools/compare/@carv/eslint-config@1.5.0...@carv/eslint-config@1.6.0) (2020-11-26)
+
+### Features
+
+- generate typedoc docs ([a535fed](https://github.com/carvjs/tools/commit/a535fedb97ecc871d8ec92c5c96533355748f405))
+
 # [1.5.0](https://github.com/carvjs/tools/compare/@carv/eslint-config@1.4.10...@carv/eslint-config@1.5.0) (2020-11-24)
 
 ### Features
