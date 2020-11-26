@@ -99,6 +99,11 @@ exports.scripts = {
   },
 
   prepublishOnly: 'nps build.package',
+  version: 'nps prettier.docs',
+  docs: {
+    default: 'nps cleanup.docs docs.package',
+    package: 'nps doctoc.readme prettier.docs',
+  },
 
   release: {
     default: {
@@ -120,11 +125,14 @@ exports.scripts = {
 
   envinfo: 'envinfo --system --browsers --IDEs --binary --npmPackages',
 
-  cleanup:
-    'rimraf ' +
-    [paths.build, paths.dist, path.join(paths.source, '**', '__generated__')]
-      .map((p) => path.relative(process.cwd(), p))
-      .join(' '),
+  cleanup: {
+    default:
+      'rimraf ' +
+      [paths.build, paths.dist, path.join(paths.source, '**', '__generated__')]
+        .map((p) => path.relative(process.cwd(), p))
+        .join(' '),
+    docs: `rimraf ${path.relative(process.cwd(), paths.docs)}`,
+  },
 
   // Tools
   eslint: {
@@ -135,7 +143,15 @@ exports.scripts = {
   prettier: {
     check: `${prettier} --check .`,
     write: `${prettier} --write .`,
-    changelog: `${prettier} --write CHANGELOG.md`,
+    docs: [
+      `${prettier} --write`,
+      fs.existsSync(path.join(paths.root, 'README.md')) &&
+        path.relative(process.cwd(), path.join(paths.root, 'README.md')),
+      fs.existsSync(path.join(paths.root, 'CHANGELOG.md')) &&
+        path.relative(process.cwd(), path.join(paths.root, 'CHANGELOG.md')),
+    ]
+      .filter(Boolean)
+      .join(' '),
   },
 
   jest: {
@@ -161,6 +177,35 @@ if (use.typescript) {
     default: tsc,
     watch: `${tsc} --watch`,
   }
+
+  const manifest = require('./lib/package-manifest')
+
+  const { typedocOptions = {} } = require(paths.typescriptConfig)
+
+  exports.scripts.docs.package += ' typedoc'
+
+  exports.scripts.typedoc = [
+    'typedoc',
+    '--name',
+    JSON.stringify(typedocOptions.name || `${manifest.name} - v${manifest.version}`),
+    '--readme',
+    path.relative(process.cwd(), path.join(paths.root, 'README.md')),
+    '--excludeExternals',
+    // Output directory
+    '--out',
+    paths.isMonorepo
+      ? path.relative(
+          process.cwd(),
+          path.join(paths.docs, path.relative(paths.projectRoot, paths.root)),
+        )
+      : path.relative(process.cwd(), paths.docs),
+    // Entry Point
+    typedocOptions.entryPoints
+      ? null
+      : path.relative(process.cwd(), require('./lib/get-input-file')()),
+  ]
+    .filter(Boolean)
+    .join(' ')
 }
 
 if (use.typescriptGraphql) {

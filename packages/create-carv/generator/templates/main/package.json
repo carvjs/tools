@@ -32,7 +32,7 @@
     "eslint": "^7.3.1",
     "jest": "^26.1.0",
     "nps": "^5.9.12",
-    "prettier": "^2.0.5",
+    "prettier": "^2.2.0",
     "snowpack": "^2.5.0"
   },
   "snowpack": {
