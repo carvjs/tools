@@ -182,30 +182,34 @@ if (use.typescript) {
 
   const { typedocOptions = {} } = require(paths.typescriptConfig)
 
-  exports.scripts.docs.package += ' typedoc'
+  try {
+    exports.scripts.typedoc = [
+      'typedoc',
+      '--name',
+      JSON.stringify(typedocOptions.name || `${manifest.name} - v${manifest.version}`),
+      '--readme',
+      path.relative(process.cwd(), path.join(paths.root, 'README.md')),
+      '--excludeExternals',
+      // Output directory
+      '--out',
+      paths.isMonorepo
+        ? path.relative(
+            process.cwd(),
+            path.join(paths.docs, path.relative(paths.projectRoot, paths.root)),
+          )
+        : path.relative(process.cwd(), paths.docs),
+      // Entry Point
+      typedocOptions.entryPoints
+        ? null
+        : path.relative(process.cwd(), require('./lib/get-input-file')()),
+    ]
+      .filter(Boolean)
+      .join(' ')
 
-  exports.scripts.typedoc = [
-    'typedoc',
-    '--name',
-    JSON.stringify(typedocOptions.name || `${manifest.name} - v${manifest.version}`),
-    '--readme',
-    path.relative(process.cwd(), path.join(paths.root, 'README.md')),
-    '--excludeExternals',
-    // Output directory
-    '--out',
-    paths.isMonorepo
-      ? path.relative(
-          process.cwd(),
-          path.join(paths.docs, path.relative(paths.projectRoot, paths.root)),
-        )
-      : path.relative(process.cwd(), paths.docs),
-    // Entry Point
-    typedocOptions.entryPoints
-      ? null
-      : path.relative(process.cwd(), require('./lib/get-input-file')()),
-  ]
-    .filter(Boolean)
-    .join(' ')
+    exports.scripts.docs.package += ' typedoc'
+  } catch {
+    /* Ignore */
+  }
 }
 
 if (use.typescriptGraphql) {

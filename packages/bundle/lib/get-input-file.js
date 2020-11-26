@@ -44,5 +44,5 @@ module.exports = function getInputFile(additional) {
 }
 
 function fail() {
-  throw new Error('No input file found.')
+  throw new Error(`No input file found: ${paths.root}`)
 }
