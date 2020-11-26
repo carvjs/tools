@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.7](https://github.com/carvjs/tools/compare/@carv/jest-preset@1.1.6...@carv/jest-preset@1.1.7) (2020-11-26)
+
+**Note:** Version bump only for package @carv/jest-preset
+
 ## [1.1.6](https://github.com/carvjs/tools/compare/@carv/jest-preset@1.1.5...@carv/jest-preset@1.1.6) (2020-11-26)
 
 **Note:** Version bump only for package @carv/jest-preset

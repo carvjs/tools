@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.5](https://github.com/carvjs/tools/compare/@carv/esbundle@1.1.4...@carv/esbundle@1.1.5) (2020-11-26)
+
+**Note:** Version bump only for package @carv/esbundle
+
 ## [1.1.4](https://github.com/carvjs/tools/compare/@carv/esbundle@1.1.3...@carv/esbundle@1.1.4) (2020-11-26)
 
 **Note:** Version bump only for package @carv/esbundle
