@@ -200,6 +200,7 @@ async function main() {
     prettier: undefined,
     graphql: undefined,
     'size-limit': undefined,
+    np: undefined
   }
 
   await fs.writeFile(
