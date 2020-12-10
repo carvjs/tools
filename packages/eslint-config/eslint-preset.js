@@ -17,14 +17,17 @@ const preventAbbreviations = {
   checkFilenames: true,
   extendDefaultWhitelist: true,
   whitelist: {
-    pkg: true,
     arg: true,
     args: true,
+    docs: true,
     env: true,
+    fn: true,
     nodeEnv: true,
+    param: true,
+    params: true,
+    pkg: true,
     ref: true,
     src: true,
-    docs: true,
   },
 }
 
@@ -55,6 +58,8 @@ module.exports = {
     'shared-node-browser': pkg.browser === undefined,
   },
   rules: {
+    'capitalized-comments': 'off',
+
     'require-atomic-updates': 'off',
     'func-names': 'off',
 
@@ -85,6 +90,7 @@ module.exports = {
     'class-methods-use-this': 'off', // Three words: "componentDidMount" :)
     'default-param-last': 'off', // Infers with destructering defaults
 
+    'unicorn/no-reduce': 'off',
     'unicorn/no-null': 'off',
     'unicorn/filename-case': [
       'error',
