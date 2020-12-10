@@ -1,6 +1,6 @@
 {
   "name": "@carv/scripts",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "homepage": "https://github.com/carvjs/tools#readme",
   "bugs": {
     "url": "https://github.com/carvjs/tools/issues"
@@ -26,9 +26,9 @@
     "root": true
   },
   "dependencies": {
-    "@carv/bundle": "^1.3.1",
+    "@carv/bundle": "^1.3.2",
     "@carv/cdn-css-loader": "^1.1.0",
-    "@carv/jest-preset": "^1.1.7",
+    "@carv/jest-preset": "^1.1.8",
     "@carv/polyfills": "^1.1.3",
     "@carv/types": "^1.3.1",
     "@peculiar/webcrypto": "^1.1.3",
@@ -71,7 +71,7 @@
     "v8-compile-cache": "^2.1.1"
   },
   "devDependencies": {
-    "@carv/eslint-config": "^1.6.0",
+    "@carv/eslint-config": "^1.6.1",
     "@carv/prettier-config": "^1.1.0"
   },
   "peerDependencies": {

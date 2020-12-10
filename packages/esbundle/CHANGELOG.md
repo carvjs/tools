@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.7](https://github.com/carvjs/tools/compare/@carv/esbundle@1.1.5...@carv/esbundle@1.1.7) (2020-12-10)
+
+### Bug Fixes
+
+- remove np from package.json ([e5b8cc0](https://github.com/carvjs/tools/commit/e5b8cc0d8c1f32e6bb3617c85eee0bfde0aa6324))
+
 ## [1.1.6](https://github.com/carvjs/tools/compare/@carv/esbundle@1.1.5...@carv/esbundle@1.1.6) (2020-12-09)
 
 ### Bug Fixes
