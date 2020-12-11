@@ -92,7 +92,7 @@ async function main() {
 
   const targets = {
     node: 'node14.5',
-    browser: ['es2020', 'chrome80', 'firefox80', 'safari11', 'edge18', 'node14.5'],
+    browser: ['chrome80', 'firefox80', 'safari12', 'edge79', 'node14.5'],
   }
 
   const outputs = {
@@ -122,7 +122,7 @@ async function main() {
     script: maybe(manifest.browser !== false, {
       outfile: `./script/${unscopedPackageName}.js`,
       platform: 'browser',
-      target: 'es2015',
+      target: targets.browser,
       format: 'iife',
       globalName: manifest.amdName || safeVariableName(unscopedPackageName),
       mainFields: ['esnext', 'es2015', 'module', 'browser', 'main'],
