@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.4](https://github.com/carvjs/tools/compare/@carv/scripts@1.7.3...@carv/scripts@1.7.4) (2020-12-12)
+
+**Note:** Version bump only for package @carv/scripts
+
 ## [1.7.3](https://github.com/carvjs/tools/compare/@carv/scripts@1.7.2...@carv/scripts@1.7.3) (2020-12-10)
 
 **Note:** Version bump only for package @carv/scripts

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.9](https://github.com/carvjs/tools/compare/@carv/esbundle@1.1.8...@carv/esbundle@1.1.9) (2020-12-12)
+
+### Bug Fixes
+
+- use evergreen browserlist ([74214bf](https://github.com/carvjs/tools/commit/74214bf1ed9433d6dafbebb5ce0c2801cede91be))
+
 ## [1.1.8](https://github.com/carvjs/tools/compare/@carv/esbundle@1.1.7...@carv/esbundle@1.1.8) (2020-12-11)
 
 ### Bug Fixes

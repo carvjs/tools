@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.9](https://github.com/carvjs/tools/compare/@carv/jest-preset@1.1.8...@carv/jest-preset@1.1.9) (2020-12-12)
+
+### Bug Fixes
+
+- select environment based on [@env](https://github.com/env) pragma or browser field ([30e6e26](https://github.com/carvjs/tools/commit/30e6e2644515832c63eede1d81fbd3dcf8364c32))
+
 ## [1.1.8](https://github.com/carvjs/tools/compare/@carv/jest-preset@1.1.7...@carv/jest-preset@1.1.8) (2020-12-10)
 
 **Note:** Version bump only for package @carv/jest-preset
