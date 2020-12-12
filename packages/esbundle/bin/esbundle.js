@@ -91,11 +91,13 @@ async function main() {
   }
 
   const targets = {
-    node: 'node14.5',
-    browser: ['chrome80', 'firefox80', 'safari12', 'edge79', 'node14.5'],
+    // Last LTS
+    node: 'node10.23',
+    browser: ['chrome79', 'firefox78', 'safari13.1', 'edge79'],
   }
 
   const outputs = {
+    // Used by nodejs
     node: maybe(manifest.browser !== true, {
       outfile: `./node/${unscopedPackageName}.js`,
       platform: 'node',
@@ -103,22 +105,26 @@ async function main() {
       format: 'cjs',
       mainFields: ['esnext', 'es2015', 'module', 'main'],
     }),
+    // Used by carv cdn
     esnext: {
       outfile: `./esnext/${unscopedPackageName}.js`,
-      // Use 'node' as target to keep process.* like process.env.NODE_ENV around
+      // Use 'node' as platform to keep process.* like process.env.NODE_ENV around
       platform: 'node',
       target: 'esnext',
       format: 'esm',
       mainFields: ['esnext', 'es2015', 'module', 'main'],
     },
+    // Used by bundlers like rollup and cdn
     module: {
       outfile: `./module/${unscopedPackageName}.js`,
-      // Use 'node' as target to keep process.* like process.env.NODE_ENV around
+      // Use 'node' as platform to keep process.* like process.env.NODE_ENV around
       platform: 'node',
-      target: targets.browser,
+      target: manifest.browser === false ? targets.node : targets.browser,
       format: 'esm',
       mainFields: ['esnext', 'es2015', 'module', 'main'],
+      minify: manifest.browser !== false,
     },
+    // Can be used from a normal script tag without module system.
     script: maybe(manifest.browser !== false, {
       outfile: `./script/${unscopedPackageName}.js`,
       platform: 'browser',
@@ -163,7 +169,7 @@ async function main() {
     // Used by carv cdn
     esnext: outputs.esnext?.outfile,
 
-    // Used by bundlers like rollup and cdn networks
+    // Used by bundlers like rollup and cdns
     module: outputs.module?.outfile,
 
     // Can be used from a normal script tag without module system.
