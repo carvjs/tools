@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.7.5](https://github.com/carvjs/tools/compare/@carv/scripts@1.7.4...@carv/scripts@1.7.5) (2021-02-15)
+
+### Bug Fixes
+
+- ensure bundled dependencies if mode is `app` ([#1](https://github.com/carvjs/tools/issues/1)) ([8973ba6](https://github.com/carvjs/tools/commit/8973ba65faa9cac73575e5497ce8c6f001cfc5ff))
+
 ## [1.7.4](https://github.com/carvjs/tools/compare/@carv/scripts@1.7.3...@carv/scripts@1.7.4) (2020-12-12)
 
 **Note:** Version bump only for package @carv/scripts
