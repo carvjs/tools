@@ -11,7 +11,7 @@ const resolveTarget = (to) => {
   return to
 }
 
-module.exports = function resolve({ bundledDependencies = false, alias = {} }) {
+module.exports = function resolve({ bundledDependencies = false, alias = {}, appMode = false }) {
   const resolveAlias = (id) => {
     if (id.startsWith('./') || id.startsWith('../') || path.isAbsolute(id) || id.includes('\0')) {
       return id
@@ -31,6 +31,10 @@ module.exports = function resolve({ bundledDependencies = false, alias = {} }) {
   }
 
   const isExternal = (id) => {
+    if (appMode) {
+      return false
+    }
+
     if (id.startsWith('./') || id.startsWith('../') || path.isAbsolute(id)) {
       return false
     }

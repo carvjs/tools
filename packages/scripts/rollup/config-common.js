@@ -72,6 +72,7 @@ module.exports = (options) => {
       resolve({
         bundledDependencies: options.bundledDependencies,
         alias: config.alias,
+        appMode: config.buildOptions.mode === 'app',
       }),
 
       svelte?.(svelteConfig),
